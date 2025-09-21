@@ -1,0 +1,142 @@
+from django.http import HttpResponse
+from django.shortcuts import render,get_object_or_404
+from .models import Product, ProductImage,Size
+from datetime import datetime,timedelta
+# Helper function to get product data including first image
+def get_product_data(products):
+    product_list = []
+    for product in products:
+        product_image = ProductImage.objects.filter(p_id=product).first()
+        product_dict = {
+            'p_id': product.p_id,
+            'p_name': product.p_name,
+            'small_title': product.small_title,
+            'small_desc': product.small_desc,
+            'brand_name': product.brand_name,
+            'desc': product.desc,
+            'price': product.price,
+            'del_price': product.del_price,
+            'category': product.category.c_name,
+            'video': product.video.url if product.video else None,
+            'delivery_times': product.delivery_times,
+            'guarentee': product.guarentee,           # new column
+            'save': product.save_upto,                     # new column
+            'new': product.new,                       # new column
+            'main_category_diff': product.main_category_diff,
+            'stock_status': product.stock_status,
+            'where': product.where,
+            'where_to_display': product.where_to_display,
+            'slug': product.slug,
+            'image_url': product_image.image.url if product_image else None
+        }
+        product_list.append(product_dict)
+    return product_list
+
+
+
+def home(request):
+    # ------------------ FIRST PRODUCTS ------------------
+    first_products = Product.objects.filter(where_to_display='home', where='first')
+    first_product_data = get_product_data(first_products)
+    first_product = first_product_data[0] if first_product_data else None
+    other_first_products = first_product_data[1:] if len(first_product_data) > 1 else []
+
+    # ------------------ TRENDING PRODUCTS ------------------
+    trending_products = Product.objects.filter(where_to_display='home', where='trending')
+    trending_product_data = get_product_data(trending_products)
+
+    # ------------------ BESTSELLING PRODUCTS ------------------
+    bestselling_products = Product.objects.filter(where_to_display='home', where='bestselling')
+    bestselling_product_data = get_product_data(bestselling_products)
+
+    # ------------------ LAST PRODUCTS ------------------
+    last_products = Product.objects.filter(where_to_display='home', where='last')
+    last_product_data = get_product_data(last_products)
+ 
+    # ------------------ CONTEXT ------------------
+    context = {
+        'first_product': first_product,
+        'other_first_products': other_first_products,
+        'trending_products': trending_product_data,
+        'bestselling_products': bestselling_product_data,
+        'last_products': last_product_data,
+    }
+
+    return render(request, 'home.html', context)
+
+from django.shortcuts import render, get_object_or_404
+from .models import Product, ProductImage, Size
+
+# Helper function to get product data including first image + sizes
+def get_product_data1(products):
+    product_list = []
+    for product in products:
+        product_image = ProductImage.objects.filter(p_id=product).first()
+        sizes = Size.objects.filter(p_id=product).values_list('size', flat=True)
+
+        product_dict = {
+            'p_id': product.p_id,
+            'p_name': product.p_name,
+            'small_title': product.small_title,
+            'small_desc': product.small_desc,
+            'brand_name': product.brand_name,
+            'desc': product.desc,
+            'price': product.price,
+            'del_price': product.del_price,
+            'category': product.category.c_name,
+            'video': product.video.url if product.video else None,
+            'delivery_times': product.delivery_times,
+            'guarentee': product.guarentee,
+            'save': product.save_upto,   # make sure field name matches your model
+            'new': product.new,
+            'main_category_diff': product.main_category_diff,
+            'stock_status': product.stock_status,
+            'where': product.where,
+            'where_to_display': product.where_to_display,
+            'slug': product.slug,
+            'image_url': product_image.image.url if product_image else None,
+            'sizes': list(sizes)  # add sizes here
+        }
+        product_list.append(product_dict)
+    return product_list
+def product_detail(request, p):
+    # ---------------- SPECIFIC PRODUCT ----------------
+    product = get_object_or_404(Product, slug=p)
+
+    # Main product (only one object, so wrap in list and unpack first)
+    main_product_data = get_product_data1([product])[0]
+
+    # All images of this product (not just the first one)
+    product_images = ProductImage.objects.filter(p_id=product)
+
+    # ---------------- SAME BRAND PRODUCTS ----------------
+    same_brand_products = Product.objects.filter(
+        brand_name=product.brand_name
+    ).exclude(p_id=product.p_id)
+    same_brand_data = get_product_data1(same_brand_products)
+
+    # ---------------- SAME CATEGORY PRODUCTS ----------------
+    same_category_products = Product.objects.filter(
+        category=product.category
+    ).exclude(p_id=product.p_id)
+    same_category_data = get_product_data1(same_category_products)
+    current_url=request.build_absolute_uri()
+    size=Size.objects.filter(p_id=product)
+    # ---------------- CONTEXT ----------------
+    context = {
+        'product': main_product_data,  
+          'current_url': current_url,     # dict with all product details
+        'product_images': product_images, 
+             'size':size,     # queryset of all images
+        'same_brand_products': same_brand_data,
+        'same_category_products': same_category_data,
+    }
+
+    return render(request, 'single-product.html', context)
+
+
+
+def shop(request):
+    return render(request,"single-product.html")
+def product(request,p):
+    return HttpResponse(p)

@@ -1,0 +1,530 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+        <!-- breadcrumb__start -->
+        <div class="breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb__title">
+                            <h1>Product</h1>
+                            <ul>
+                                <li>
+                                    <a href="{% url "home" %}">Home</a>
+                                </li>
+                                <li class="color__blue">
+                                    Product Details
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- breadcrumb__end -->
+
+
+{% if product %}
+
+   <!-- single__product__start -->
+   <div class="single__product sp_top_50 sp_bottom_80">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <div class="featurearea__details__img">
+
+                    <div class="featurearea__big__img">
+                        {% for i in product_images %}
+                        <div class="featurearea__single__big__img">
+                            <img src="{{i.image.url}}"alt="Product Big Img">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class=" featurearea__thumb__img featurearea__thumb__img__slider__active slider__default__arrow">
+                        {% for i in product_images %}
+                        <div class="featurearea__single__thumb__img">
+                            <img src="{{i.image.url}}" alt="Product Big Img">
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <div class="single__product__wrap">
+                    <div class="single__product__heding">
+                        <h2>{{product.p_name}}</h2>
+                    </div>
+                    <div class="single__product__price">
+                        <span>Rs.{{product.price}}</span>
+                        <del>Rs.{{product.del_price}}</del>
+                        <label>Save -{{product.save}}%</label>
+                    </div>
+
+                    <hr>
+
+
+                    <div class="single__product__description">
+                        <p>{{product.desc}}</p>
+                        
+                        </div>
+                  
+                      
+                     
+                        <div class="single__product__special__feature">
+
+
+                            <ul>
+                              
+                              <li>
+                                <strong>Vendor:</strong> 
+                                <span>
+                                  <a href="#">{{product.brand_name}}</a>
+                                </span>
+                              </li>
+                              <li>
+                                <strong>Type:</strong> 
+                                <span>
+                                  <a href="#">{{product.category}}</a>
+                                </span>
+                              </li>
+                            </ul>
+                       
+                          </div>
+
+                          <hr>
+                          <div class="single__product__swatch single__product__size">
+                            <span class="header">Size : </span>
+                            <ul>
+                                {% for s in size  %}
+                                <li><a href="#">{{s.size}}</a></li>
+                                {% endfor %}
+                            </ul>
+                          </div>
+
+
+                         
+
+                          <div class="single__product__quantity">
+                            <div class="qty-container">
+                                <button class="qty-btn-minus btn-qty" type="button">-</button>
+                                <input type="text" name="qty" value="1" class="input-qty">
+                                <button class="qty-btn-plus btn-qty" type="button">+</button>
+                            </div>
+                            <a class="default__button" href="#"><i class="fas fa-shopping-cart"></i> Add to cart</a>
+
+                            <a class="default__button black__button" href="#">Buy it now</a>
+                            
+                        
+                        </div>
+
+
+
+                        <div class="single__product__bottom__menu">
+                            <ul>
+                                <li>
+                                <a href="#" title="Add to wishlist">
+                             <span class="add__wishlist"><i class="far fa-heart"></i>  Add to wishlist</span>
+                             </a>
+                            </li>
+                             
+                              <li>
+                                <a href="#" title="Ask a Question" data-toggle="modal">
+                                  <i class="far fa-envelope"></i> Ask a Question
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#" title="Size Chart" data-toggle="modal">
+                                  <i class="far fa-chart-bar"></i> Size Chart
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                          <hr>
+
+                            <p class="single__product__car"> 
+                                <img src="{% static "img/car/car.webp" %}" height="25" alt="Delivery Date">
+                                Estimated Delivery Time : <strong>{{product.delivery_times}}days..</strong>
+                            </p>
+                            <div class="single__return__menu">
+                                <h6>Return rules summary</h6>
+                                <ul>
+                                    <li>Returns accepted for 30 days</li>
+                                    <li>Free return shipping</li>
+                                    <li>No restocking fee</li>
+                                    <li>No final sale items</li>
+                                </ul>
+                            </div>
+                            <hr>
+
+                            <div class="single__return__checkout">
+                                <h5>Guaranteed safe checkout</h5>
+                            </div>
+
+                            <div class="single__product__small__img">
+                                <ul>
+                                    <li>
+                                        <img src="{% static "img/footer/footer__1.svg" %}" alt="">
+                                    </li>
+                                    <li>
+                                        <img src="{% static "img/footer/footer__2.svg" %}" alt="">
+                                    </li>
+                                    <li>
+                                        <img src="{% static "img/footer/footer__3.svg" %}" alt="">
+                                    </li>
+                                    <li>
+                                        <img src="{% static "img/footer/footer__4.svg" %}" alt="">
+                                    </li>
+                                    <li>
+                                        <img src="{% static "img/footer/footer__5.svg" %}" alt="">
+                                    </li>
+                                    <li>
+                                        <img src="{% static "img/footer/footer__6.svg" %}" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                            <hr>
+
+                            <div class="single__product__pairs">
+                                <h6>Pairs well with</h6>
+                            </div>
+
+                            <div class="single__product__grid">
+                                <div class="row grid__responsive">
+                                    {% for i in same_brand_products %}                                   
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="{% url "product" p=i.slug %}">
+                                                        <img class="primary__image" src="{{i.image_url}}" alt="Primary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__quickview">                                
+                                                    <a class="" title="Quickview" data-toggle="modal" data-target="#quickViewModal" href="{% url "product" p=i.slug %}" onclick="quiqview('e-s-product')" tabindex="0">Quickview
+                                                    </a>
+                                                </div>
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <del>Rs.{{i.del_price}}</del>
+                                                    <span>Rs.{{i.price}}</span> 
+                                                </div>
+                                            </div>
+            {% endfor %}
+                                        </div>
+                                    </div>
+
+            
+                                        
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="single__social__media">
+   <ul>
+    <li>Share:</li>
+
+    <!-- Facebook -->
+    <li>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ current_url }}" 
+           title="Share on Facebook" target="_blank">
+            <i class="fab fa-facebook-f"></i><span>Facebook</span>
+        </a>
+    </li>
+
+    <!-- Twitter -->
+    <li>
+        <a href="https://twitter.com/intent/tweet?url={{ current_url }}&text=Check+this+out!" 
+           title="Share on Twitter" target="_blank">
+            <i class="fab fa-twitter"></i><span>Twitter</span>
+        </a>
+    </li>
+
+    <!-- Pinterest -->
+    <li>
+        <a href="https://pinterest.com/pin/create/button/?url={{ current_url }}" 
+           title="Share on Pinterest" target="_blank">
+            <i class="fab fa-pinterest"></i><span>Pinterest</span>
+        </a>
+    </li>
+
+    <!-- WhatsApp -->
+    <li>
+        <a href="https://api.whatsapp.com/send?text={{ current_url }}" 
+           title="Share on WhatsApp" target="_blank">
+            <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+        </a>
+    </li>
+
+  
+</ul>
+
+
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- single__product__end -->
+
+
+<!-- discription__section__start -->
+
+<div class="descriptionarea sp_bottom_80 ">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 descriptionarea__tab__wrapper">
+                <ul class="nav  descriptionarea__tab__button" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="descriptionarea__link active" data-bs-toggle="tab" data-bs-target="#description" type="button" aria-selected="false" role="tab" tabindex="-1">Description</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="descriptionarea__link" data-bs-toggle="tab" data-bs-target="#video" type="button" aria-selected="false" role="tab" tabindex="-1">Video</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="descriptionarea__link" data-bs-toggle="tab" data-bs-target="#product__Type" type="button" aria-selected="true" role="tab" tabindex="-1">Product Type</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="descriptionarea__link" data-bs-toggle="tab" data-bs-target="#delivery__system" type="button" aria-selected="false" role="tab">Delivery system</button>
+                      </li>
+                </ul>
+                  <div class="tab-content tab__content__wrapper" id="myTabContent1">
+                    <div class="tab-pane fade active show" id="description" role="tabpanel" aria-labelledby="description">  
+                      
+                         <p>{{product.small_desc}}</p>
+            
+                 
+                </div>
+                    <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video">
+                       
+                            <p>{{product.video}}</p>
+                
+                    </div>
+                    <div class="tab-pane fade " id="product__Type" role="tabpanel" aria-labelledby="product__Type">
+                      
+                            <p>
+                           {{product.desc}}
+                            </p>
+                
+                      
+                    </div>
+                    <div class="tab-pane fade" id="delivery__system" role="tabpanel" aria-labelledby="delivery__system">
+                     
+                            <p>
+                                As opposed to using 'Content here, content here', making it look like readable
+                                English. Many desktop publishing packages and web page editors now use Lorem
+                                Ipsum as their default model text, and a search for 'lorem ipsum' will uncover
+                                many web sites still in their infancy. Various versions have evolved over the
+                                years, sometimes by accident, sometimes on purpose injected humour and the
+                                like. It is a long established fact that a reader will be distracted by the
+                                readable content of a page when looking at its layout. The point of using Lorem
+                                Ipsum is that it has a more-or-less normal distribution of letters
+                            </p>
+                            <p>
+                                If you are going to use a passage of Lorem Ipsum, you need to be sure there
+                                isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum
+                                generators on the Internet tend to repeat predefined chunks as necessary, making
+                                this the first true generator on the Internet. It uses a dictionary of over 200
+                                Latin words, combined with a handful of model sentence structures, to generate
+                                Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore
+                                always free from repetition, injected humour, or non-characteristic words etc
+                            </p>
+                
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- discription__section__end -->
+
+            
+            <!-- related__section__start -->
+
+            <!-- related__section__start -->
+            <div class="related__section sp_bottom_50">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="section__title text-center">
+                                <h2>Related Product</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row grid__responsive row__custom__class feature__slider__active slider__default__arrow">
+                        {% if same_category_products %}
+                        {% for i in same_category_products %}
+                        <div class="col-xl-3 column__custom__class">
+                            <div class="grid__wraper">
+                                <div class="grid__wraper__img">
+                                    <div class="grid__wraper__img__inner">
+                                        <a href="{% url "product" p=i.slug %}">
+                                            <img class="primary__image" src="{{i.image_url}}" alt="Primary Image">
+                                            <img class="secondary__image" src="{{i.image_url}}" alt="Secondary Image">
+                                        </a>
+                                    </div>
+                                    <div class="grid__wraper__icon">                                
+                                        <ul>
+                                            <li>
+                                                <span data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                    <a class="quick__view__action" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Quick View" data-bs-original-title="Quick View">
+                                                        <i class="far fa-eye"></i>
+                                                    </a>
+                                                </span>
+                                            </li>
+
+                                            <li>
+                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </a>                                             
+                                            </li>
+
+                                            <li>
+                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                    <i class="far fa-heart"></i>
+                                                </a>
+                                            </li>
+                                            
+                                            <li>
+                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Compare" data-bs-original-title="Add To Compare">
+                                                    <i class="fas fa-exchange-alt"></i>
+                                                    
+                                                </a>
+                                            </li>
+
+                                        </ul>   
+                                    </div>
+
+                                    <div class="grid__wraper__badge">
+                                        {% if i.new == 'yes' %}
+                                        <span class="new__badge">New</span>
+                                        {% endif %}
+                                        <span class="sale__badge">-{{i.save}}%</span>
+                                    </div>
+
+                                
+
+                                </div>
+                                <div class="grid__wraper__info">
+                                    <h3 class="grid__wraper__tittle">
+                                        <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
+                                    </h3>
+                                    <div class="grid__wraper__price">
+                                        <del>Rs.{{i.del_price}}</del>
+                                        <span>Rs.{{i.price}}</span> 
+                                    </div>
+                                    
+                                </div>
+
+                            
+                                
+
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+
+                </div>
+{% endif %}
+            </div>
+            <!-- related__section__start -->
+
+
+            <!-- faq__section__start -->
+                <div class="faq sp_bottom_50">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="faq__heading text-center section__title">
+                                    <h2 class="">FAQs</h2>
+                                </div>
+                                <div class="accordion" id="accordionExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            How to buy a product?
+                                        </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            How can i make refund from your website?
+                                        </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            I am a new user. How should I start?
+                                        </button>
+                                        </h2>
+                                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingFour">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                                I am a new user. How should I start?
+                                            </button>
+                                        </h2>
+                                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                            </div>
+                                        </div>
+                                        </div>
+
+
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- faq__section__end -->
+
+
+            <!-- contact__section__start  -->
+            <div class="single__product__contact sp_bottom_80">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="single__product__contact__text text-center">
+                                <h2>For furthermore help, contact with our support team.</h2>
+                                <div class="single__product__contact__button">
+                                <a href="#" class="default__button">Contact Us</a>
+                            </div>
+                            <h3 class="single__product__contact__number"><i class="fas fa-phone"></i> 044-4217 0885</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- contact__section__end  -->
+
+
+{% endblock content %}

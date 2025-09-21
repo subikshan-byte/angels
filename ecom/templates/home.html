@@ -1,0 +1,757 @@
+{% extends "base.html" %}
+{% load static %}
+{%block title %}home{% endblock title %}
+{% block content %}
+
+            <!-- minicart__section__start -->
+            <section class="minicart">
+                <div class="minicart__inner">
+                    <div class="minicart__wrapper">
+                        <div class="minicart__close__icon">
+                            <div class="minicart__cart__text ">
+                                <strong>Cart</strong>
+                            </div>
+                            <button class="minicart__close__btn">
+                                <i class="fa fa-close"></i>
+                            </button>
+
+                        </div>
+
+                        <div class="minicart__single__wraper">
+                            <div class="minicart__single">
+
+                                <div class="minicart__single__img">
+                                    <a href="single-product.html">
+                                        <img src="{%  static "img/grid/grid__1.png" %}" alt="product">
+                                    </a>
+                                    <div class="minicart__single__close">
+                                        <button title="Remove"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                                <div class="minicart__single__content">
+                                    <h4><a href="single-product.html">E. Casual Comforts T-shirt</a></h4>
+                                    <span>1 x <span class="money">$5,.00 USD</span></span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="minicart__single">
+
+                                <div class="minicart__single__img">
+                                    <a href="single-product.html">
+                                        <img src="{% static "img/grid/grid__2.png" %}" alt="product">
+                                    </a>
+                                    <div class="minicart__single__close">
+                                        <button title="Remove"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                                <div class="minicart__single__content">
+                                    <h4><a href="single-product.html">M. Denim Clothing Jacket</a></h4>
+                                    <span>1 x <span class="money">$4,.00 USD</span></span>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="minicart__footer">
+                            <div class="minicart__subtotal">
+                                <span class="subtotal__title">Subtotal:</span>
+                                <span class="subtotal__amount">Rs.450 </span>
+                            </div>
+                            <div class="minicart__button">
+                                <a href="cart.html" class="default__button">View Cart</a>
+                                <a href="checkout.html" class="default__button">Checkout</a>
+                            </div>
+                            <div class="cart__note__text">
+                                <p>Free Shipping on All Orders Over Rs.1000!</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+            <!-- minicart__section__end -->
+
+
+        </header>
+        <!-- header section end -->
+
+
+
+
+        <!-- herobanner__start -->
+        <div class="herobanner herobanner__3">
+
+            <div
+                class="herobannerarea__slider  slider__default__arrow herobanner__arrow slider__default__dot herobanner__dot">
+{% if first_product %}
+
+                <div class="herobannerarea__slider__single position-relative">
+
+                    <div class="herobannerarea__slider__image">
+                        <img class="img-fluid" src="{{first_product.image_url}}" alt="slide Image">
+                    </div>
+
+                    <div class="herobanner__inner__3">
+                        <div class="herobanner__text__wraper herobanner__text__wraper--3 ltn__slide-animation">
+
+                            <h4 class="herobanner__small__title">{{first_product.p_name}}</h4>
+                            <h1 class="herobanner__title animated"><strong>{{first_product.small_title}}</strong></h1>
+                            <div class="herobanner__text animated">
+                                <p>{{first_product.small_desc}}</p>
+                            </div>
+
+                            <div class="herobanner__button  animated">
+                                <a href="{% url "product" p=i.slug %}" class="default__button" tabindex="0">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endif %}
+
+{% if other_first_products %}
+{% for i in other_first_products  %}
+
+                <div class="herobannerarea__slider__single position-relative">
+
+                    <div class="herobannerarea__slider__image">
+                        <img class="img-fluid" src="{{i.image_url}}" alt="slide Image">
+                    </div>
+
+                    <div class="herobanner__inner__3">
+                        <div class="herobanner__text__wraper herobanner__text__wraper--3 ltn__slide-animation">
+
+                            <h4 class="herobanner__small__title">{{i.p_name}}</h4>
+                            <h1 class="herobanner__title animated"><strong>{{i.small_title}}</strong></h1>
+                            <div class="herobanner__text animated">
+                                <p>{{i.small_desc}}</p>
+                            </div>
+
+                            <div class="herobanner__button  animated">
+                                <a href="{% url "product" p=i.slug %}" class="default__button" tabindex="0">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+{% endif %}
+            </div>
+
+        </div>
+        <!-- herobanner__end -->
+
+
+
+        <!-- feature__section__start -->
+        <div class="feture__section  sp_top_80">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="section__title text-center">
+                            <h2>Trending Products.</h2>
+                        </div>
+                    </div>
+                </div>
+
+
+
+{% if  trending_products%}
+{% for i in trending_products %}
+                <div class="row grid__responsive row__custom__class feature__slider__active slider__default__arrow">
+                    <div class="col-xl-3 column__custom__class">
+                        <div class="grid__wraper">
+                            <div class="grid__wraper__img">
+                                <div class="grid__wraper__img__inner">
+                                    <a href="{% url "product" p=i.slug %}">
+                                        <img class="primary__image" src="{{i.image_url}}" alt="Primary Image">
+                                        <img class="secondary__image" src="{{i.image_url}}"
+                                            alt="Secondary Image">
+                                    </a>
+                                </div>
+                                <div class="grid__wraper__icon">
+                                    <ul>
+
+                                        <li>
+                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                <i class="far fa-heart"></i>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+
+                                <div class="grid__wraper__badge">
+                                    {% if i.new == 'yes' %}
+                                    <span class="new__badge">New</span>
+                                    {% endif %}
+                                    <span class="sale__badge">-{{i.save}}%</span>
+                                </div>
+
+
+
+                            </div>
+                            <div class="grid__wraper__info">
+                                <h3 class="grid__wraper__tittle">
+                                    <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
+                                </h3>
+                                <div class="grid__wraper__price">
+                                    <del>Rs.{{i.del_price}}</del>
+                                    <span>Rs.{{i.price}}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+               
+                <div class="col-xl-12">
+                    <div class="feture__section__button text-center">
+                        <a class="default__button btn__pink" href="#">View All</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- feature__section__end -->
+
+        <!-- best__selling__start -->
+        <div class="best__selling sp_bottom_80">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                        <div class="section__title">
+                            <h2><strong>Best Selling</strong></h2>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                        <div class="best__selling__tab">
+                            <ul class="nav  best__selling__tab__wrap" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="product__tap__link active" data-bs-toggle="tab"
+                                        data-bs-target="#projects__one" type="button">Cosmetics</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="product__tap__link" data-bs-toggle="tab"
+                                        data-bs-target="#projects__two" type="button">Jewelry</button>
+                                </li>
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- best__selling__Start -->
+                <div class="tab-content " id="myTabContent">
+                        {% if bestselling_products %}
+                          {% for i in bestselling_products %}
+                          {% if i.main_category_diff == 'cosmetic' %}
+                    <div class="tab-pane fade active show" id="projects__one" role="tabpanel"
+                        aria-labelledby="projects__one">
+                      
+                          
+                        <div
+                            class="row grid__responsive row__custom__class feature__slider__active slider__default__arrow">
+                          
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-12 column__custom__class ">
+                                <div class="grid__wraper">
+                                    <div class="grid__wraper__img">
+                                        <div class="grid__wraper__img__inner">
+                                            <a href="{% url "product" p=i.slug %}">
+                                                <img class="primary__image" src="{{i.image_url}}"
+                                                    alt="Primary Image">
+                                                <img class="secondary__image" src="{{i.image_url}}"
+                                                    alt="Secondary Image">
+                                            </a>
+                                        </div>
+                                        <div class="grid__wraper__icon">
+                                            <ul>
+                                                <li>
+                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                        <i class="fas fa-shopping-cart"></i>
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Add To Wishlist"
+                                                        data-bs-original-title="Add To Wishlist">
+                                                        <i class="far fa-heart"></i>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+
+                                        <div class="grid__wraper__badge">
+                                            {% if i.new == 'yes' %}
+                                            <span class="new__badge">New</span>{% endif %}
+                                            <span class="sale__badge">-{{i.save}}%</span>
+                                        </div>
+
+                                        <div class="grid__wraper__countdown" data-countdown="2026/06/01">
+                                            <div class="count">
+                                                <p>422</p><span>Days</span>
+                                            </div>
+                                            <div class="count">
+                                                <p>23</p> <span>Hrs</span>
+                                            </div>
+                                            <div class="count">
+                                                <p>25</p> <span>Min</span>
+                                            </div>
+                                            <div class="count">
+                                                <p>01</p> <span>Sec</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="grid__wraper__info">
+                                        <h3 class="grid__wraper__tittle">
+                                            <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
+                                        </h3>
+                                        <div class="grid__wraper__price">
+                                            <del>Rs.{{i.del_price}}</del>
+                                            <span>Rs.{{i.price}}</span>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     {% endif %}
+                    {% endfor %}
+                    {% for i in bestselling_products %}
+                          {% if i.main_category_diff == 'jewelry' %}
+                    <div class="tab-pane fade" id="projects__two" role="tabpanel" aria-labelledby="projects__two">
+                        <div
+                            class="row grid__responsive row__custom__class feature__slider__active slider__default__arrow">
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-12 column__custom__class ">
+                                <div class="grid__wraper">
+                                    <div class="grid__wraper__img">
+                                        <div class="grid__wraper__img__inner">
+                                            <a href="{% url "product" p=i.slug %}">
+                                                <img class="primary__image" src="{{i.image_url}}"
+                                                    alt="Primary Image">
+                                                <img class="secondary__image" src="{{i.image_url}}"
+                                                    alt="Secondary Image">
+                                            </a>
+                                        </div>
+                                        <div class="grid__wraper__icon">
+                                            <ul>
+
+                                                <li>
+                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                        <i class="fas fa-shopping-cart"></i>
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Add To Wishlist"
+                                                        data-bs-original-title="Add To Wishlist">
+                                                        <i class="far fa-heart"></i>
+                                                    </a>
+                                                </li>
+
+
+                                            </ul>
+                                        </div>
+
+                                        <div class="grid__wraper__badge">
+                                            {% if new == 'yes' %}
+                                            <span class="new__badge">New</span>{% endif %}
+                                            <span class="sale__badge">-{{i.save}}%</span>
+                                        </div>
+
+                                        <div class="grid__wraper__countdown" data-countdown="2026/06/01">
+                                            <div class="count">
+                                                <p>422</p><span>Days</span>
+                                            </div>
+                                            <div class="count">
+                                                <p>23</p> <span>Hrs</span>
+                                            </div>
+                                            <div class="count">
+                                                <p>25</p> <span>Min</span>
+                                            </div>
+                                            <div class="count">
+                                                <p>01</p> <span>Sec</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="grid__wraper__info">
+                                        <h3 class="grid__wraper__tittle">
+                                            <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
+                                        </h3>
+                                        <div class="grid__wraper__price">
+                                            <del>Rs.{{i.del_price}}</del>
+                                            <span>Rs.{{i.price}}</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                   
+{% endif %}
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="best__selling__button">
+                            <a class="default__button btn__yellow__2" href="#">View All</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- best__selling__end -->
+
+<!--second last-->
+ <!-- about__section__start -->
+<div class="about sp_top_80 sp_bottom_80">
+    <div class="container">
+        <div class="row align-items-center">
+            {% if last_products  %}
+            {% for i in last_products %}
+            <!-- Image First (Desktop + Mobile) -->
+            <div class="col-xl-6 col-lg-6 col-md-12 col-12 order-1">
+                <div class="about__img">
+                    <img src="{{i.image_url}}" alt="">
+                </div>
+            </div>
+
+            <!-- Text Second (Desktop + Mobile) -->
+            <div class="col-xl-6 col-lg-6 col-md-12 col-12 order-2">
+                <div class="about__text">
+                    <h2>{{i.p_name}}<span>.</span></h2>
+
+                    <p>{{i.desc}}</p>
+
+                    
+
+                    <div class="about__button">
+                        <a class="default__button btn__pink" href="{% url "product" p=i.slug %}">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            
+        </div>
+    </div>
+</div>
+<!-- about__section__end -->
+
+
+
+<!--end part--> 
+        <!-- about__before__after__start -->
+        <div class="before__after sp_top_80">
+            <div class="container">
+                <div class="row align-items-center">
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                        <div class="before-after-wrap">
+                            <span class="before__after__common before__class">Before</span>
+                            <figure style="background-image: url(img/about/after.jpg)">
+                                <div id="compare" style="background-image: url(img/about/before.jpg)"></div>
+                            </figure>
+                            <input oninput="beforeAfter()" onchange="beforeAfter()" type="range" min="0" max="100"
+                                value="50" id="slider">
+                            <span class="before__after__common after__class">After</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                        <div class="about__4">
+                            <h2><strong>Flawless Finish Foundation<span>.</span></strong></h2>
+                            <p>Discover the secret to a flawless complexion with our FlawlessFinish Foundation. This
+                                exceptional foundation offers a seamless, long-lasting, and radiant finish, leaving you
+                                looking and feeling your best.</p>
+                            <ul class="about__4__list">
+                                <li>Seamless Coverage</li>
+                                <li>Long-Lasting</li>
+                                <li>Skin-Nourishing</li>
+                                <li>Variety of Shades</li>
+                                <li>Radiant Glow</li>
+                            </ul>
+                            <div class="about__4__button">
+                                <a class="default__button" href="#">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function beforeAfter() {
+                        document.getElementById('compare').style.width = document.getElementById('slider').value + "%";
+                    }
+                </script>
+
+            </div>
+        </div>
+        <!-- about__before__after__end -->
+
+
+        <!-- brant__section__start -->
+        <div class="brand sp_bottom_80  sp_top_80">
+            <div class="container">
+                <div class="brand__wraper brand__slider__active">
+                    <div class="brand__single">
+                        <div class="brand__img" >
+                            <img src="{% static "img/brand/brand-logo-1.png" %}" alt="">
+                        </div>
+                    </div>
+
+                    <div class="brand__single">
+                        <div class="brand__img">
+                            <img src="{% static "img/brand/brand-logo-2.png" %}" alt="">
+                        </div>
+                    </div>
+
+                    <div class="brand__single">
+                        <div class="brand__img">
+                            <img src="{% static "img/brand/brand-logo-3.png" %}" alt="">
+                        </div>
+                    </div>
+
+                    <div class="brand__single">
+                        <div class="brand__img">
+                            <img src="{% static "img/brand/brand-logo-4.png" %}" alt="">
+                        </div>
+                    </div>
+
+                    <div class="brand__single">
+                        <div class="brand__img">
+                            <img src="{% static "img/brand/brand-logo-5.png" %}" alt="">
+                        </div>
+                    </div>
+
+                    <div class="brand__single">
+                        <div class="brand__img">
+                            <img src="{% static "img/brand/brand-logo-6.png" %}" alt="">
+                        </div>
+                    </div>
+
+                    <div class="brand__single">
+                        <div class="brand__img">
+                            <img src="{% static "img/brand/brand-logo-7.png" %}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- brant__section__end -->
+
+
+        <!-- testimonial__section__start -->
+        <div class="testimonial testimonial__2 sp_bottom_100 sp_top_80">
+            <div class="container">
+                <div class="row testimonial__slider__active slider__default__arrow slider__default__dot">
+                    <div class="col-xl-12">
+                        <div class="testimonial__inner text-center">
+                            <div class="testimonial__img">
+                                <i class="fa fa-quote-right"></i>
+                            </div>
+
+                            <div class="testimonial__info">
+                                <p>Finally found my perfect foundation match here! The staff is so helpful and knowledgeable. My new favourite beauty spot.</p>
+                                <h4>Aisha Rajesh</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12">
+                        <div class="testimonial__inner text-center">
+                            <div class="testimonial__img">
+                                <i class="fa fa-quote-right"></i>
+                            </div>
+
+                            <div class="testimonial__info">
+                                <p>Incredible range of brands, from international to local. Always find something new and exciting to try. Love this store.</p>
+                                <h4>Vikram Pandian</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12">
+                        <div class="testimonial__inner text-center">
+                            <div class="testimonial__img">
+                                <i class="fa fa-quote-right"></i>
+                            </div>
+
+                            <div class="testimonial__info">
+                                <p>Angel's Fashion is my go-to for everything beauty! The staff are like fairy godmothers—they always know the perfect product. My skin has never looked better.</p>
+                                <h4>Sarah Lahore</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12">
+                        <div class="testimonial__inner text-center">
+                            <div class="testimonial__img">
+                                <i class="fa fa-quote-right"></i>
+                            </div>
+
+                            <div class="testimonial__info">
+                                <p>My go-to for everything skincare! Their advice transformed my routine and my skin has never been clearer. Highly recommend</p>
+                                <h4>Priya Chopra</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- testimonial__section__start -->
+
+
+
+        <!-- fetaure__section__start -->
+        <div class="feature__2 feature__3  sp_top_80">
+            <div class="container ">
+                <div class="row">
+                    <div class="col-xl-12">
+
+                        <div class="feature__border">
+                            <div class="feature__2__single feature__3__single">
+                                <div class="feature__2__icon">
+                                    <img src=" {%static "img/feature/feature__1.svg" %} " alt="">
+                                </div>
+                                <div class="feature__2__text">
+                                    <h4>Free Shipping</h4>
+                                    <p>On orders over Rs.1000</p>
+                                </div>
+                            </div>
+
+                            <div class="feature__2__single feature__3__single">
+                                <div class="feature__2__icon">
+                                    <img src="{% static "img/feature/feature__2.svg" %}"alt="">
+                                </div>
+                                <div class="feature__2__text">
+                                    <h4>Money Back</h4>
+                                    <p>Money back in 15 days..</p>
+                                </div>
+                            </div>
+
+                            <div class="feature__2__single feature__3__single">
+                                <div class="feature__2__icon">
+                                    <img src="{% static "img/feature/feature__3.svg" %}" alt="">
+                                </div>
+                                <div class="feature__2__text">
+                                    <h4>Secure Checkout</h4>
+                                    <p>100% Payment Secure.</p>
+                                </div>
+                            </div>
+
+                            <div class="feature__2__single feature__3__single">
+                                <div class="feature__2__icon">
+                                    <img src="{% static "img/feature/feature__4.svg" %}" alt="">
+                                </div>
+                                <div class="feature__2__text">
+                                    <h4>Online Support</h4>
+                                    <p>Ensure the product quality.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- fetaure__section__end -->
+
+
+       
+
+        <!-- instagram__start -->
+        <div class="instagram">
+            <div class="container">
+                <div class="row">
+                    <div class="section__title text-center">
+                        <h2>Our Store</h2>
+                        <p><a href="#" target="_blank" title="https://www.instagram.com/">@Angels Fashion Annanagar</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="instagram__img__wraper">
+                <div
+                    class="row row__custom__class instagram__slider__active slider__default__arrow slider__default__arrow slider__default__arrow--2">
+
+                    <div class="col-sm-12 column__custom__class">
+                        <div class="instagram__img">
+                            <a class="popup__img" href="img/instagram/gallery-1.jpg"> <img
+                                    src="{% static "img/instagram/gallery-1.jpg" alt="Instagram Gallery Image" %}"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 column__custom__class">
+                        <div class="instagram__img">
+                            <a class="popup__img" href="img/instagram/gallery-2.jpg"> <img
+                                    src="{% static "img/instagram/gallery-2.jpg" %}" alt="Instagram Gallery Image"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 column__custom__class">
+                        <div class="instagram__img">
+                            <a class="popup__img" href="img/instagram/gallery-3.jpg"> <img
+                                    src="{% static "img/instagram/gallery-3.jpg" %}" alt="Instagram Gallery Image"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 column__custom__class">
+                        <div class="instagram__img">
+                            <a class="popup__img" href="img/instagram/gallery-4.jpg"> <img
+                                    src="{% static "img/instagram/gallery-4.jpg" %}" alt="Instagram Gallery Image"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 column__custom__class">
+                        <div class="instagram__img">
+                            <a class="popup__img" href="img/instagram/gallery-6.jpg"> <img
+                                    src="{% static "img/instagram/gallery-6.jpg" %}" alt="Instagram Gallery Image"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 column__custom__class">
+                        <div class="instagram__img">
+                            <a class="popup__img" href="img/instagram/gallery-7.jpg"> <img
+                                    src="{% static "img/instagram/gallery-7.jpg" %}" alt="Instagram Gallery Image"></a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- instagram__end -->
+
+
+{% endblock content %}

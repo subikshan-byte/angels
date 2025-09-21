@@ -1,0 +1,135 @@
+from django.db import models
+from django.utils.text import slugify
+
+# ---------------- CATEGORY ----------------
+class Category(models.Model):
+    c_id = models.AutoField(primary_key=True)
+    c_name = models.CharField(max_length=100, default="")
+    hot_choices=[
+        ('none','none'),
+        ('hot','hot'),
+        ('trending','trending'),
+        ('bestselling','bestsellin')
+    ]
+    hot=models.CharField(
+    max_length=150,
+    choices=hot_choices,
+    default='none')
+    slug = models.SlugField(unique=True, blank=True, null=True, default="")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.c_name) + f"-{self.c_id or '0'}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.c_name
+
+
+# ---------------- PRODUCT ----------------
+
+class Product(models.Model):
+    p_id = models.AutoField(primary_key=True)
+    p_name = models.CharField(max_length=100, default="")
+    small_title = models.CharField(max_length=100, default="")
+    small_desc = models.CharField(max_length=100, default="")
+    brand_name = models.CharField(max_length=100, default="")
+    desc = models.TextField(default="")
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    del_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    save_upto=models.IntegerField(default=1)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    video = models.FileField(upload_to='videos/', blank=True, null=True, default="")
+    delivery_times=models.IntegerField(default=1)
+    guarentee=models.TextField(default='')
+    new_choice=[
+        ("yes","yes"),
+        ("no","no")
+    ]
+    new=models.CharField(
+    max_length=150,
+    choices=new_choice,
+    default='jewelry')
+    main_category = [
+    ('jewelry','jewelry'),
+    ('cosmetic', 'coesmetic'),
+    ('skincare','skincare'),
+]
+
+    main_category_diff = models.CharField(
+    max_length=150,
+    choices=main_category,
+    default='non'
+)
+    STOCK_CHOICES = [
+    ('in stock', 'In Stock'),
+    ('out of stock', 'Out of Stock'),
+]
+
+    stock_status = models.CharField(
+    max_length=150,
+    choices=STOCK_CHOICES,
+    default='in stock'
+)
+    WHERE = [
+        ('bestselling', 'bestselling'),
+        ('trending', 'trending'),
+        ('first','first'),
+        ('last','last')
+    ]
+    where= models.CharField(
+        max_length=100,
+        choices=WHERE,
+        default='none'
+    )
+
+    WHERE_TO_DISPLAY_CHOICES = [
+        ('home', 'Home'),
+        ('none', 'None'),
+    ]
+    where_to_display = models.CharField(
+        max_length=10,
+        choices=WHERE_TO_DISPLAY_CHOICES,
+        default='none'
+    )
+    slug = models.SlugField(unique=True, blank=True, null=True, default="")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.desc[:50]) + f"-{self.p_id or '0'}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.p_name
+
+
+# ---------------- PRODUCT IMAGE ----------------
+class ProductImage(models.Model):
+    img_id = models.AutoField(primary_key=True)
+    p_id = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
+    image = models.ImageField(upload_to='images', blank=True, null=True, default="")
+    slug = models.SlugField(unique=True, blank=True, null=True, default="")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = f"img-{self.img_id or '0'}-{slugify(self.p_id.desc[:20])}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Image for {self.p_id}"
+
+
+# ---------------- SIZE ----------------
+class Size(models.Model):
+    sid = models.AutoField(primary_key=True)
+    size = models.CharField(max_length=10, default="")
+    p_id = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
+    slug = models.SlugField(unique=True, blank=True, null=True, default="")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = f"{slugify(self.size)}-{self.sid or '0'}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.size
