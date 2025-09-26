@@ -1,0 +1,50 @@
+{% for i in results  %}
+<p>{{i}}</p>{% endfor %}
+{% for i in query  %}
+<p>{{i}}</p>{% endfor %}
+{% for i in same_category_products  %}
+<p>{{i}}</p>{% endfor %}
+{% for i in same_main_category_diff_products  %}
+<p>{{i}}</p>{% endfor %}
+<div class="sidebar__widget widget-collapse-show">
+    <div class="sidebar__title">
+        <h4>Brands</h4>
+        <i class="fa fa-angle-down"></i>
+    </div>
+    <div class="sidebar__menu">
+        <form method="get" id="filter-form">
+            <input type="hidden" name="q" value="{{ query }}">
+            
+            <ul>
+                {% for i in brand_list %}
+                <li>
+                    <div class="sidebar__box">
+                        <input type="checkbox" name="brand" value="{{ i.brand_name }}"
+                               id="brand_{{ forloop.counter }}"
+                               {% if i.brand_name in selected_brands %}checked{% endif %}
+                               onchange="this.form.submit()">
+                        <label for="brand_{{ forloop.counter }}">{{ i.brand_name }}</label>
+                        <span class="shopsidebar__number">({{ i.total }})</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h4>Size</h4>
+            <ul>
+                {% for i in size1 %}
+                <li>
+                    <div class="sidebar__box">
+                        <input type="checkbox" name="size" value="{{ i.size__size }}"
+                               id="size_{{ forloop.counter }}"
+                               {% if i.size__size in selected_sizes %}checked{% endif %}
+                               onchange="this.form.submit()">
+                        <label for="size_{{ forloop.counter }}">{{ i.size__size }}</label>
+                        <span class="shopsidebar__number">({{ i.total }})</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </form>
+    </div>
+</div>

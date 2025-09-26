@@ -830,7 +830,7 @@
                         </svg></button>
                 </div>
                 <div class="headersearch__active__input">
-                    <form action="/search" method="get" role="search" style="position: relative;">
+                    <form action="{% url "search" %}" method="get" role="search" style="position: relative;">
                         <div class="header__form__search">
                             <input type="search" name="q" value="" placeholder="Search our store" class="input-text"
                                 autocomplete="off">
