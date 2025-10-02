@@ -17,9 +17,7 @@ def get_product_data(products):
             'price': product.price,
             'del_price': product.del_price,
             'category': product.category.c_name,
-            'video': product.video.url if product.video else None,
             'delivery_times': product.delivery_times,
-            'guarentee': product.guarentee,           # new column
             'save': product.save_upto,                     # new column
             'new': product.new,                       # new column
             'main_category_diff': product.main_category_diff,
@@ -108,9 +106,7 @@ def get_product_data1(products):
             'price': product.price,
             'del_price': product.del_price,
             'category': product.category.c_name,
-            'video': product.video.url if product.video else None,
             'delivery_times': product.delivery_times,
-            'guarentee': product.guarentee,
             'save': product.save_upto,   # make sure field name matches your model
             'new': product.new,
             'main_category_diff': product.main_category_diff,

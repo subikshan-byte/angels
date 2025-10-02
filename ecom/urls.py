@@ -23,7 +23,8 @@ path('checkout/cart/', views7.cart_checkout, name='cart_checkout'),
     # Payment success for cart
     path('payment/success-cart/', views7.payment_success_cart, name='cart_payment_success'),
     path("about",views8.about,name="about"),
-    path("contact",views8.contact,name="contact")
+    path("contact",views8.contact,name="contact"),
+    path("privacy",views8.privacy,name="privacy")
 ]
 
 
