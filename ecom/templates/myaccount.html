@@ -1,0 +1,811 @@
+{% extends "base.html" %}
+{% block title %}MyAccount{% endblock title %}
+{% load static %}
+{% block content %}
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6de5;
+            --secondary: #f8f9fa;
+            --accent: #ff6b6b;
+            --text: #333;
+            --light-text: #777;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background-color: white;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Account Section Styles */
+        .account-section {
+            padding: 20px 0;
+        }
+
+        .account-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .account-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .account-header p {
+            color: var(--light-text);
+            font-size: 16px;
+        }
+
+        .account-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .account-content {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .account-header h1 {
+                font-size: 24px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+
+        /* User Details Card */
+        .user-details-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .user-details-card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
+        }
+
+        .user-info {
+            margin-top: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            width: 120px;
+            color: var(--light-text);
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .info-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .info-label {
+                width: 100%;
+            }
+            
+            .user-details-card {
+                padding: 20px;
+            }
+        }
+
+        .edit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .edit-btn:hover {
+            background-color: #3a5bd0;
+        }
+
+        /* Order History Section Styles */
+        .order-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .order-section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
+        }
+
+        .order-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .order-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .order-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .order-tab:hover {
+            color: var(--primary);
+        }
+
+        .order-table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 30px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .order-table th {
+            text-align: left;
+            padding: 15px 10px;
+            border-bottom: 2px solid var(--border);
+            color: var(--light-text);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .order-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .product-thumbnail img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-name a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .product-name a:hover {
+            color: var(--primary);
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Quantity Display */
+        .quantity-display {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--secondary);
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .product-subtotal {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-delivered {
+            background: #e6f7ee;
+            color: #0a9c4d;
+        }
+
+        .status-processing {
+            background: #fff4e6;
+            color: #ff8c00;
+        }
+
+        .status-shipped {
+            background: #e6f3ff;
+            color: #1890ff;
+        }
+
+        .status-out-for-delivery {
+            background: #e6f3ff;
+            color: #1890ff;
+        }
+
+        .status-order-received {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .status-cancelled {
+            background: #ffe6e6;
+            color: #ff3333;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .order-summary h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .reorder-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .reorder-btn:hover {
+            background-color: #ff5252;
+        }
+
+        /* Improved Popup Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: modalFadeIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 22px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--light-text);
+            transition: color 0.3s;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        .cancel-btn {
+            background: var(--secondary);
+            color: var(--text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background: #e9ecef;
+        }
+
+        .save-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #3a5bd0;
+        }
+
+        /* Mobile-specific improvements */
+        @media (max-width: 768px) {
+            .order-section {
+                padding: 20px 15px;
+            }
+            
+            .order-table th, 
+            .order-table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+            
+            .product-thumbnail img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .order-status {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .order-section {
+                padding: 15px 12px;
+            }
+            
+            .order-table th, 
+            .order-table td {
+                padding: 10px 6px;
+                font-size: 13px;
+            }
+            
+            .product-thumbnail img {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .order-status {
+                font-size: 11px;
+                padding: 3px 6px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .modal-header, .modal-footer {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .modal-content {
+                max-height: 85vh;
+            }
+            
+            .form-group input {
+                padding: 10px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .modal-footer button {
+                width: 100%;
+            }
+            
+            .order-table th, 
+            .order-table td {
+                padding: 8px 4px;
+                font-size: 12px;
+            }
+            
+            .product-thumbnail img {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .quantity-display {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+        }
+
+        /* Ensure no horizontal overflow */
+        .order-section, .user-details-card {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+        <div class="breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb__title">
+                            <h1>My Account</h1>
+                            <ul>
+                                <li>
+                                    <a href="{% url "home" %}">Home</a>
+                                </li>
+                                <li class="color__blue">
+                                   My Account
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- breadcrumb__end -->
+
+
+
+         <!-- Account Section -->
+    <section class="account-section">
+        <div class="container">
+            <div class="account-header">
+             
+                <p>Manage your profile and view your order history</p>
+            </div>
+            
+            <div class="account-content">
+                <!-- User Details Card -->
+                <div class="user-details-card">
+                    <h2>Profile Information</h2>
+                    <div class="user-info">
+                        <div class="info-item">
+                            <div class="info-label">Name:</div>
+                            <div class="info-value" id="display-name"> {{request.user.first_name}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value" id="display-email">{{ request.user.email}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Mobile:</div>
+                            <div class="info-value" id="display-mobile">+91 {{ profile.mobile}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address:</div>
+                            <div class="info-value" id="display-address">{{ profile.address}}</div>
+                        </div>
+                    </div>
+                    <button class="edit-btn" id="open-edit-modal">Edit Profile</button>
+                </div>
+                
+                <!-- Order History Section -->
+                <div class="order-section">
+                    <h2>Order History</h2>
+                    <div class="order-tabs">
+                    <div class="order-tab active">Your Orders</div>
+                        
+                    </div>
+                    
+                    <div class="order-table-container">
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if  cart1 %}
+                                {% for i in cart1 %}
+                                <tr>
+                                    <td class="product-info">
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <div class="product-thumbnail">
+                                                <img src="{{i.image_url}}" alt="{{i.p_name}}">
+                                            </div>
+                                            <div class="product-name">
+                                                <a href="#">{{i.p_name}}</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="product-price">Rs.{{i.price}}</td>
+                                    <td class="product-quantity">
+                                        <span class="quantity-display">{{i.qty}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="order-status status-delivered">{{i.status}}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+<form method="POST" id="edit-profile-form" action="{% url "edit" %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="edit-name">Full Name</label>
+        <input type="text" id="edit-name" name="name" value="{{ request.user.first_name }}">
+    </div>
+
+    <div class="form-group">
+        <label for="edit-email">Email Address</label>
+        <input type="email" id="edit-email" name="email" value="{{ request.user.email }}">
+    </div>
+
+    <div class="form-group">
+        <label for="edit-mobile">Mobile Number</label>
+        <input type="tel" id="edit-mobile" name="mobile" value="{{ profile.mobile }}">
+    </div>
+
+    <div class="form-group">
+        <label for="edit-address">Delivery Address</label>
+        <input type="text" id="edit-address" name="address" value="{{  profile.address }}">
+    </div>
+ <button class="save-btn" id="save-profile" style:"align:center">Save Changes</button>
+</form>
+
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="cancel-edit">Cancel</button>
+               
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const editModal = document.getElementById('edit-modal');
+        const openModalBtn = document.getElementById('open-edit-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const saveProfileBtn = document.getElementById('save-profile');
+        
+        // Open modal
+        openModalBtn.addEventListener('click', function() {
+            editModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close modal functions
+        function closeModal() {
+            editModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelEditBtn.addEventListener('click', closeModal);
+        
+        // Close modal when clicking outside content
+        editModal.addEventListener('click', function(e) {
+            if (e.target === editModal) {
+                closeModal();
+            }
+        });
+        
+        // Save profile changes
+        saveProfileBtn.addEventListener('click', function() {
+            // Get values from form
+            const name = document.getElementById('edit-name').value;
+            const email = document.getElementById('edit-email').value;
+            const mobile = document.getElementById('edit-mobile').value;
+            const address = document.getElementById('edit-address').value;
+            const city = document.getElementById('edit-city').value;
+            const state = document.getElementById('edit-state').value;
+            const pincode = document.getElementById('edit-pincode').value;
+            
+            // Update display values
+            document.getElementById('display-name').textContent = name;
+            document.getElementById('display-email').textContent = email;
+            document.getElementById('display-mobile').textContent = mobile;
+            document.getElementById('display-address').textContent = address;
+            document.getElementById('display-city').textContent = city;
+            document.getElementById('display-state').textContent = state;
+            document.getElementById('display-pincode').textContent = pincode;
+            
+            // Close modal
+            closeModal();
+            
+            // Show success message
+            alert('Profile updated successfully!');
+        });
+        
+        // Tab switching functionality
+        document.querySelectorAll('.order-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.order-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+            });
+        });
+        
+        // Reorder button
+        document.querySelector('.reorder-btn').addEventListener('click', function() {
+            alert('Selected items would be added to cart for reordering.');
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && editModal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+    </script>
+
+  
+{% endblock content %}

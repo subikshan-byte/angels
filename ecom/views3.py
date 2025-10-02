@@ -1,16 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from .models import Product,Category,Size
+from .models import Cart, CartItem, Product,Category,Size, UserProfile
 from .views import get_product_data1
 from rapidfuzz import fuzz
 from django.db.models import Count
 
-def category(request, c):
-    return HttpResponse(c)
 
-
-def search(request):
-    query = request.GET.get('q', '').strip()
+def search(request,s):
+    if(s=='0'):
+        query = request.GET.get('q', '').strip()
+    if(s!='0' and s!='100'):
+        query=s.strip()
     sort_by = request.GET.get("SortBy", "manual")
     category_filter = request.GET.get("category")
     brand_filter = request.GET.get("brand")
@@ -102,6 +102,33 @@ def search(request):
     if size_filter:
         filtered_products = filtered_products.filter(size__size=size_filter)
 
+    if sort_by == "In Stock":
+        filtered_products = filtered_products.filter(stock_status="In stock")
+    elif sort_by == "Out of Stock":
+        filtered_products = filtered_products.filter(stock_status="Out of stock")
+    if('100' in s):
+        u=s.split(" ")
+        if(u[1]=="size"):
+            # Fetch all products you want to check
+            products = Product.objects.all()
+
+# Size you want to filter
+            size_to_filter = u[2]  # e.g., "M"
+
+# Filter in Python
+            filtered_products = [
+    p for p in products 
+    if size_to_filter in [s.size for s in p.size_set.all()]
+]
+
+
+
+
+
+        else:
+            filtered_products = filtered_products.filter(brand_name__iexact=u[2])
+
+    u=s.split(" ")
     # --- SORTING ---
     sort_mapping = {
         'manual': None,
@@ -151,8 +178,28 @@ def search(request):
     .annotate(total=Count("p_id"))
     .order_by("category__c_name")
 )
+    selected_brands = request.GET.getlist("brand")
+    selected_sizes = request.GET.getlist("size")
+    products = []
+    price=0
+    log='0'
+    if not request.user.is_authenticated:
+        log='1'
+    else:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
 
-
+        
+        for item in cart_items:
+            product = item.product
+            # attach quantity and subtotal
+            price+=item.quantity*product.price
+            product.quantity_in_cart = item.quantity
+            product.subtotal_in_cart = item.subtotal()
+            # attach first image url (or None if no image)
+            first_image = product.productimage_set.first()
+            product.image_url = first_image.image.url if first_image else ""
+            products.append(product)
     context = {
         'query': query,
         'results': results,
@@ -163,6 +210,16 @@ def search(request):
         "category_list":category_with_counts,
         "size1":size_counts,
         "stock_counts":stock_counts,
+        "selected_size":selected_sizes,
+        "selected_brands":selected_brands,
+        'h':filtered_products,
+        "cart":products,
+        "price":price,
+        "log":log,
+        "is_logged_in": request.user.is_authenticated,
+        "user": request.user if request.user.is_authenticated else None,
+        
+
 
     }
 

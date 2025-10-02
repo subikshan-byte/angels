@@ -1,50 +1,693 @@
-{% for i in results  %}
-<p>{{i}}</p>{% endfor %}
-{% for i in query  %}
-<p>{{i}}</p>{% endfor %}
-{% for i in same_category_products  %}
-<p>{{i}}</p>{% endfor %}
-{% for i in same_main_category_diff_products  %}
-<p>{{i}}</p>{% endfor %}
-<div class="sidebar__widget widget-collapse-show">
-    <div class="sidebar__title">
-        <h4>Brands</h4>
-        <i class="fa fa-angle-down"></i>
-    </div>
-    <div class="sidebar__menu">
-        <form method="get" id="filter-form">
-            <input type="hidden" name="q" value="{{ query }}">
+<div class="tab-content " id="myTabContent">
+                            <div class="tab-pane fade active show" id="projects__one" role="tabpanel" aria-labelledby="projects__one">
+                                <div class="row grid__responsive">
+                                   
+                                            
             
-            <ul>
-                {% for i in brand_list %}
-                <li>
-                    <div class="sidebar__box">
-                        <input type="checkbox" name="brand" value="{{ i.brand_name }}"
-                               id="brand_{{ forloop.counter }}"
-                               {% if i.brand_name in selected_brands %}checked{% endif %}
-                               onchange="this.form.submit()">
-                        <label for="brand_{{ forloop.counter }}">{{ i.brand_name }}</label>
-                        <span class="shopsidebar__number">({{ i.total }})</span>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__3.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__4.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                        
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                       
+            
+                                                    </ul>   
+                                                </div>
+            
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">B. Pair of Blue Shoes</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <span>$47.00</span> 
+                                                </div>
+                                                
+                                            </div>
+            
+                                        
+                                            
+            
+            
+            
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__5.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__6.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                       
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        
+                                                       
+            
+                                                    </ul>   
+                                                </div>
+            
+                                                <div class="grid__wraper__badge">
+                                                    <span class="new__badge">New</span>
+                                                </div>
+            
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">F. Ultimate Smart Watch</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <span>$47.00</span> 
+                                                </div>
+                                               
+                                            </div>
+            
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__7.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__8.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                               
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        
+                                                        
+            
+                                                    </ul>   
+                                                </div>
+            
+                                                <div class="grid__wraper__badge">
+                                                    <span class="sale__badge">-15%</span>
+                                                </div>
+            
+                                                <div class="grid__wraper__countdown" data-countdown="2027/02/01">
+                                                    <div class="count">
+                                                        <p>422</p><span>Days</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>23</p> <span>Hrs</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>25</p> <span>Min</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>01</p> <span>Sec</span>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">S. Mokmol Jacket</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <del>$72.00</del>
+                                                    <span>$47.00</span> 
+                                                </div>
+                                                
+                                            </div>
+            
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__9.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__10.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                       
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        
+                                                       
+            
+                                                    </ul>   
+                                                </div>
+            
+                                                <div class="grid__wraper__badge">
+                                                    <span class="new__badge">New</span>
+                                                    <span class="sale__badge">-15%</span>
+                                                </div>
+            
+                                                <div class="grid__wraper__countdown" data-countdown="2026/06/01">
+                                                    <div class="count">
+                                                        <p>422</p><span>Days</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>23</p> <span>Hrs</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>25</p> <span>Min</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>01</p> <span>Sec</span>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">A. Stylist Sunglass</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <del>$72.00</del>
+                                                    <span>$47.00</span> 
+                                                </div>
+                                                
+                                            </div>
+              
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__11.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__12.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                       
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                       
+            
+                                                    </ul>   
+                                                </div>
+            
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">B. Pair of Blue Shoes</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <span>$47.00</span> 
+                                                </div>
+                                                
+                                            </div>       
+            
+            
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__14.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__13.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                       &gt;
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        
+                                                        
+            
+                                                    </ul>   
+                                                </div>
+            
+                                                <div class="grid__wraper__badge">
+                                                    <span class="new__badge">New</span>
+                                                </div>
+            
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">F. Ultimate Smart Watch</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <span>$47.00</span> 
+                                                </div>
+                                               
+                                            </div>
+            
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__15.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__16.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                        
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        
+                                                        
+            
+                                                    </ul>   
+                                                </div>
+            
+                                                <div class="grid__wraper__badge">
+                                                    <span class="sale__badge">-15%</span>
+                                                </div>
+            
+                                            
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">S. Mokmol Jacket</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <del>$72.00</del>
+                                                    <span>$47.00</span> 
+                                                </div>
+                                                
+                                            </div>
+            
+                                        </div>
+                                    </div>
 
-            <h4>Size</h4>
-            <ul>
-                {% for i in size1 %}
-                <li>
-                    <div class="sidebar__box">
-                        <input type="checkbox" name="size" value="{{ i.size__size }}"
-                               id="size_{{ forloop.counter }}"
-                               {% if i.size__size in selected_sizes %}checked{% endif %}
-                               onchange="this.form.submit()">
-                        <label for="size_{{ forloop.counter }}">{{ i.size__size }}</label>
-                        <span class="shopsidebar__number">({{ i.total }})</span>
+                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                        <div class="grid__wraper">
+                                            <div class="grid__wraper__img">
+                                                <div class="grid__wraper__img__inner">
+                                                    <a href="single-product.html">
+                                                        <img class="primary__image" src="img/grid/grid__17.png" alt="Primary Image">
+                                                        <img class="secondary__image" src="img/grid/grid__18.png" alt="Secondary Image">
+                                                    </a>
+                                                </div>
+                                                <div class="grid__wraper__icon">                                
+                                                    <ul>
+                                                        
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                <i class="fas fa-shopping-cart"></i>
+                                                            </a>                                             
+                                                        </li>
+            
+                                                        <li>
+                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        
+                                                        
+            
+                                                    </ul>   
+                                                </div>
+            
+                                                <div class="grid__wraper__badge">
+                                                    <span class="new__badge">New</span>
+                                                    <span class="sale__badge">-15%</span>
+                                                </div>
+            
+                                                <div class="grid__wraper__countdown" data-countdown="2026/06/01">
+                                                    <div class="count">
+                                                        <p>422</p><span>Days</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>23</p> <span>Hrs</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>25</p> <span>Min</span>
+                                                    </div>
+                                                    <div class="count">
+                                                        <p>01</p> <span>Sec</span>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+                                            <div class="grid__wraper__info">
+                                                <h3 class="grid__wraper__tittle">
+                                                    <a href="single-product.html" tabindex="0">W. Men Formal T-shirt</a>
+                                                </h3>
+                                                <div class="grid__wraper__price">
+                                                    <del>$72.00</del>
+                                                    <span>$47.00</span> 
+                                                </div>
+                                                
+                                            </div>
+            
+                                        
+                                            
+            
+            
+            
+                                        </div>
+                                    </div>
+            
+                                  
+            
+                                </div>
+                            </div>
+    
+                           
+            
+                                        
+                                    
+                                
+    <!-- shop__section__start-->
+
+        <!-- categori__section__start -->
+        <div class="category sp_bottom_70 sp_top_80">
+            <div class="container">
+                <div class="row grid__responsive row__custom__class category__slider__active slider__default__arrow">
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/baby/baby__1.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Featured</a></h5>
+                            </div>
+                        </div>
                     </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </form>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__31.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Earrings</a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__32.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Baby (T Shirt)</a></h5>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+        
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__33.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Gold</a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__37.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Kids</a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__35.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Men</a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__36.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Necklaces</a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/baby/baby__1.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Featured </a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__1.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1">Kids</a></h5>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-12 column__custom__class">
+                        <div class="category__single">
+                            <div class="category__img">
+                                <img src="img/grid/grid__10.png" alt="">
+                            </div>
+                            <div class="category__text">
+                                <h5><a href="#" tabindex="-1"> Product</a></h5>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+        <!-- categori__section__end -->
+
+
+<!-- footer__section__start -->
+<div class="footer ">
+    <div class="footer__inner sp_top_80">
+    <div class="container sp_bottom_60">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="footer__widget">
+                    <h4 class="footer__title">About Us.</h4>
+                    <div class="footer__content">
+                        <p>Angel's Fashion is your premier destination for beauty and cosmetics, dedicated to helping you express your unique style. We offer a carefully curated selection of high-quality makeup, skincare, and fragrance products from leading international and niche brands.</p>
+                    </div>
+                    <div class="footer__social__icon">
+                        <ul>
+                            <li><a target="_blank" title="Facebook-f" href="https://www.facebook.com/shopify"><i class="fab fa-facebook-f"></i></a></li>     
+                            
+                            
+                            <li><a target="_blank" title="Twitter" href="https://twitter.com/shopify"><i class="fab fa-twitter"></i></a></li>       
+                               
+                            
+                            
+                            <li><a target="_blank" title="Youtube" href="https://www.youtube.com/user/shopify"><i class="fab fa-youtube"></i></a></li>       
+                            
+                            
+                            <li><a target="_blank" title="Instagram" href="https://www.instagram.com/shopify/"><i class="fab fa-instagram"></i></a></li>       
+                            
+                            
+                            
+                            
+                            </ul>
+                    </div>
+                    <div class="footer__bottom">
+
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-6">
+                <div class="footer__widget">
+                    <h4 class="footer__title">Quick Link</h4>
+                    <div class="footer__menu">
+                    <ul>
+                        <li><a href="/account">My Account</a></li>
+                        <li><a href="/cart">My Cart</a></li>
+                        <li><a href="/pages/wishlist">Wishlist</a></li>
+                       
+                        <li><a href="/pages/contact">Need Help?</a></li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-6">
+                <div class="footer__widget">
+                    <h4 class="footer__title">Information</h4>
+                    <div class="footer__menu">
+                    <ul>
+                        <li><a href="/account">About us</a></li>
+                        <li><a href="/cart">Contact</a></li>
+                        <li><a href="/pages/wishlist">Blogs</a></li>
+                       
+                        <li><a href="/pages/contact">Size Chart</a></li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-6">
+                <div class="footer__widget">
+                    <h4 class="footer__title">Policies</h4>
+                    <div class="footer__menu">
+                    <ul>
+                        <li><a href="/account">Privacy Policy</a></li>
+                        <li><a href="/cart">Refund Policy</a></li>
+                        <li><a href="/pages/wishlist">Terms of Service</a></li>
+                       
+                        <li><a href="/pages/contact">Shipping Policy</a></li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+
+
+
+        </div>
     </div>
-</div>
+    </div>
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="copyright__text">
+                <p>© 2025 <strong>Angels Fashion</strong>. All rights reserved.</p>
+           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+ <!-- footer__section__end -->
+
+
+
+
+
+</div></div>

@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-
+from django.contrib.auth.models import User
 # ---------------- CATEGORY ----------------
 class Category(models.Model):
     c_id = models.AutoField(primary_key=True)
@@ -42,6 +42,7 @@ class Product(models.Model):
     video = models.FileField(upload_to='videos/', blank=True, null=True, default="")
     delivery_times=models.IntegerField(default=1)
     guarentee=models.TextField(default='')
+
     new_choice=[
         ("yes","yes"),
         ("no","no")
@@ -120,6 +121,7 @@ class ProductImage(models.Model):
 
 
 # ---------------- SIZE ----------------
+
 class Size(models.Model):
     sid = models.AutoField(primary_key=True)
     size = models.CharField(max_length=10, default="")
@@ -133,3 +135,64 @@ class Size(models.Model):
 
     def __str__(self):
         return self.size
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Cart of {self.user.username}"
+
+    def total_price(self):
+        return sum(item.subtotal() for item in self.items.all())
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.p_name}"
+
+    def subtotal(self):
+        return self.quantity * self.product.price
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    address = models.TextField(blank=True, null=True)
+    mobile = models.CharField(max_length=15, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
+# ---------------- ORDER ----------------
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('shipped', 'Shipped'),
+        ('out_for_delivery', 'Out for Delivery'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled')
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    address = models.TextField(blank=True, null=True)
+    payment_id = models.CharField(max_length=100, blank=True, null=True)  # Razorpay payment ID
+
+    def total_price(self):
+        return sum(item.subtotal() for item in self.items.all())
+
+
+
+# ---------------- ORDER ITEM ----------------
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Store price at purchase time
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.p_name} (Order #{self.order.id})"
+
+    def subtotal(self):
+        return self.quantity * self.price

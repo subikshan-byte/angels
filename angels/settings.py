@@ -37,8 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ecom.apps.EcomConfig'
+    'ecom.apps.EcomConfig',
+     'django.contrib.sites',  # required for allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -46,6 +52,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     'allauth.account.middleware.AccountMiddleware',
+    
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -132,3 +142,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # default
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
+)
+
+LOGIN_REDIRECT_URL = '/'  # where to redirect after login
+LOGOUT_REDIRECT_URL = '/'  # where to redirect after logout
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '115959179651-a38evr1hsld3jkoohf7hk542i6tti0sg.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+SILENCED_SYSTEM_CHECKS = ["models.W036"]
+RAZORPAY_KEY_ID = "rzp_test_ROETDnupbhbT32"
+RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+]

@@ -1,0 +1,22 @@
+<h3>Pay for {{ product.p_id }}</h3>
+<p>Quantity: {{ quantity }}</p>
+<p>Total: Rs. {{ total_amount }}</p>
+
+<form action="{% url 'payment_success' %}" method="POST">
+    {% csrf_token %}
+    <script 
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      
+        data-key="{{ razorpay_key }}"
+        data-amount="{{ total_amount|floatformat:0|add:"0" }}00"
+        data-currency="{{ currency }}"
+        data-order_id="{{ razorpay_order_id }}"
+        data-buttontext="Pay Now"
+        data-name="MyShop"
+        data-description="Order Payment"
+        data-prefill.name="{{ request.user.username }}"
+        data-theme.color="#3399cc">
+    </script>
+    <input type="hidden" name="product_slug" value="{{ product.slug }}">
+    <input type="hidden" name="quantity" value="{{ quantity }}">
+</form>

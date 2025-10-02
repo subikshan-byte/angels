@@ -53,10 +53,15 @@
                                         {% for i in  brand_list%}
                                         <li>
                                             <div class="sidebar__box">
-                                            <input id="in_stock1" type="checkbox">
-                                            <label for="in_stock1">{{i.brand_name}}</label>
-                                            <a href="#"><span class="shopsidebar__number">({{i.total}})</span></a>
-                                        </div>
+                                           
+                                                {% with "100 brand "|add:i.brand_name as search_param %}
+                                                <a href="{% url 'search' s=search_param%}">
+                                                 <span class="shopsidebar__number"><h6>{{ i.brand_name }} ({{ i.total }})</h6></span>
+                                                </a>
+                                                {% endwith %}
+
+
+                                            </div>
                                         
                                         </li>
                                         {% endfor %}
@@ -77,12 +82,13 @@
                                         {% for i in size1 %}
                                         <li>
                                             <div class="sidebar__box">
-                                            <input id="out__of__stock9" type="checkbox">
-                                            <label for="out__of__stock9"> {{i.size}}</label>
-<a href="#"><span class="shopsidebar__number">({{i.total}})
-</span></a>
+                                                {% with "100 size "|add:i.size as search_param %}
+                                                <a href="{% url 'search' s=search_param%}">
+                                                <span class="shopsidebar__number"><h6>{{i.size}}({{i.total}})</h6></span>
+                                                </a>
+                                                {% endwith %}
 
-                                        </div>
+                                            </div>
                                         
                                         </li>
                                         {% endfor %}
@@ -114,338 +120,204 @@
                                 </ul>
                             </div>
                            
-                            <div class="shop__number text-right">
-                                <span>
-                                    Showing 1 - 15 of  68 result 
-                                </span>
-                                </div>
-                        </div>
+                           
+                        
 
 
-                        <div class="tab-content " id="myTabContent">
-                            <div class="tab-pane fade active show" id="projects__one" role="tabpanel" aria-labelledby="projects__one">
-                                <div class="row grid__responsive">
+                        
                                    
-    <form action="{% url 'search' %}" method="get">
- 
-    <div class="shop__selecte">
-        <select class="nice-select" name="SortBy" id="SortBy" onchange="this.form.submit()">
-            <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
-            <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
-            <option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
-            <option value="title-descending" {% if sort_by == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
-            <option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
-            <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price, high to low</option>
-            <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Date, new to old</option>
-            <option value="created-ascending" {% if sort_by == 'created-ascending' %}selected{% endif %}>Date, old to new</option>
-        </select>
-    </div>
-</form>
-{% for i in results  %}
-<p>{{i}}</p>{% endfor %}
-{% for i in query  %}
-<p>{{i}}</p>{% endfor %}
-<!--{% for i in products_per_category  %}
-<p>{{i}}</p>{% endfor %}-->
-{% for i in same_main_category_diff_products  %}
-<p>{{size1}}</p>{% endfor %}
-{% if results %}
-<p>{{p}}</p>
-            {% for i in results  %}
-                                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
-                                        <div class="grid__wraper">
-                                            <div class="grid__wraper__img">
-                                                <div class="grid__wraper__img__inner">
-                                                    <a href="{% url "product" p=i.slug %}">
-                                                        <img class="primary__image" src="{{i.image_url}}" alt="Primary Image">
-                                                        <img class="secondary__image" src="{{i.image_url}}" alt="Secondary Image">
-                                                    </a>
-                                                </div>
-                                                <div class="grid__wraper__icon">                                
-                                                    <ul>
-                                                        
+                            <form action="{% url 'search' s="0"  %}" method="get">
             
-                                                        <li>
-                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
-                                                                <i class="fas fa-shopping-cart"></i>
-                                                            </a>                                             
-                                                        </li>
-            
-                                                        <li>
-                                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
-                                                                <i class="far fa-heart"></i>
-                                                            </a>
-                                                        </li>
-                                                       
-            
-                                                    </ul>   
-                                                </div>
-            
-            
-                                            </div>
-                                            <div class="grid__wraper__info">
-                                                <h3 class="grid__wraper__tittle">
-                                                    <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.small_desc}}</a>
-                                                </h3>
-                                                <div class="grid__wraper__price">
-                                                    <span>Rs.{{i.price}}</span> 
-                                                </div>
-                                                
-                                            </div>
-            
-                                        
-                                            
-            
-            
-            
-                                        </div>
-                                    </div>
-        {% endfor %}
-        {% endif %}
+                                <div class="shop__selecte">
+                                    <select class="nice-select" name="SortBy" id="SortBy" onchange="this.form.submit()">
+                                        <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
+                                        <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+                                        <option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
+                                        <option value="title-descending" {% if sort_by == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
+                                        <option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price, low to high</option>
+                                        <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price, high to low</option>
+                                        <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Date, new to old</option>
+                                        <option value="created-ascending" {% if sort_by == 'created-ascending' %}selected{% endif %}>Date, old to new</option>           
+                                        <option value="In Stock" {% if sort_by == 'In Stock' %}selected{% endif %}>In Stock</option>
+                                        <option value="Out of Stock" {% if sort_by == 'Out of Stock' %}selected{% endif %}>Out of Stock</option>
+
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    {% if results %}
+                    <div class="tab-content " id="myTabContent">
+                                                <div class="tab-pane fade active show" id="projects__one" role="tabpanel" aria-labelledby="projects__one">
+                                                    <div class="row grid__responsive">
+
+                                {% for i in results  %}
+                                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                                                            <div class="grid__wraper">
+                                                                <div class="grid__wraper__img">
+                                                                    <div class="grid__wraper__img__inner">
+                                                                        <a href="{% url "product" p=i.slug %}">
+                                                                            <img class="primary__image" src="{{i.image_url}}" alt="Primary Image">
+                                                                            <img class="secondary__image" src="{{i.image_url}}" alt="Secondary Image">
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="grid__wraper__icon">                                
+                                                                        <ul>
+                                                                            
+                                
+                                                                            <li>
+                                                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                                    <i class="fas fa-shopping-cart"></i>
+                                                                                </a>                                             
+                                                                            </li>
+                                
+                                                                            <li>
+                                                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
+                                                                                    <i class="far fa-heart"></i>
+                                                                                </a>
+                                                                            </li>
+                                                                        
+                                
+                                                                        </ul>   
+                                                                    </div>
+                                
+                                                                </div>
+                                                                <div class="grid__wraper__info">
+                                                                    <h3 class="grid__wraper__tittle">
+                                                                        <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.small_desc}}</a>
+                                                                    </h3>
+                                                                    <div class="grid__wraper__price">
+                                                                        <span>Rs.{{i.price}}</span> 
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                
+                                                            
+                                                                
+                                
+                                
+                                
+                                                            </div>
+                                                        </div>
+                            {% endfor %}
+                            
             
             
                                   
             
-                                </div>
-                            </div>
-    
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
                            
             
                                         
                                     
                                 
-    <!-- shop__section__start-->
+            <!-- shop__section__start-->
 
-        <!-- categori__section__start -->
-        <div class="category sp_bottom_70 sp_top_80">
-            <div class="container">
-                <div class="row grid__responsive row__custom__class category__slider__active slider__default__arrow">
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/baby/baby__1.png" alt="">
+            
+            <div class="category sp_bottom_70 sp_top_80">
+                <div class="container">
+                    <div class="row grid__responsive row__custom__class category__slider__active slider__default__arrow">
+                        
+            
+                        <div class="col-12 column__custom__class">
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__31.png"%}"  alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Earrings" %}" tabindex="-1">Earrings</a></h5>
+                                </div>
                             </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Featured</a></h5>
+            
+                        </div>
+            
+                        <div class="col-12 column__custom__class">
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__32.png"%}"  alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Baby (T Shirt)" %}" tabindex="-1">Baby (T Shirt)</a></h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__31.png" alt="">
+            
+                        <div class="col-12 column__custom__class">
+            
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__33.png"%}"  alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Gold" %}" tabindex="-1">Gold</a></h5>
+                                </div>
                             </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Earrings</a></h5>
+            
+                        </div>
+            
+                        <div class="col-12 column__custom__class">
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__37.png"%}"  alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Kids" %}" tabindex="-1">Kids</a></h5>
+                                </div>
+                            </div>
+            
+                        </div>
+            
+                        <div class="col-12 column__custom__class">
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__35.png"%}"  alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Men" %}" tabindex="-1">Men</a></h5>
+                                </div>
+                            </div>
+            
+                        </div>
+            
+                        <div class="col-12 column__custom__class">
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__36.png"%}"  alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Necklaces" %}" tabindex="-1">Necklaces</a></h5>
+                                </div>
+                            </div>
+            
+                        </div>
+            
+            
+                    </div>
+            
+            
+                        <div class="col-12 column__custom__class">
+                            <div class="category__single">
+                                <div class="category__img">
+                                    <img src="{% static "img/grid/grid__10.png" %}" alt="">
+                                </div>
+                                <div class="category__text">
+                                    <h5><a href="{% url "search" s="Product" %}" tabindex="-1"> Product</a></h5>
+                                </div>
                             </div>
                         </div>
-        
+            
                     </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__32.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Baby (T Shirt)</a></h5>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-        
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__33.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Gold</a></h5>
-                            </div>
-                        </div>
-        
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__37.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Kids</a></h5>
-                            </div>
-                        </div>
-        
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__35.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Men</a></h5>
-                            </div>
-                        </div>
-        
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__36.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Necklaces</a></h5>
-                            </div>
-                        </div>
-        
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/baby/baby__1.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Featured </a></h5>
-                            </div>
-                        </div>
-        
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__1.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1">Kids</a></h5>
-                            </div>
-                        </div>
-        
-                    </div>
-        
-                    <div class="col-12 column__custom__class">
-                        <div class="category__single">
-                            <div class="category__img">
-                                <img src="img/grid/grid__10.png" alt="">
-                            </div>
-                            <div class="category__text">
-                                <h5><a href="#" tabindex="-1"> Product</a></h5>
-                            </div>
-                        </div>
-                    </div>
-        
                 </div>
             </div>
-        </div>
-        <!-- categori__section__end -->
+            <!-- categori__section__end -->
 
-{% endblock content %}
-<!-- footer__section__start -->
-<div class="footer ">
-    <div class="footer__inner sp_top_80">
-    <div class="container sp_bottom_60">
-        <div class="row">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="footer__widget">
-                    <h4 class="footer__title">About Us.</h4>
-                    <div class="footer__content">
-                        <p>Angel's Fashion is your premier destination for beauty and cosmetics, dedicated to helping you express your unique style. We offer a carefully curated selection of high-quality makeup, skincare, and fragrance products from leading international and niche brands.</p>
-                    </div>
-                    <div class="footer__social__icon">
-                        <ul>
-                            <li><a target="_blank" title="Facebook-f" href="https://www.facebook.com/shopify"><i class="fab fa-facebook-f"></i></a></li>     
-                            
-                            
-                            <li><a target="_blank" title="Twitter" href="https://twitter.com/shopify"><i class="fab fa-twitter"></i></a></li>       
-                               
-                            
-                            
-                            <li><a target="_blank" title="Youtube" href="https://www.youtube.com/user/shopify"><i class="fab fa-youtube"></i></a></li>       
-                            
-                            
-                            <li><a target="_blank" title="Instagram" href="https://www.instagram.com/shopify/"><i class="fab fa-instagram"></i></a></li>       
-                            
-                            
-                            
-                            
-                            </ul>
-                    </div>
-                    <div class="footer__bottom">
-
-                </div>
-            </div>
-
-            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-6">
-                <div class="footer__widget">
-                    <h4 class="footer__title">Quick Link</h4>
-                    <div class="footer__menu">
-                    <ul>
-                        <li><a href="/account">My Account</a></li>
-                        <li><a href="/cart">My Cart</a></li>
-                        <li><a href="/pages/wishlist">Wishlist</a></li>
-                       
-                        <li><a href="/pages/contact">Need Help?</a></li>
-                    </ul>
-                  </div>
-                </div>
-            </div>
-
-
-            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-6">
-                <div class="footer__widget">
-                    <h4 class="footer__title">Information</h4>
-                    <div class="footer__menu">
-                    <ul>
-                        <li><a href="/account">About us</a></li>
-                        <li><a href="/cart">Contact</a></li>
-                        <li><a href="/pages/wishlist">Blogs</a></li>
-                       
-                        <li><a href="/pages/contact">Size Chart</a></li>
-                    </ul>
-                  </div>
-                </div>
-            </div>
-
-            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-6">
-                <div class="footer__widget">
-                    <h4 class="footer__title">Policies</h4>
-                    <div class="footer__menu">
-                    <ul>
-                        <li><a href="/account">Privacy Policy</a></li>
-                        <li><a href="/cart">Refund Policy</a></li>
-                        <li><a href="/pages/wishlist">Terms of Service</a></li>
-                       
-                        <li><a href="/pages/contact">Shipping Policy</a></li>
-                    </ul>
-                  </div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-    </div>
-
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-          <div class="col-12 text-center">
-            <div class="copyright__text">
-                <p>© 2025 <strong>Angels Fashion</strong>. All rights reserved.</p>
-           
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
- <!-- footer__section__end -->
+ 
+            <!-- footer__section__start -->
+         
+        <!-- footer__section__end -->
 
 
 
@@ -477,3 +349,4 @@
 </body>
 
 </html>
+{% endblock content %}

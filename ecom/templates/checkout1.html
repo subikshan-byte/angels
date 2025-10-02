@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Cart Checkout</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.product.p_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.product.price }}</td>
+            <td>₹{{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total: ₹{{ total_amount }}</h3>
+
+<!-- Razorpay Payment Button -->
+<form action="{{ callback_url }}" method="POST">
+    {% csrf_token %}
+    <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ razorpay_key }}"
+        data-amount="{{ total_amount|floatformat:2|floatformat:"0" }}00"  <!-- amount in paise -->
+        data-currency="INR"
+        data-order_id="{{ order_id }}"
+        data-buttontext="Pay with Razorpay"
+        data-name="Your Store Name"
+        data-description="Cart Payment"
+        data-theme.color="#F37254">
+    </script>
+    <input type="hidden" name="items" value="{{ items|length }}">
+</form>
+{% endblock %}

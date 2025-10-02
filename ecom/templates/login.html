@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {%block title %}login{% endblock title %}
+{% load socialaccount %}
 {% block content %}
 
       <!-- breadcrumb__start -->
@@ -46,6 +47,15 @@
 
 
             <div class="tab-content tab__content__wrapper" id="myTabContent">
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="{% if message.tags %}{{ message.tags }}{% endif %}">
+                               <h6 style="color:red; text-align: center;" >{{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
                 <div class="tab-pane fade active show" id="projects__one" role="tabpanel" aria-labelledby="projects__one">
                     <div class="col-xl-8 offset-md-2 loginarea__col">
@@ -57,20 +67,19 @@
 
 
 
-                            <form action="#">
+                            <form method="POST" action="{% url 'login' %}">
+                                {% csrf_token %}
                                 <div class="loginarea__form">
                                     <label class="form__label">Username or email</label>
-                                    <input class="common__login__input" type="text" placeholder="Your username or email">
-
+                                    <input class="common__login__input" type="text" name="username" placeholder="Your username or email" required>
                                 </div>
                                 <div class="loginarea__form">
                                     <label class="form__label">Password</label>
-                                    <input class="common__login__input" type="password" placeholder="Password">
-
+                                    <input class="common__login__input" type="password" name="password" placeholder="Password" required>
                                 </div>
                                 <div class="loginarea__form d-flex justify-content-between flex-wrap gap-2">
                                     <div class="form__check">
-                                        <input type="checkbox" id="login__privacy">
+                                        <input type="checkbox" id="login__privacy" name="remember_me">
                                         <label for="login__privacy">Remember Me</label>
                                     </div>
                                     <div class="text-end login__form__link">
@@ -78,16 +87,21 @@
                                     </div>
                                 </div>
                                 <div class="loginarea__button text-center">
-                                    <a class="default__button" href="#">Log In</a>
+                                    <button type="submit" class="default__button">Log In</button>
                                 </div>
                             </form>
 
+
                             <div class="loginarea__social__option">
-                              
                                 <ul class="loginarea__social__btn">
-                                    <li><a class="default__button" href="#"><i class="fab fa-google"></i> Google</a></li>
+                                    <li>
+                                        <a class="default__button" href="{% provider_login_url 'google' %}">
+                                            <i class="fab fa-google"></i> Log in with Google
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
+
 
 
                         </div>
@@ -104,65 +118,58 @@
 
 
 
-                            <form action="#">
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <div class="loginarea__form">
-                                            <label class="form__label">First Name</label>
-                                            <input class="common__login__input" type="text" placeholder="First Name">
-
+                            <form method="POST" action="{% url 'signup' %}">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-xl-6">
+                                                <div class="loginarea__form">
+                                                    <label class="form__label">First Name</label>
+                                                    <input class="common__login__input" type="text" name="first_name" placeholder="First Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="loginarea__form">
+                                                    <label class="form__label">Last Name</label>
+                                                    <input class="common__login__input" type="text" name="last_name" placeholder="Last Name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="loginarea__form">
+                                                    <label class="form__label">Username</label>
+                                                    <input class="common__login__input" type="text" name="username" placeholder="Username" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="loginarea__form">
+                                                    <label class="form__label">Email</label>
+                                                    <input class="common__login__input" type="email" name="email" placeholder="Your Email" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="loginarea__form">
+                                                    <label class="form__label">Password</label>
+                                                    <input class="common__login__input" type="password" name="password1" placeholder="Password" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="loginarea__form">
+                                                    <label class="form__label">Re-enter Password</label>
+                                                    <input class="common__login__input" type="password" name="password2" placeholder="Re-enter Password" required>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="loginarea__form">
-                                            <label class="form__label">Last Name</label>
-                                            <input class="common__login__input" type="password" placeholder="Last Name">
 
+                                        <div class="loginarea__form d-flex justify-content-between flex-wrap gap-2">
+                                            <div class="form__check">
+                                                <input type="checkbox" id="regi__privacy" name="terms" required>
+                                                <label for="regi__privacy">Accept the Terms and Privacy Policy</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="loginarea__form">
-                                            <label class="form__label">Username</label>
-                                            <input class="common__login__input" type="password" placeholder="Username">
 
+                                        <div class="login__button text-center">
+                                            <button type="submit" class="default__button">Sign Up</button>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="loginarea__form">
-                                            <label class="form__label">Email</label>
-                                            <input class="common__login__input" type="password" placeholder="Your Email">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="loginarea__form">
-                                            <label class="form__label">Password</label>
-                                            <input class="common__login__input" type="password" placeholder="Password">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="loginarea__form">
-                                            <label class="form__label">Re-Enter Password</label>
-                                            <input class="common__login__input" type="password" placeholder="Re-Enter Password">
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="loginarea__form d-flex justify-content-between flex-wrap gap-2">
-                                    <div class="form__check">
-                                        <input type="checkbox" id="regi__privacy">
-                                        <label for="regi__privacy">Accept the Terms and Privacy Policy</label>
-                                    </div>
-
-                                </div>
-                                <div class="login__button">
-                                    <a class="default__button text-center" href="#">Sign Up</a>
-                                </div>
-                            </form>
-
-
+                                    </form>
 
 
                         </div>

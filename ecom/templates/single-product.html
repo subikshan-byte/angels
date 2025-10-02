@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-
+  
 {% block content %}
+
         <!-- breadcrumb__start -->
         <div class="breadcrumb">
             <div class="container">
@@ -104,20 +105,29 @@
                           </div>
 
 
-                         
+                        <form method="POST" id="productForm">
+    {% csrf_token %}
+    <div class="single__product__quantity">
+        <div class="qty-container">
+            <button type="button" class="qty-btn-minus btn-qty">-</button>
+            <input type="number" name="quantity" value="1" class="input-qty" min="1">
+            <button type="button" class="qty-btn-plus btn-qty">+</button>
+        </div>
+        <!-- Add to Cart -->
+        <button type="submit" formaction="{% url 'add to cart' product_id=product.slug %}" 
+                class="default__button">
+            <i class="fas fa-shopping-cart"></i> Add to cart
+        </button>
 
-                          <div class="single__product__quantity">
-                            <div class="qty-container">
-                                <button class="qty-btn-minus btn-qty" type="button">-</button>
-                                <input type="text" name="qty" value="1" class="input-qty">
-                                <button class="qty-btn-plus btn-qty" type="button">+</button>
-                            </div>
-                            <a class="default__button" href="#"><i class="fas fa-shopping-cart"></i> Add to cart</a>
+        <!-- Buy it Now -->
+        <button type="submit" formaction="{% url 'buy_now' product.slug %}" 
+                class="default__button black__button">
+            Buy it now
+        </button>
+    </div>
+</form>
 
-                            <a class="default__button black__button" href="#">Buy it now</a>
-                            
-                        
-                        </div>
+
 
 
 
@@ -216,11 +226,11 @@
                                                     <span>Rs.{{i.price}}</span> 
                                                 </div>
                                             </div>
-            {% endfor %}
+           
                                         </div>
                                     </div>
 
-            
+             {% endfor %}
                                         
                                 </div>
                             </div>
@@ -382,19 +392,12 @@
                                             </li>
 
                                             <li>
-                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                <a href="{% url 'add to cart' product_id=product.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
                                                     <i class="fas fa-shopping-cart"></i>
                                                 </a>                                             
-                                            </li>
-
+                                            </li>                                            
                                             <li>
-                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
-                                                    <i class="far fa-heart"></i>
-                                                </a>
-                                            </li>
-                                            
-                                            <li>
-                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Compare" data-bs-original-title="Add To Compare">
+                                                <a href="{% url 'buy_now' product.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Compare" data-bs-original-title="Add To Compare">
                                                     <i class="fas fa-exchange-alt"></i>
                                                     
                                                 </a>

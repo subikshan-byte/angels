@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.shortcuts import render,get_object_or_404
-from .models import Product, ProductImage,Size
+from django.shortcuts import redirect, render,get_object_or_404
+from .models import Cart, CartItem, Product, ProductImage,Size
 from datetime import datetime,timedelta
 # Helper function to get product data including first image
 def get_product_data(products):
@@ -52,7 +52,26 @@ def home(request):
     # ------------------ LAST PRODUCTS ------------------
     last_products = Product.objects.filter(where_to_display='home', where='last')
     last_product_data = get_product_data(last_products)
- 
+    products = []
+    price=0
+    log='0'
+    if not request.user.is_authenticated:
+        log='1'
+    else:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        
+        for item in cart_items:
+            product = item.product
+            # attach quantity and subtotal
+            price+=item.quantity*product.price
+            product.quantity_in_cart = item.quantity
+            product.subtotal_in_cart = item.subtotal()
+            # attach first image url (or None if no image)
+            first_image = product.productimage_set.first()
+            product.image_url = first_image.image.url if first_image else ""
+            products.append(product)
     # ------------------ CONTEXT ------------------
     context = {
         'first_product': first_product,
@@ -60,6 +79,11 @@ def home(request):
         'trending_products': trending_product_data,
         'bestselling_products': bestselling_product_data,
         'last_products': last_product_data,
+        "is_logged_in": request.user.is_authenticated,
+        "user": request.user if request.user.is_authenticated else None,
+        "cart":products,
+        "price":price,
+        "log":log
     }
 
     return render(request, 'home.html', context)
@@ -123,6 +147,26 @@ def product_detail(request, p):
     current_url=request.build_absolute_uri()
     size=Size.objects.filter(p_id=product)
     # ---------------- CONTEXT ----------------
+    products = []
+    price=0
+    log='0'
+    if not request.user.is_authenticated:
+        log='1'
+    else:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        
+        for item in cart_items:
+            product = item.product
+            # attach quantity and subtotal
+            price+=item.quantity*product.price
+            product.quantity_in_cart = item.quantity
+            product.subtotal_in_cart = item.subtotal()
+            # attach first image url (or None if no image)
+            first_image = product.productimage_set.first()
+            product.image_url = first_image.image.url if first_image else ""
+            products.append(product)
     context = {
         'product': main_product_data,  
           'current_url': current_url,     # dict with all product details
@@ -130,6 +174,11 @@ def product_detail(request, p):
              'size':size,     # queryset of all images
         'same_brand_products': same_brand_data,
         'same_category_products': same_category_data,
+        "cart":products,
+        "price":price,
+        "log":log,
+        "is_logged_in": request.user.is_authenticated,
+        "user": request.user if request.user.is_authenticated else None,
     }
 
     return render(request, 'single-product.html', context)

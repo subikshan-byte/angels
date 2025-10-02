@@ -2,13 +2,72 @@
 {% load static %}
 {%block title %}home{% endblock title %}
 {% block content %}
-
+        <style>
+            .offer-banner {
+              position: relative;
+              width: 100%;
+              overflow: hidden;
+              background: #000;
+            }
         
-
-
-
-
-        <!-- herobanner__start -->
+            /* Different heights for PC and mobile */
+            .offer-banner {
+              height:100px;
+              margin: 10px 5px;  /* desktop */
+            }
+            @media (max-width: 768px) {
+              .offer-banner {
+                height: 60px;  /* mobile */
+              }
+            }
+        
+            .slides {
+               
+              display: flex;
+              height: 100%;
+              width: 100%;
+              transition: transform 0.6s ease-in-out;
+            }
+        
+            .slide {
+              flex: 0 0 100%;
+              height: 100%;
+            }
+        
+            .slide img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover; /* keep aspect ratio filled */
+            }
+          </style>
+        </head>
+        <body>
+          <div class="offer-banner">
+            <div class="slides">
+              <div class="slide">
+                <img src="{% static "img/grid/banner1.png" %}" alt="Offer 1">
+              </div>
+              <div class="slide">
+                <img src="{% static "img/grid/banner2.png" %}"  alt="Offer 2">
+              </div>
+              <div class="slide">
+                <img src="{% static "img/grid/banner3.png" %}"  alt="Offer 3">
+              </div>
+            </div>
+          </div>
+        
+          <script>
+            const slides = document.querySelector('.slides');
+            const totalSlides = document.querySelectorAll('.slide').length;
+            let index = 0;
+        
+            function showNextSlide() {
+              index = (index + 1) % totalSlides;
+              slides.style.transform = `translateX(-${index * 100}%)`;
+            }
+        
+            setInterval(showNextSlide, 3000); // switch every 3s
+          </script>
         <div class="herobanner herobanner__3">
 
             <div
@@ -31,7 +90,7 @@
                             </div>
 
                             <div class="herobanner__button  animated">
-                                <a href="{% url "product" p=i.slug %}" class="default__button" tabindex="0">Shop Now</a>
+                                <a href="{% url "product" p=first_product.slug %}" class="default__button" tabindex="0">Shop Now</a>
                             </div>
                         </div>
                     </div>
@@ -98,26 +157,7 @@
                                             alt="Secondary Image">
                                     </a>
                                 </div>
-                                <div class="grid__wraper__icon">
-                                    <ul>
-
-                                        <li>
-                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="Add To Cart" data-bs-original-title="Add To Cart">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
-                                                <i class="far fa-heart"></i>
-                                            </a>
-                                        </li>
-
-
-                                    </ul>
-                                </div>
+                                
 
                                 <div class="grid__wraper__badge">
                                     {% if i.new == 'yes' %}
@@ -145,11 +185,7 @@
                 {% endfor %}
                 {% endif %}
                
-                <div class="col-xl-12">
-                    <div class="feture__section__button text-center">
-                        <a class="default__button btn__pink" href="#">View All</a>
-                    </div>
-                </div>
+                
             </div>
 
         </div>
@@ -206,25 +242,7 @@
                                                     alt="Secondary Image">
                                             </a>
                                         </div>
-                                        <div class="grid__wraper__icon">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="Add To Cart" data-bs-original-title="Add To Cart">
-                                                        <i class="fas fa-shopping-cart"></i>
-                                                    </a>
-                                                </li>
-
-                                                <li>
-                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="Add To Wishlist"
-                                                        data-bs-original-title="Add To Wishlist">
-                                                        <i class="far fa-heart"></i>
-                                                    </a>
-                                                </li>
-
-                                            </ul>
-                                        </div>
+                                       
 
                                         <div class="grid__wraper__badge">
                                             {% if i.new == 'yes' %}
@@ -286,7 +304,7 @@
                                             <ul>
 
                                                 <li>
-                                                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    <a href="{% url 'add to cart' product_id=i.slug %}" data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="Add To Cart" data-bs-original-title="Add To Cart">
                                                         <i class="fas fa-shopping-cart"></i>
                                                     </a>
@@ -346,13 +364,7 @@
 {% endif %}
                 </div>
 
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="best__selling__button">
-                            <a class="default__button btn__yellow__2" href="#">View All</a>
-                        </div>
-                    </div>
-                </div>
+         
 
 
             </div>
