@@ -62,8 +62,4 @@ def payment_success_cart(request):
     # Clear cart
     cart.items.all().delete()
 
-    return render(request, "success.html", {
-        "order": order,
-        "items": items,
-        "total": order.total_price(),
-    })
+    return redirect("myaccount")

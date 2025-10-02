@@ -53,7 +53,9 @@ def payment_success(request):
     order = Order.objects.create(
         user=request.user,
         status="paid",
-        payment_id=payment_id
+        payment_id=payment_id,
+                address=request.user.userprofile.address
+
     )
 
     # Create OrderItem
@@ -64,12 +66,7 @@ def payment_success(request):
         price=product.price
     )
 
-    return render(request, "success.html", {
-        "order": order,
-        "product": product,
-        "quantity": quantity,
-        "total": order.total_price(),
-    })
+    return redirect("myaccount")
 from django.shortcuts import redirect, get_object_or_404
 from .models import CartItem
 
@@ -100,4 +97,3 @@ def update_cart_quantity(request, item_id):
         return HttpResponse(action)
 
     return redirect('cart')  # redirect to cart page
-
