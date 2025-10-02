@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{%block title %}{{product.p_name}}{% endblock title %}
+
 {% load static %}
   
 {% block content %}
@@ -81,13 +83,13 @@
                               <li>
                                 <strong>Vendor:</strong> 
                                 <span>
-                                  <a href="#">{{product.brand_name}}</a>
+                                  <a href="{% url "product" p=product.slug %}">{{product.brand_name}}</a>
                                 </span>
                               </li>
                               <li>
                                 <strong>Type:</strong> 
                                 <span>
-                                  <a href="#">{{product.category}}</a>
+                                  <a href="{% url "product" p=product.slug %}">{{product.category}}</a>
                                 </span>
                               </li>
                             </ul>
@@ -132,24 +134,7 @@
 
 
                         <div class="single__product__bottom__menu">
-                            <ul>
-                                <li>
-                                <a href="#" title="Add to wishlist">
-                             <span class="add__wishlist"><i class="far fa-heart"></i>  Add to wishlist</span>
-                             </a>
-                            </li>
-                             
-                              <li>
-                                <a href="#" title="Ask a Question" data-toggle="modal">
-                                  <i class="far fa-envelope"></i> Ask a Question
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#" title="Size Chart" data-toggle="modal">
-                                  <i class="far fa-chart-bar"></i> Size Chart
-                                </a>
-                              </li>
-                            </ul>
+                            
                           </div>
                           <hr>
 
@@ -236,7 +221,7 @@
                             </div>
                             <hr>
                             <div class="single__social__media">
-   <ul>
+<ul>
     <li>Share:</li>
 
     <!-- Facebook -->
@@ -248,12 +233,7 @@
     </li>
 
     <!-- Twitter -->
-    <li>
-        <a href="https://twitter.com/intent/tweet?url={{ current_url }}&text=Check+this+out!" 
-           title="Share on Twitter" target="_blank">
-            <i class="fab fa-twitter"></i><span>Twitter</span>
-        </a>
-    </li>
+    
 
     <!-- Pinterest -->
     <li>
@@ -271,8 +251,32 @@
         </a>
     </li>
 
-  
+    <!-- Instagram (no direct share, just redirect to IG app/site) -->
+    <li>
+        <a href="https://www.instagram.com/" 
+           title="Share on Instagram" target="_blank">
+            <i class="fab fa-instagram"></i><span>Instagram</span>
+        </a>
+    </li>
+
+    <!-- Copy Link -->
+    <li>
+        <a href="javascript:void(0);" onclick="copyLink('{{ current_url }}')" title="Copy Link">
+            <i class="fas fa-link"></i><span>Copy Link</span>
+        </a>
+    </li>
 </ul>
+
+<script>
+function copyLink(url) {
+    navigator.clipboard.writeText(url).then(function() {
+        alert("Link copied to clipboard ✅");
+    }, function(err) {
+        alert("Failed to copy link ❌");
+    });
+}
+</script>
+
 
 
                             </div>
@@ -286,72 +290,7 @@
 
 <!-- discription__section__start -->
 
-<div class="descriptionarea sp_bottom_80 ">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 descriptionarea__tab__wrapper">
-                <ul class="nav  descriptionarea__tab__button" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      <button class="descriptionarea__link active" data-bs-toggle="tab" data-bs-target="#description" type="button" aria-selected="false" role="tab" tabindex="-1">Description</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <button class="descriptionarea__link" data-bs-toggle="tab" data-bs-target="#video" type="button" aria-selected="false" role="tab" tabindex="-1">Video</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <button class="descriptionarea__link" data-bs-toggle="tab" data-bs-target="#product__Type" type="button" aria-selected="true" role="tab" tabindex="-1">Product Type</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="descriptionarea__link" data-bs-toggle="tab" data-bs-target="#delivery__system" type="button" aria-selected="false" role="tab">Delivery system</button>
-                      </li>
-                </ul>
-                  <div class="tab-content tab__content__wrapper" id="myTabContent1">
-                    <div class="tab-pane fade active show" id="description" role="tabpanel" aria-labelledby="description">  
-                      
-                         <p>{{product.small_desc}}</p>
-            
-                 
-                </div>
-                    <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video">
-                       
-                            <p>{{product.video}}</p>
-                
-                    </div>
-                    <div class="tab-pane fade " id="product__Type" role="tabpanel" aria-labelledby="product__Type">
-                      
-                            <p>
-                           {{product.desc}}
-                            </p>
-                
-                      
-                    </div>
-                    <div class="tab-pane fade" id="delivery__system" role="tabpanel" aria-labelledby="delivery__system">
-                     
-                            <p>
-                                As opposed to using 'Content here, content here', making it look like readable
-                                English. Many desktop publishing packages and web page editors now use Lorem
-                                Ipsum as their default model text, and a search for 'lorem ipsum' will uncover
-                                many web sites still in their infancy. Various versions have evolved over the
-                                years, sometimes by accident, sometimes on purpose injected humour and the
-                                like. It is a long established fact that a reader will be distracted by the
-                                readable content of a page when looking at its layout. The point of using Lorem
-                                Ipsum is that it has a more-or-less normal distribution of letters
-                            </p>
-                            <p>
-                                If you are going to use a passage of Lorem Ipsum, you need to be sure there
-                                isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum
-                                generators on the Internet tend to repeat predefined chunks as necessary, making
-                                this the first true generator on the Internet. It uses a dictionary of over 200
-                                Latin words, combined with a handful of model sentence structures, to generate
-                                Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore
-                                always free from repetition, injected humour, or non-characteristic words etc
-                            </p>
-                
-                    </div>
-                  </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- discription__section__end -->
 
@@ -519,7 +458,7 @@
                             <div class="single__product__contact__text text-center">
                                 <h2>For furthermore help, contact with our support team.</h2>
                                 <div class="single__product__contact__button">
-                                <a href="#" class="default__button">Contact Us</a>
+                                <a href="{% url "contact" %}" class="default__button">Contact Us</a>
                             </div>
                             <h3 class="single__product__contact__number"><i class="fas fa-phone"></i> 044-4217 0885</h3>
                             </div>

@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% load static %}
+{%block title %}About{% endblock title %}
+{% block content %}
+
+<head>
+    <!-- Charset & Viewport -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta -->
+  <title>About Angels Fashion | Beauty & Fashion Store in Anna Nagar, Chennai</title>
+  <meta name="description" content="Learn the story of Angels Fashion – founded in 1982 by Suresh Kumar. From Anna Nagar’s first AC beauty showroom to a leading fashion & cosmetics destination.">
+  <meta name="keywords" content="About Angels Fashion, founder Suresh Kumar, CEO Abhishek, beauty fashion Chennai, Anna Nagar showroom, cosmetics store">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Zap Waves">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="About Angels Fashion | Beauty & Fashion Store in Anna Nagar, Chennai">
+  <meta property="og:description" content="Discover Angels Fashion's journey – from a single nail polish to a premier beauty & fashion destination in Anna Nagar, Chennai.">
+  <meta property="og:image" content="https://www.angels-glamnglow.in/img/favicon_io/android-chrome-512x512.png">
+  <meta property="og:url" content="https://www.angels-glamnglow.in/about.html">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About Angels Fashion | Beauty & Fashion Store in Anna Nagar, Chennai">
+  <meta name="twitter:description" content="Learn about Angels Fashion – trusted since 1982 for cosmetics, fashion, and bridal jewelry in Anna Nagar, Chennai.">
+  <meta name="twitter:image" content="https://www.angels-glamnglow.in/img/favicon_io/android-chrome-512x512.png">
+
+  <!-- Favicons -->
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Angels Fashion",
+    "image": "https://www.angels-glamnglow.in/img/favicon_io/android-chrome-512x512.png",
+    "@id": "https://www.angels-glamnglow.in/",
+    "url": "https://www.angels-glamnglow.in/about.html",
+    "telephone": "+91-XXXXXXXXXX",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Anna Nagar East, Chennai",
+      "addressLocality": "Chennai",
+      "postalCode": "600102",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://www.facebook.com/YourPage",
+      "https://www.instagram.com/YourPage",
+      "https://wa.me/YourWhatsAppNumber"
+    ]
+  }
+  </script>
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- CSS here -->
+
+
+
+</head>
+
+
+<body>
+
+
+
+    <main class="main_wrapper body__overlay overflow__hidden">
+
+ 
+    <!-- header__topbar__start -->
+
+
+
+
+
+
+        <!-- breadcrumb__start -->
+        <div class="breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb__title">
+                            <h1>About Us</h1>
+                            <ul>
+                                <li>
+                                    <a href="{% url "home" %}">Home</a>
+                                </li>
+                                <li class="color__blue">
+                                    About Us
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- breadcrumb__end -->
+
+<!-- About Us Section Start -->
+<section class="about-section">
+    <div class="container">
+  
+      <!-- Title -->
+      <div class="about-header">
+        <h2>About Us</h2>
+        <p>Since 1982, Angels Fashion has been at the heart of beauty & fashion in Anna Nagar, Chennai.</p>
+      </div>
+  
+      <!-- Where it all began -->
+      <div class="about-block">
+        <div class="about-text">
+          <h3>Where it all Began</h3>
+          <p>
+            From a single nail polish to a world of nail care & beauty – that’s the Angels journey. 
+            Founded by <strong>Mr. Suresh Kumar</strong>, with the vision of creating more than a store – a place that sets 
+            trends and inspires beauty. At Angels, beauty has no boundaries.
+          </p>
+          <p>
+            Built on relationships and trusted by thousands of salons, beauticians & loyal retail customers for decades, 
+            Angels became <strong>pioneers in Anna Nagar</strong> – among the very first AC showrooms dedicated to beauty & fashion.
+          </p>
+        </div>
+        <div class="about-image">
+          <img src="img/about/abt2.jpeg" alt="Where it all began - Angels Fashion">
+        </div>
+      </div>
+  
+      <!-- Milestone -->
+      <div class="about-block reverse">
+        <div class="about-text">
+          <h3>Our Milestone</h3>
+          <p>
+            Angels Fashion reached a <strong>big milestone</strong> by opening the <strong>first AC showroom in Anna Nagar 
+            for beauty & fashion</strong>. Over the years, we expanded into fashion & bridal jewellery, partnering with 
+            leading national and global brands.
+          </p>
+          <p>
+            With <strong>Abhishek</strong> as the CEO today, Angels Fashion continues to build on this legacy – delivering 
+            timeless style and trusted beauty products to every customer.
+          </p>
+        </div>
+        <div class="about-image">
+          <img src="img/about/abt1.jpeg" alt="Milestone of Angels Fashion">
+        </div>
+      </div>
+  
+    </div>
+  </section>
+  <!-- About Us Section End -->
+<style>
+    .about-section {
+  padding: 60px 20px;
+  background: #fafafa;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.about-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.about-header p {
+  font-size: 16px;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.about-block {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 60px;
+  flex-wrap: wrap;
+}
+
+.about-block.reverse {
+  flex-direction: row-reverse;
+}
+
+.about-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-text h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.about-text p {
+  margin-bottom: 15px;
+  line-height: 1.7;
+  font-size: 15px;
+  color: #555;
+}
+
+.about-image {
+  flex: 1;
+  min-width: 280px;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.about-image img:hover {
+  transform: scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-block {
+    flex-direction: column;
+    text-align: center;
+  }
+  .about-block.reverse {
+    flex-direction: column;
+  }
+  .about-text {
+    margin-bottom: 20px;
+  }
+}
+
+</style>  
+      
+        <!-- brant__section__start -->
+            <div class="brand sp_bottom_80">
+                <div class="container">
+                    <div class="brand__wraper brand__slider__active">
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-1.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-2.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-3.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-4.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-5.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-6.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="brand__single">
+                            <div class="brand__img">
+                                <img src="img/brand/brand-logo-7.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- brant__section__end -->
+{% endblock content %}

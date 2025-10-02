@@ -55,14 +55,38 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_filter = ('user',)
 
 # ---------------- ORDER ----------------
+@admin.action(description="Mark selected orders as Shipped")
+def mark_as_shipped(modeladmin, request, queryset):
+    queryset.update(status='shipped')
+
+@admin.action(description="Mark selected orders as Delivered")
+def mark_as_delivered(modeladmin, request, queryset):
+    queryset.update(status='delivered')
+
+from django.contrib import admin
+from .models import Order, OrderItem
+
+# Inline admin for OrderItem
+class OrderItemInline(admin.TabularInline):  # or admin.StackedInline for detailed view
+    model = OrderItem
+    extra = 1  # how many empty rows to show
+    fields = ('product', 'quantity', 'price', 'subtotal')  # fields visible in inline
+    readonly_fields = ('subtotal',)  # prevent editing subtotal directly
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'status', 'created_at', 'total_price')
+    list_display = ('id', 'user', 'status', 'created_at', 'total_price', 'address')
     search_fields = ('user__username', 'id')
     list_filter = ('status', 'created_at')
+    list_editable = ('status',)  # inline editing
+    actions = ['mark_as_shipped', 'mark_as_delivered']  # bulk actions
+    inlines = [OrderItemInline]  # combine Order + OrderItems in same page
 
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'order', 'product', 'quantity', 'price', 'subtotal')
-    search_fields = ('order__id', 'product__p_name')
-    list_filter = ('order', 'product')
+    @admin.action(description="Mark selected orders as Shipped")
+    def mark_as_shipped(self, request, queryset):
+        queryset.update(status='shipped')
+
+    @admin.action(description="Mark selected orders as Delivered")
+    def mark_as_delivered(self, request, queryset):
+        queryset.update(status='delivered')
+

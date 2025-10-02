@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{%block title %}Checkout{% endblock title %}
 {% block content %}
 <h2>Cart Checkout</h2>
         <div class="breadcrumb">
@@ -9,7 +10,7 @@
                             <h1>Checkout</h1>
                             <ul>
                                 <li>
-                                    <a href="#">Home</a>
+                                    <a href="{% url "home" %}">Home</a>
                                 </li>
                                 <li class="color__blue">
                                    Checkout
@@ -45,12 +46,12 @@
                                                 <td class="checkoutarea__ctg__type">{{ item.product.p_name }}</td>
                                                 <td class="checkoutarea__cgt__des">Rs. {{ item.product.price }}</td>
                                             </tr>
-                                        {% endfor %}
+                                        
                                             <tr class="checkoutarea__item">
                                                 <td class="checkoutarea__ctg__type">Subtotal</td>
                                                 <td class="checkoutarea__cgt__des">Rs.{{ item.subtotal }}</td>
                                             </tr>
-                                           
+                                           {% endfor %}
                                             <tr class="checkoutarea__item">
                                                 <td class="checkoutarea__item">Payment</td>
                                                 <td class="checkoutarea__cgt__des ship-opt">
@@ -351,19 +352,5 @@
         }
     </style>
 <!-- Razorpay Payment Button -->
-<form action="{{ callback_url }}" method="POST">
-    {% csrf_token %}
-    <script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        data-key="{{ razorpay_key }}"
-        data-amount="{{ total_amount|floatformat:2|floatformat:"0" }}00"  <!-- amount in paise -->
-        data-currency="INR"
-        data-order_id="{{ order_id }}"
-        data-buttontext="Pay with Razorpay"
-        data-name="Your Store Name"
-        data-description="Cart Payment"
-        data-theme.color="#F37254">
-    </script>
-    <input type="hidden" name="items" value="{{ items|length }}">
-</form>
+
 {% endblock %}

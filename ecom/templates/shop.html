@@ -165,16 +165,12 @@
                                                                             
                                 
                                                                             <li>
-                                                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                                <a href="{% url 'add to cart' product_id=i.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
                                                                                     <i class="fas fa-shopping-cart"></i>
                                                                                 </a>                                             
                                                                             </li>
                                 
-                                                                            <li>
-                                                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Wishlist" data-bs-original-title="Add To Wishlist">
-                                                                                    <i class="far fa-heart"></i>
-                                                                                </a>
-                                                                            </li>
+                                                                            
                                                                         
                                 
                                                                         </ul>   
@@ -298,16 +294,7 @@
                     </div>
             
             
-                        <div class="col-12 column__custom__class">
-                            <div class="category__single">
-                                <div class="category__img">
-                                    <img src="{% static "img/grid/grid__10.png" %}" alt="">
-                                </div>
-                                <div class="category__text">
-                                    <h5><a href="{% url "search" s="Product" %}" tabindex="-1"> Product</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                       
             
                     </div>
                 </div>

@@ -1,3 +1,353 @@
+{% extends "base.html" %}
+{%block title %}Cart Checkout{% endblock title %}
+
+{% block content %}
+<h2>Cart Checkout</h2>
+        <div class="breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb__title">
+                            <h1>Checkout</h1>
+                            <ul>
+                                <li>
+                                    <a href="{% url "home" %}">Home</a>
+                                </li>
+                                <li class="color__blue">
+                                   Checkout
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- breadcrumb__end -->
+    <!-- checkout__section__start -->
+    <div class="checkoutarea sp_bottom_100 sp_top_100">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-6 col-md-12 col-12">
+                    <div class="checkoutarea__payment__wraper">
+                        <div class="checkoutarea__total">
+                            <h3>Your Order</h3>
+                            <form action="#" method="post">
+                                <div class="checkoutarea__table__wraper">
+                                    <table class="checkoutarea__table">
+                                        <thead>
+                                            <tr class="checkoutarea__item">
+                                                <td class="checkoutarea__ctg__type">Product</td>
+                                                <td class="checkoutarea__cgt__des">Pricing</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="checkoutarea__item prd-name">
+                                                <td class="checkoutarea__ctg__type">{{ product.p_name }}</td>
+                                                <td class="checkoutarea__cgt__des">Rs. {{product.price }}</td>
+                                            </tr>                               
+                                            <tr class="checkoutarea__item">
+                                                <td class="checkoutarea__item">Payment</td>
+                                                <td class="checkoutarea__cgt__des ship-opt">
+                                                    <div class="checkoutarea__shipp">
+                                                        <input type="radio" id="pay-toggle2" name="ship" checked>
+                                                        <label for="pay-toggle2">Pay Online</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="checkoutarea__item">
+                                                <td class="checkoutarea__itemcrt-total">Total</td>
+                                                <td class="checkoutarea__cgt__des prc-total">Rs. {{ total_amount }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="checkoutarea__payment clearfix">
+                            <div class="checkoutarea__payment__toggle">
+                               <form action="{{ callback_url }}" method="POST">
+    {% csrf_token %}
+    <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ razorpay_key }}"
+        data-amount="{{ total_amount|floatformat:2|floatformat:"0" }}00"  <!-- amount in paise -->
+        data-currency="INR"
+        data-order_id="{{ order_id }}"
+        data-buttontext="Pay with Razorpay"
+        data-name="Your Store Name"
+        data-description="Cart Payment"
+        data-theme.color="#F37254">
+    </script>
+    <input type="hidden" name="items" value="{{ items|length }}">
+</form> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+                :root {
+            --primary: #8B7355;
+            --primary-light: #a58c6d;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border: #dee2e6;
+            --success: #28a745;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .checkoutarea {
+            padding: 60px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+
+        .col-xl-6, .col-lg-6, .col-md-12 {
+            padding: 0 15px;
+        }
+
+        .checkoutarea__billing, .checkoutarea__payment__wraper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+        }
+
+        .checkoutarea__billing:hover, .checkoutarea__payment__wraper:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .checkoutarea__billing__heading h2, .checkoutarea__total h3 {
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-light);
+            position: relative;
+        }
+
+        .checkoutarea__billing__heading h2:after, .checkoutarea__total h3:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .checkoutarea__inputbox {
+            margin-bottom: 20px;
+        }
+
+        .checkoutarea__inputbox label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .checkoutarea__inputbox input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .checkoutarea__inputbox input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.2);
+        }
+
+        .checkoutarea__table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .checkoutarea__table thead {
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .checkoutarea__item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .checkoutarea__ctg__type, .checkoutarea__cgt__des {
+            padding: 12px 0;
+            text-align: left;
+        }
+
+        .checkoutarea__cgt__des {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .prd-name .checkoutarea__ctg__type, .prd-name .checkoutarea__cgt__des {
+            padding: 8px 0;
+        }
+
+        .checkoutarea__itemcrt-total, .prc-total {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .checkoutarea__shipp {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkoutarea__shipp input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary);
+        }
+
+        .checkoutarea__shipp label {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(139, 115, 85, 0.1);
+        }
+
+        .default__button {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .default__button:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
+        }
+
+        .checkoutarea__payment__total {
+            margin-top: 25px;
+        }
+
+        @media (min-width: 992px) {
+            .col-lg-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .checkoutarea {
+                padding: 40px 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .checkoutarea__billing, .checkoutarea__payment__wraper {
+                padding: 20px;
+            }
+            
+            .checkoutarea__table__wraper {
+                overflow-x: auto;
+            }
+        }
+    </style>
+<!-- Razorpay Payment Button -->
+
+{% endblock %}
 <!DOCTYPE html>
 <html lang="en">
 <head>

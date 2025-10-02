@@ -656,11 +656,13 @@
                                 <tr>
                                     <td class="product-info">
                                         <div style="display: flex; align-items: center; gap: 15px;">
+                                            <a href="{% url "product" p=i.slug %}">
                                             <div class="product-thumbnail">
                                                 <img src="{{i.image_url}}" alt="{{i.p_name}}">
-                                            </div>
+                                            </div></a>
                                             <div class="product-name">
-                                                <a href="#">{{i.p_name}}</a>
+                                                {% if i.slug %}
+                                                <a href="{% url "product" p=i.slug %}">{{i.p_name}}</a>{% endif %}
                                             </div>
                                         </div>
                                     </td>

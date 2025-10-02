@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}MyAccount{% endblock title %}
+{% block title %}Cart{% endblock title %}
 {% load static %}
 {% block content %}
 
@@ -15,7 +15,7 @@
                             <h1>Cart</h1>
                             <ul>
                                 <li>
-                                    <a href="#">Home</a>
+                                    <a href="{% url "home" %}">Home</a>
                                 </li>
                                 <li class="color__blue">
                                    Cart
@@ -52,11 +52,11 @@
                                             {% for i in cart  %}
                                             <tr>
     <td class="cartarea__product__thumbnail">
-        <a href="#">
+        <a href="{% url "product" p=i.slug %}">
             <img src="{{ i.image_url }}" alt="cart">
         </a>
     </td>
-    <td class="cartarea__product__name"><a href="#">{{ i.p_name }}</a></td>
+    <td class="cartarea__product__name"><a href="{% url "product" p=i.slug %}">{{ i.p_name }}</a></td>
     <td class="cartarea__product__price__cart"><span class="amount">Rs.{{ i.price }}</span></td>
     <td class="cartarea__product__quantity">
         <form action="{% url 'update_cart_quantity' i.cart_item_id %}" method="POST">
@@ -92,7 +92,7 @@
                             <a class="default__button" href="{% url "home" %}">Continue Shopping</a>
                             </div>
                             <div class="cartarea__clear">
-                            <a class="default__button" href="#">Update Cart</a>  
+                            <a href="{% url "cart_checkout" %}" class="default__button">Checkout</a>
                             </div>
                         </div>
                         </div>

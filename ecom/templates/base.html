@@ -707,7 +707,7 @@
 
                         <div class="col-xl-4 col-lg-4 col-md-6 main_menu_wrap">
                             <div class="headerarea__logo">
-                                <a href="#"><img src="{% static "img/logo_main.jpg" %}" alt=""></a>
+                                <a href="{% url "home" %}"><img src="{% static "img/logo_main1.jpg" %}" alt=""></a>
                             </div>
 
 
@@ -1005,9 +1005,9 @@
                                             </ul>
                                         </li>
 
-                                        <li><a href="about.html">About</a> </li>
+                                        <li><a href="{% url "about" %}">About</a> </li>
 
-                                        <li><a href="#">Contact</a>
+                                        <li><a href="{% url "contact" %}">Contact</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -1023,7 +1023,7 @@
                 <div class="row align-items-center">
                     <div class="col-sm-4 col-2">
                         <div class="mobile-off-canvas">
-                            <a class="mobile-aside-button" href="#">
+                            <a class="mobile-aside-button" href="{% url "home" %}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="feather feather-menu">
@@ -1036,7 +1036,7 @@
                     </div>
                     <div class="col-sm-4 col-5">
                         <div class="mobile-logo">
-                            <a class="logo__mobile" href="{% url "home" %}"><img src="{% static "img/logo_main.jpg" %}" alt="logo"></a>
+                            <a class="logo__mobile" href="{% url "home" %}"><img src="{% static "img/logo_main1.jpg" %}" alt="logo"></a>
                         </div>
                     </div>
                     <div class="col-sm-4 col-5">
@@ -1128,7 +1128,7 @@
                 <div class="header-mobile-aside-wrap">
 
                     <div class="mobile__logo">
-                      <a class="logo__mobile" href="#"><img src="{% static "img/logo_main.jpg" %}" alt="logo"></a>
+                      <a class="logo__mobile" href="{% url "home" %}"><img src="{% static "img/logo_main1.jpg" %}" alt="logo"></a>
 
                     </div>
 
@@ -1303,8 +1303,8 @@
                                         </ul>
                                     </li>
 
-                                    <li><a href="about.html">About</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="{% url "home" %}">About</a></li>
+                                    <li><a href="{% url "contact" %}">Contact</a></li>
                                 </ul>
                             </nav>
 
@@ -1316,7 +1316,7 @@
 
 
                         <div class="single-mobile-curr-lang">
-                            <a class="mobile-account-active" href="#">My Account <i class="fa fa-angle-down"></i></a>
+                            <a class="mobile-account-active" href="{% url "myaccount" %}">My Account <i class="fa fa-angle-down"></i></a>
                             <div class="lang-curr-dropdown account-dropdown-active">
                                 <ul>
                                     {% if is_logged_in %}
@@ -1416,7 +1416,7 @@
                             <div class="minicart__single">
 
                                 <div class="minicart__single__img">
-                                    <a href="single-product.html">
+                                    <a href="{% url "product" p=i.slug %}">
                                         <img src="{{i.image_url}}" alt="product">
                                     </a>
                                     <a href="{% url 'remove_from_cart' i.p_id %}">
@@ -1425,7 +1425,7 @@
                                     </div></a>
                                 </div>
                                 <div class="minicart__single__content">
-                                    <h4><a href="single-product.html">{{i.p_name}}</a></h4>
+                                    <h4><a href="{% url "product" p=i.slug %}">{{i.p_name}}</a></h4>
                                     <span>{{i.quantity_in_cart}} x <span class="money">Rs.{{i.price}}</span></span>
 
                                 </div>
@@ -1506,7 +1506,7 @@
                             <div class="footer__widget">
                                 <div class="footer__middle text-center">
                                     <div class="footer__logo">
-                                        <img src="{% static "img/logo_main.jpg" %}" alt="Footer Logo">
+                                        <img src="{% static "img/logo_main1.jpg" %}" alt="Footer Logo">
                                     </div>
                                     <div class="footer__address">
                                         <ul>

@@ -39,9 +39,8 @@ class Product(models.Model):
     del_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    video = models.FileField(upload_to='videos/', blank=True, null=True, default="")
+
     delivery_times=models.IntegerField(default=1)
-    guarentee=models.TextField(default='')
 
     new_choice=[
         ("yes","yes"),

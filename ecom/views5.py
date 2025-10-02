@@ -56,6 +56,7 @@ def account_detail(request):
             image_url = product_images[0].image.url if product_images else ""
 
             cart1.append({
+                "slug":item.product.slug,
                 "p_name": item.product.p_name,
                 "image_url": image_url,
                 "price": float(item.price*item.quantity),  # price at purchase time
