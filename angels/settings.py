@@ -156,8 +156,8 @@ LOGOUT_REDIRECT_URL = '/'  # where to redirect after logout
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '628548672455-h8o33grr3acm5hnn1s4etrm4gp5fpv5m.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': '628548672455-2kiq4jrta7lgp9t9kcdu5r3u23boeenh.apps.googleusercontent.com',
+            'secret': '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',
             'key': ''
         }
     }
