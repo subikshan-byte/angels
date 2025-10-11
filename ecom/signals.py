@@ -32,19 +32,6 @@ def delete_old_productimage_file_on_update(sender, instance, **kwargs):
 
 
 # ---------------- PRODUCT MODEL ----------------
-@receiver(post_delete, sender=Product)
-def delete_product_file_on_row_delete(sender, instance, **kwargs):
-    delete_file(instance.video)   # deletes from MEDIA_ROOT/videos/
 
 
-@receiver(pre_save, sender=Product)
-def delete_old_product_file_on_update(sender, instance, **kwargs):
-    if not instance.pk:
-        return False
-    try:
-        old_instance = Product.objects.get(pk=instance.pk)
-    except Product.DoesNotExist:
-        return False
 
-    if old_instance.video != instance.video:
-        delete_file(old_instance.video)
