@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--@ol#!m2b*bz_bs4d)o#%4(k0(gix^2paz^116)2*+fhqtgf)^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =True
 
-ALLOWED_HOSTS = ["angels-glamnglow.in","190.92.175.39"]
+ALLOWED_HOSTS = ["https://angels-glamnglow.in","https://angles-glamnglow.in"]
 
 
 # Application definition
@@ -170,3 +170,4 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "https://angels-glamnglow.in"
 ]
+SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
