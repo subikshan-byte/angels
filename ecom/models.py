@@ -30,10 +30,10 @@ class Category(models.Model):
 
 class Product(models.Model):
     p_id = models.AutoField(primary_key=True)
-    p_name = models.CharField(max_length=100, default="")
-    small_title = models.CharField(max_length=100, default="")
-    small_desc = models.CharField(max_length=100, default="")
-    brand_name = models.CharField(max_length=100, default="")
+    p_name = models.CharField(max_length=1000, default="")
+    small_title = models.CharField(max_length=1000, default="")
+    small_desc = models.CharField(max_length=1000, default="")
+    brand_name = models.CharField(max_length=1000, default="")
     desc = models.TextField(default="")
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     del_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
@@ -57,7 +57,7 @@ class Product(models.Model):
 ]
 
     main_category_diff = models.CharField(
-    max_length=150,
+    max_length=1000,
     choices=main_category,
     default='non'
 )
