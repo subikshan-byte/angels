@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--@ol#!m2b*bz_bs4d)o#%4(k0(gix^2paz^116)2*+fhqtgf)^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =True
 
-ALLOWED_HOSTS = ["https://angels-glamnglow.in","https://angles-glamnglow.in"]
+ALLOWED_HOSTS = ["angels-glamnglow.in","www.angles-glamnglow.in","190.92.175.39"]
 
 
 # Application definition
@@ -166,8 +166,6 @@ SILENCED_SYSTEM_CHECKS = ["models.W036"]
 RAZORPAY_KEY_ID = "rzp_test_ROETDnupbhbT32"
 RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
-    "https://angels-glamnglow.in"
+    "angels-glamnglow.in","www.angles-glamnglow.in","190.92.175.39"
 ]
 SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
