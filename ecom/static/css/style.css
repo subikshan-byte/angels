@@ -1251,7 +1251,26 @@ li {
     bottom: 20px;
   }
 }
+/* reduce overall product box height */
+.product-box,
+.custom_class {
+  height: 320px;       /* adjust: try 300, 280, etc. */
+  overflow: hidden;    /* hides any content that goes beyond height */
+}
 
+/* optional: reduce image size proportionally */
+.product-box img {
+  max-height: 180px;   /* adjust image height */
+  object-fit: contain; /* maintain proper aspect ratio */
+}
+
+/* reduce text spacing */
+.product-box h3, 
+.product-box p {
+  margin: 5px 0;
+  line-height: 1.2;
+  font-size: 14px; /* smaller text helps reduce height */
+}
 @media (min-width: 768px) and (max-width: 991px) {
   .slider__default__dot .slick-dots {
     bottom: -20px;
