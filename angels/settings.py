@@ -166,6 +166,9 @@ SILENCED_SYSTEM_CHECKS = ["models.W036"]
 RAZORPAY_KEY_ID = "rzp_test_ROETDnupbhbT32"
 RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
 CSRF_TRUSTED_ORIGINS = [
-    "https://angels-glamnglow.in","https://www.angles-glamnglow.in","190.92.175.39"
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+
+    "https://angels-glamnglow.in"
 ]
 
