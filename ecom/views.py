@@ -139,7 +139,7 @@ def product_detail(request, p):
         category=product.category
     ).exclude(p_id=product.p_id)
     same_category_data = get_product_data1(same_category_products)
-    current_url=(request.build_absolute_uri()).replace("190.92.175.39","angels-glamnglow.in")
+    current_url=(request.build_absolute_uri()).replace("190.92.175.39:8000","angels-glamnglow.in")
     size=Size.objects.filter(p_id=product)
     # ---------------- CONTEXT ----------------
     products = []
