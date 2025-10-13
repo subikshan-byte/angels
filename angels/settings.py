@@ -170,4 +170,4 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://angels-glamnglow.in",
 ]
-
+DEFAULT_DOMAIN="angels-glamnglow"
