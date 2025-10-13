@@ -38,20 +38,10 @@
                 <div class="featurearea__details__img">
 
                     <div class="featurearea__big__img">
-                        {% for i in product_images %}
                         <div class="featurearea__single__big__img">
-                            <img src="{{i.image_url}}"alt="{{i.image_url}}">
+                            <img src="{{product.image_url}}"alt="{{i.image_url}}">
                         </div>
-                        {% endfor %}
                     </div>
-                    <div class=" featurearea__thumb__img featurearea__thumb__img__slider__active slider__default__arrow">
-                        {% for i in product_images %}
-                        <div class="featurearea__single__thumb__img">
-                            <img src="{{i.image_url}}" alt="Product Big Img">
-                        </div>
-                        {% endfor %}
-                    </div>
-
                 </div>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-12">
