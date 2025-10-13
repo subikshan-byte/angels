@@ -168,6 +168,6 @@ RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
-    "http://angels-glamnglow.in",
+    "https://angels-glamnglow.in",
 ]
 DEFAULT_DOMAIN="angels-glamnglow"
