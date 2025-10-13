@@ -6,7 +6,7 @@ from datetime import datetime,timedelta
 def get_product_data(products):
     product_list = []
     for product in products:
-        product_image = ProductImage.objects.filter(p_id=product).first()
+        product_image = ""
         product_dict = {
             'p_id': product.p_id,
             'p_name': product.p_name,
