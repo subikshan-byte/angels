@@ -127,7 +127,6 @@ def product_detail(request, p):
     main_product_data = get_product_data1([product])[0]
 
     # All images of this product (not just the first one)
-    product_images = ProductImage.objects.filter(p_id=product)
 
     # ---------------- SAME BRAND PRODUCTS ----------------
     same_brand_products = Product.objects.filter(
@@ -166,7 +165,6 @@ def product_detail(request, p):
     context = {
         'product': main_product_data,  
           'current_url': current_url,     # dict with all product details
-        'product_images': product_images, 
              'size':size,     # queryset of all images
         'same_brand_products': same_brand_data,
         'same_category_products': same_category_data,
