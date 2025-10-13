@@ -93,7 +93,7 @@ from .models import Product, ProductImage, Size
 def get_product_data1(products):
     product_list = []
     for product in products:
-        product_image = ProductImage.objects.filter(p_id=product).first()
+        product_image =""
         sizes = Size.objects.filter(p_id=product).values_list('size', flat=True)
 
         product_dict = {
