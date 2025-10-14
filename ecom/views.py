@@ -167,7 +167,7 @@ def product_detail(request, p):
     context = {
         'product': main_product_data,  
           'current_url': current_url,     # dict with all product details
-             'size':size,     # queryset of all images
+                 # queryset of all images
         'same_brand_products': same_brand_data,
         'same_category_products': same_category_data,
         "cart":products,
