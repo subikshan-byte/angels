@@ -175,7 +175,7 @@
                                     <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
                                 </h3>
                                 <div class="grid__wraper__price">
-                                    <del>Rs.{{i.del_price}}</del>
+                                   
                                     <span>Rs.{{i.price}}</span>
                                 </div>
 
@@ -192,7 +192,7 @@
             </div>
                 <div class="col-xl-12">
                     <div class="feture__section__button text-center">
-                        <a class="default__button btn__pink" href="#">View All</a>
+                        <a class="default__button btn__pink" href="{% url "home" %}">GO TO TOP</a>
                     </div>
                 </div>
 
@@ -279,7 +279,7 @@
                                             <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
                                         </h3>
                                         <div class="grid__wraper__price">
-                                            <del>Rs.{{i.del_price}}</del>
+                                            
                                             <span>Rs.{{i.price}}</span>
                                         </div>
 
@@ -293,7 +293,7 @@
                     {% endfor %}
                             <div class="col-xl-12">
                     <div class="feture__section__button text-center">
-                        <a class="default__button btn__pink" href="#">View All</a>
+                        <a class="default__button btn__pink" href="{% url "home" %}">GO TO TOP</a>
                     </div>
                 </div>
                     </div>
@@ -358,7 +358,7 @@
                                             <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
                                         </h3>
                                         <div class="grid__wraper__price">
-                                            <del>Rs.{{i.del_price}}</del>
+                                            
                                             <span>Rs.{{i.price}}</span>
                                         </div>
 
@@ -375,7 +375,7 @@
 {% endif %}
                          <div class="col-xl-12">
                     <div class="feture__section__button text-center">
-                        <a class="default__button btn__pink" href="#">View All</a>
+                        <a class="default__button btn__pink" href="{% url "home" %}">GO TO TOP</a>
                     </div>
                 </div>
 
