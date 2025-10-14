@@ -51,7 +51,7 @@
                     </div>
                     <div class="single__product__price">
                         <span>Rs.{{product.price}}</span>
-                        <del>Rs.{{product.del_price}}</del>
+                       
                         <label>Save -{{product.save}}%</label>
                     </div>
 
@@ -88,11 +88,11 @@
 
                           <hr>
                           <div class="single__product__swatch single__product__size">
-                            <span class="header">Size : </span>
+                            <span class="header">HAPPY SHOPING </span>
                             <ul>
-                                {% for s in size  %}
-                                <li><a href="#">{{s.size}}</a></li>
-                                {% endfor %}
+
+                                <li><a href="#"></a></li>
+                            
                             </ul>
                           </div>
 
@@ -197,7 +197,6 @@
                                                     <a href="{% url "product" p=i.slug %}" tabindex="0">{{i.p_name}}</a>
                                                 </h3>
                                                 <div class="grid__wraper__price">
-                                                    <del>Rs.{{i.del_price}}</del>
                                                     <span>Rs.{{i.price}}</span> 
                                                 </div>
                                             </div>
