@@ -7,6 +7,7 @@ def get_product_data(products):
     product_list = []
     for product in products:
         product_image = ProductImage.objects.filter(p_id=product).first()
+        image_url = product_image.image.url if (product_image and product_image.image and hasattr(product_image.image, 'url')) else None
         product_dict = {
             'p_id': product.p_id,
             'p_name': product.p_name,
@@ -25,7 +26,7 @@ def get_product_data(products):
             'where': product.where,
             'where_to_display': product.where_to_display,
             'slug': product.slug,
-            'image_url': product_image.image.url if product_image else None
+            'image_url': image_url
         }
         product_list.append(product_dict)
     return product_list
@@ -94,6 +95,7 @@ def get_product_data1(products):
     product_list = []
     for product in products:
         product_image = ProductImage.objects.filter(p_id=product).first()
+        image_url = product_image.image.url if (product_image and product_image.image and hasattr(product_image.image, 'url')) else None
         sizes = Size.objects.filter(p_id=product).values_list('size', flat=True)
 
         product_dict = {
@@ -114,7 +116,7 @@ def get_product_data1(products):
             'where': product.where,
             'where_to_display': product.where_to_display,
             'slug': product.slug,
-            'image_url': product_image.image.url if product_image else None,
+            'image_url':image_url
             'sizes': list(sizes)  # add sizes here
         }
         product_list.append(product_dict)
