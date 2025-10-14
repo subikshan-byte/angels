@@ -117,7 +117,7 @@ def get_product_data1(products):
             'where_to_display': product.where_to_display,
             'slug': product.slug,
             'image_url':image_url
-            'sizes': list(sizes)  # add sizes here
+            'sizes': "" # add sizes here
         }
         product_list.append(product_dict)
     return product_list
