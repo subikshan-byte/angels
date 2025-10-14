@@ -96,7 +96,7 @@ def get_product_data1(products):
     for product in products:
         product_image = ProductImage.objects.filter(p_id=product).first()
         image_url = product_image.image.url if (product_image and product_image.image and hasattr(product_image.image, 'url')) else None
-        sizes = Size.objects.filter(p_id=product).values_list('size', flat=True)
+        sizes = ""
 
         product_dict = {
             'p_id': product.p_id,
