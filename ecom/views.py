@@ -6,7 +6,7 @@ from datetime import datetime,timedelta
 def get_product_data(products):
     product_list = []
     for product in products:
-        product_image = ""
+        product_image = ProductImage.objects.filter(p_id=product).first()
         product_dict = {
             'p_id': product.p_id,
             'p_name': product.p_name,
@@ -93,7 +93,7 @@ from .models import Product, ProductImage, Size
 def get_product_data1(products):
     product_list = []
     for product in products:
-        product_image =""
+        product_image = ProductImage.objects.filter(p_id=product).first()
         sizes = Size.objects.filter(p_id=product).values_list('size', flat=True)
 
         product_dict = {
