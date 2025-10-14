@@ -117,7 +117,7 @@ def get_product_data1(products):
             'where_to_display': product.where_to_display,
             'slug': product.slug,
             'image_url':image_url
-            'sizes': "" # add sizes here
+            
         }
         product_list.append(product_dict)
     return product_list
@@ -142,7 +142,7 @@ def product_detail(request, p):
     ).exclude(p_id=product.p_id)
     same_category_data = get_product_data1(same_category_products)
     current_url=(request.build_absolute_uri()).replace("190.92.175.39:8000","angels-glamnglow.in")
-    size=Size.objects.filter(p_id=product)
+    
     # ---------------- CONTEXT ----------------
     products = []
     price=0
