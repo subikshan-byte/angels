@@ -432,6 +432,51 @@
 
 <!--end part--> 
 
+        <!-- about__before__after__start -->
+        <div class="before__after sp_top_80">
+            <div class="container">
+                <div class="row align-items-center">
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                        <div class="before-after-wrap">
+                            <span class="before__after__common before__class">Before</span>
+                            <figure style="background-image: url(img/about/after.jpg)">
+                                <div id="compare" style="background-image: url(img/about/before.jpg)"></div>
+                            </figure>
+                            <input oninput="beforeAfter()" onchange="beforeAfter()" type="range" min="0" max="100"
+                                value="50" id="slider">
+                            <span class="before__after__common after__class">After</span>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                        <div class="about__4">
+                            <h2><strong>Flawless Finish Foundation<span>.</span></strong></h2>
+                            <p>Discover the secret to a flawless complexion with our FlawlessFinish Foundation. This
+                                exceptional foundation offers a seamless, long-lasting, and radiant finish, leaving you
+                                looking and feeling your best.</p>
+                            <ul class="about__4__list">
+                                <li>Seamless Coverage</li>
+                                <li>Long-Lasting</li>
+                                <li>Skin-Nourishing</li>
+                                <li>Variety of Shades</li>
+                                <li>Radiant Glow</li>
+                            </ul>
+                            <div class="about__4__button">
+                                <a class="default__button" href="#">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function beforeAfter() {
+                        document.getElementById('compare').style.width = document.getElementById('slider').value + "%";
+                    }
+                </script>
+
+            </div>
+        </div>
         <!-- about__before__after__end -->
 
 
