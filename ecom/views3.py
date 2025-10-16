@@ -58,7 +58,6 @@ def search(request,s):
     # Step 3: Fuzzy matches (letter similarity)
     hierarchy = [
         ("p_name", 75),
-        ("small_title", 70),
         ("brand_name", 70),
         ("category__c_name", 65),
         ("main_category_diff", 60),
