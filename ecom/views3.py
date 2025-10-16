@@ -25,17 +25,17 @@ def search(request,s):
     candidates = Product.objects.all()
 
     if query:
-    exact_matches = []
-    word_matches = []
-    fuzzy_matches = []
+     exact_matches = []
+     word_matches = []
+     fuzzy_matches = []
 
     # Normalize query (case + space insensitive)
-    query_normalized = query.lower().replace(" ", "")
-    query_lower = query.lower()
-    query_words = query_lower.split()
+     query_normalized = query.lower().replace(" ", "")
+     query_lower = query.lower()
+     query_words = query_lower.split()
 
     # Step 1: Exact matches (case & space insensitive)
-    for product in candidates:
+     for product in candidates:
         fields_to_check = [
             product.p_name,
             product.brand_name,
