@@ -25,49 +25,66 @@ def search(request,s):
     candidates = Product.objects.all()
 
     if query:
-     exact_matches = []
-     fuzzy_matches = []
+    exact_matches = []
+    word_matches = []
+    fuzzy_matches = []
 
-    # Normalize query
-     query_lower = query.lower()
+    # Normalize query (case + space insensitive)
+    query_normalized = query.lower().replace(" ", "")
+    query_lower = query.lower()
+    query_words = query_lower.split()
 
-    # Step 1: Exact matches (case-insensitive)
-     for product in candidates:
-        if (
-            query_lower == product.p_name.lower()
-            or query_lower == product.brand_name.lower()
-            or query_lower == product.category.c_name.lower()
-        ):
-            exact_matches.append(product)
+    # Step 1: Exact matches (case & space insensitive)
+    for product in candidates:
+        fields_to_check = [
+            product.p_name,
+            product.brand_name,
+            product.category.c_name,
+        ]
+        for value in fields_to_check:
+            val_norm = str(value).lower().replace(" ", "")
+            if query_normalized == val_norm:
+                exact_matches.append(product)
+                break  # once matched, skip further checks for this product
 
-    # Step 2: Fuzzy matches (related ones)
+    # Step 2: Word-level matches (if any word from query is in product)
+    for product in candidates:
+        if product in exact_matches:
+            continue
+        combined_text = f"{product.p_name} {product.brand_name} {product.category.c_name}".lower()
+        if any(word in combined_text for word in query_words):
+            word_matches.append(product)
+
+    # Step 3: Fuzzy matches (letter similarity)
     hierarchy = [
-        ("p_name", 85),
-        ("small_title", 80),
-        ("brand_name", 75),
-        ("category__c_name", 75),
-        ("main_category_diff", 70),
+        ("p_name", 75),
+        ("small_title", 70),
+        ("brand_name", 70),
+        ("category__c_name", 65),
+        ("main_category_diff", 60),
     ]
 
     for field, threshold in hierarchy:
         for product in candidates:
-            if product in exact_matches:
-                continue  # already matched exactly
+            if product in exact_matches or product in word_matches:
+                continue
             if field == "category__c_name":
                 value = product.category.c_name
             else:
                 value = getattr(product, field, "")
             if fuzz.partial_ratio(query_lower, str(value).lower()) >= threshold:
-                if product not in fuzzy_matches:
-                    fuzzy_matches.append(product)
+                fuzzy_matches.append(product)
 
-    # Step 3: Combine — exact matches first
-        matched_products = exact_matches + fuzzy_matches
+    # Step 4: Combine in priority order — exact > word > fuzzy
+        matched_products = (
+        exact_matches
+        + [p for p in word_matches if p not in exact_matches]
+        + [p for p in fuzzy_matches if p not in exact_matches and p not in word_matches]
+    )
 
-        combined_results = exact_matches + [p for p in fuzzy_matches if p not in exact_matches]
-
+        
 # Convert to final product data
-        results = get_product_data1(combined_results)
+        results = get_product_data1(matched_products)
 
         if matched_products:
             first_product = matched_products[0]
