@@ -62,12 +62,12 @@ def search(request,s):
                     fuzzy_matches.append(product)
 
     # Step 3: Combine — exact matches first
-      matched_products = exact_matches + fuzzy_matches
+        matched_products = exact_matches + fuzzy_matches
 
-      combined_results = exact_matches + [p for p in fuzzy_matches if p not in exact_matches]
+        combined_results = exact_matches + [p for p in fuzzy_matches if p not in exact_matches]
 
 # Convert to final product data
-      results = get_product_data1(combined_results)
+        results = get_product_data1(combined_results)
 
         if matched_products:
             first_product = matched_products[0]
