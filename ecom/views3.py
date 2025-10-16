@@ -23,6 +23,8 @@ def search(request,s):
 
     # Fetch all products (we’ll filter later)
     candidates = Product.objects.all()
+    import re
+    
     if query:
         exact_product_name_matches = []
         exact_matches = []
@@ -30,47 +32,52 @@ def search(request,s):
         word_matches = []
         fuzzy_matches = []
     
-        # Normalize query (case & space insensitive)
-        query_lower = query.lower().strip()
-        query_no_space = query_lower.replace(" ", "")
-        query_words = query_lower.split()
+        # --- Normalize helper ---
+        def normalize(text):
+            text = text.lower()
+            text = re.sub(r'[^a-z0-9]+', ' ', text)  # remove punctuation & special chars
+            text = re.sub(r'\s+', ' ', text).strip()  # collapse spaces
+            return text
     
-        # Step 1️⃣: Exact product name match (strongest match)
+        query_norm = normalize(query)
+        query_words = query_norm.split()
+    
+        # Step 1️⃣: Exact / near-exact product name match
         for product in candidates:
-            name_no_space = product.p_name.lower().replace(" ", "")
-            if name_no_space == query_no_space:
+            name_norm = normalize(product.p_name)
+            # exact or 95% fuzzy match for high similarity
+            if name_norm == query_norm or fuzz.ratio(query_norm, name_norm) >= 95:
                 exact_product_name_matches.append(product)
                 continue
     
-        # Step 2️⃣: Exact match across name/brand/category
+        # Step 2️⃣: Exact combined fields match (brand + category + name)
         for product in candidates:
             if product in exact_product_name_matches:
                 continue
-            combined_fields = f"{product.p_name} {product.brand_name} {product.category.c_name}".lower()
-            combined_no_space = combined_fields.replace(" ", "")
-            if query_no_space == combined_no_space:
+            combined = normalize(f"{product.p_name} {product.brand_name} {product.category.c_name}")
+            if combined == query_norm:
                 exact_matches.append(product)
                 continue
     
-        # Step 3️⃣: Phrase match (query as substring)
+        # Step 3️⃣: Phrase match (query substring in product fields)
         for product in candidates:
             if product in exact_product_name_matches or product in exact_matches:
                 continue
-            combined_fields = f"{product.p_name} {product.brand_name} {product.category.c_name}".lower()
-            if query_lower in combined_fields:
+            combined = normalize(f"{product.p_name} {product.brand_name} {product.category.c_name}")
+            if query_norm in combined:
                 phrase_matches.append(product)
                 continue
     
-        # Step 4️⃣: Word-level match (one or more query words appear)
+        # Step 4️⃣: Word match (at least one word from query)
         for product in candidates:
             if product in exact_product_name_matches or product in exact_matches or product in phrase_matches:
                 continue
-            combined_fields = f"{product.p_name} {product.brand_name} {product.category.c_name}".lower()
-            if any(word in combined_fields for word in query_words):
+            combined = normalize(f"{product.p_name} {product.brand_name} {product.category.c_name}")
+            if any(word in combined for word in query_words):
                 word_matches.append(product)
                 continue
     
-        # Step 5️⃣: Fuzzy match (similar text)
+        # Step 5️⃣: Fuzzy similarity (fallback)
         hierarchy = [
             ("p_name", 75),
             ("small_title", 70),
@@ -87,10 +94,10 @@ def search(request,s):
                     value = product.category.c_name
                 else:
                     value = getattr(product, field, "")
-                if fuzz.partial_ratio(query_lower, str(value).lower()) >= threshold:
+                if fuzz.partial_ratio(query_norm, normalize(str(value))) >= threshold:
                     fuzzy_matches.append(product)
     
-        # Step 6️⃣: Combine (strongest → weakest)
+        # Step 6️⃣: Combine — strongest to weakest
         matched_products = (
             exact_product_name_matches
             + [p for p in exact_matches if p not in exact_product_name_matches]
@@ -99,14 +106,15 @@ def search(request,s):
             + [p for p in fuzzy_matches if p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches and p not in word_matches]
         )
     
-        # Preserve display order in DB query
+        # Preserve order
         from django.db.models import Case, When
         matched_ids = [p.p_id for p in matched_products]
         preserve_order = Case(*[When(p_id=pid, then=pos) for pos, pid in enumerate(matched_ids)])
         filtered_products = Product.objects.filter(p_id__in=matched_ids).order_by(preserve_order)
     
-        # Convert to dicts for view
+        # Convert to usable data
         results = get_product_data1(filtered_products)
+
 
         if matched_products:
             first_product = matched_products[0]
