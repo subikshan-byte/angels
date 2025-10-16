@@ -87,10 +87,16 @@ def search(request,s):
             + [p for p in fuzzy_matches if p not in exact_matches and p not in phrase_matches and p not in word_matches]
         )
   
+        from django.db.models import Case, When
+        matched_ids = [p.p_id for p in matched_products]
+        preserve_order = Case(*[When(p_id=pid, then=pos) for pos, pid in enumerate(matched_ids)])
+    
+        filtered_products = Product.objects.filter(p_id__in=matched_ids).order_by(preserve_order)
 
+    # Convert to product data
         
 # Convert to final product data
-        results = get_product_data1(matched_products)
+        results = get_product_data1(filtered_products )
 
         if matched_products:
             first_product = matched_products[0]
