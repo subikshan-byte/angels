@@ -24,32 +24,50 @@ def search(request,s):
     # Fetch all products (we’ll filter later)
     candidates = Product.objects.all()
 
-    if query:
-        matched_products = []
+   if query:
+    exact_matches = []
+    fuzzy_matches = []
 
-        # Hierarchy: only selected fields
-        hierarchy = [
-            ("p_name", 85),
-            ("small_title", 80),
-            ("brand_name", 75),
-            ("category__c_name", 75),
-            ("main_category_diff", 70),
-        ]
+    # Normalize query
+    query_lower = query.lower()
 
-        for field, threshold in hierarchy:
-            for product in candidates:
-                # Extract value depending on field
-                if field == "category__c_name":
-                    value = product.category.c_name
-                else:
-                    value = getattr(product, field, "")
+    # Step 1: Exact matches (case-insensitive)
+    for product in candidates:
+        if (
+            query_lower == product.p_name.lower()
+            or query_lower == product.brand_name.lower()
+            or query_lower == product.category.c_name.lower()
+        ):
+            exact_matches.append(product)
 
-                if fuzz.partial_ratio(query.lower(), str(value).lower()) >= threshold:
-                    if product not in matched_products:
-                        matched_products.append(product)
+    # Step 2: Fuzzy matches (related ones)
+    hierarchy = [
+        ("p_name", 85),
+        ("small_title", 80),
+        ("brand_name", 75),
+        ("category__c_name", 75),
+        ("main_category_diff", 70),
+    ]
 
-        # Main search results
-        results = get_product_data1(matched_products)
+    for field, threshold in hierarchy:
+        for product in candidates:
+            if product in exact_matches:
+                continue  # already matched exactly
+            if field == "category__c_name":
+                value = product.category.c_name
+            else:
+                value = getattr(product, field, "")
+            if fuzz.partial_ratio(query_lower, str(value).lower()) >= threshold:
+                if product not in fuzzy_matches:
+                    fuzzy_matches.append(product)
+
+    # Step 3: Combine — exact matches first
+    matched_products = exact_matches + fuzzy_matches
+
+combined_results = exact_matches + [p for p in fuzzy_matches if p not in exact_matches]
+
+# Convert to final product data
+results = get_product_data1(combined_results)
 
         if matched_products:
             first_product = matched_products[0]
