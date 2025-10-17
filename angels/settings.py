@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--@ol#!m2b*bz_bs4d)o#%4(k0(gix^2paz^116)2*+fhqtgf)^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG =True
 
-ALLOWED_HOSTS = ["angels-glamnglow.in","190.92.175.39","127.0.0.1:8000"]
+ALLOWED_HOSTS = ["angels-glamnglow.in","www.angels-glamnglow.in"]
 
 
 # Application definition
@@ -156,8 +156,8 @@ LOGOUT_REDIRECT_URL = '/'  # where to redirect after logout
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '628548672455-2kiq4jrta7lgp9t9kcdu5r3u23boeenh.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': '544989337133-o669caf03rhlnmuj0h9g8gq940lb974i.apps.googleusercontent.com',
+            'secret': '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',
             'key': ''
         }
     }
