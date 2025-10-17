@@ -172,7 +172,7 @@ RAZORPAY_KEY_ID = "rzp_test_ROETDnupbhbT32"
 RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
 CSRF_TRUSTED_ORIGINS = [
     "https://angels-glamnglow.in",
-    http://190.92.175.39:8000',
+    'http://190.92.175.39:8000',
       'https://www.angels-glamnglow.in',
 ]
 DEFAULT_DOMAIN="angels-glamnglow"
