@@ -92,7 +92,6 @@ def search(request,s):
         # Step 5️⃣: Fuzzy similarity (fallback)
         hierarchy = [
             ("p_name", 75),
-            ("small_title", 70),
             ("brand_name", 70),
             ("category__c_name", 65),
             ("main_category_diff", 60),
@@ -155,12 +154,9 @@ def search(request,s):
         )
 
         # ✅ Step 7️⃣: Preserve display order (force exact top)
+        # ✅ Step 7️⃣: Preserve display order (force exact top)
         from django.db.models import Case, When, Value, IntegerField
         
-        # --- Step: force exact matches to the very top ---
-        # treat anything ≥97% similar to query as "exact"
-        
-        # --- Step: preserve display order exactly ---
         matched_ids = [p.p_id for p in matched_products]
         
         if matched_ids:
@@ -169,19 +165,22 @@ def search(request,s):
                 output_field=IntegerField(),
             )
         
-            qs = (
+            # Force Django to follow this exact order
+            filtered_products = (
                 Product.objects.filter(p_id__in=matched_ids)
                 .annotate(_order=preserve_order)
                 .order_by("_order")
             )
         
-            # explicitly drop model default ordering if it exists
-            qs.query.clear_ordering(force=True)
+            # 🚨 Critical: clear any model-level ordering (e.g., ordering = ['p_name'])
+            filtered_products.query.clear_ordering(force=True)
         
-            results = get_product_data1(qs)
+            # Convert queryset to usable data
+            results = get_product_data1(filtered_products)
         else:
             results = []
-
+        
+        
 
 
 
