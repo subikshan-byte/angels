@@ -118,6 +118,12 @@ def search(request,s):
             + [p for p in word_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches]
             + [p for p in fuzzy_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches and p not in word_matches]
         )
+        # ✅ Force DB exact results first (even if duplicates)
+        matched_products = sorted(
+            matched_products,
+            key=lambda p: 0 if normalize(p.p_name) == query_norm else 1
+        )
+
     
         # ✅ Step 7️⃣: Preserve display order
         matched_ids = [p.p_id for p in matched_products]
