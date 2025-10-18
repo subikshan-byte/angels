@@ -215,3 +215,37 @@ class PasswordResetOTP(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user.username}"
+from django.utils import timezone
+import random
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    discount_percent = models.PositiveIntegerField(default=0)
+    active = models.BooleanField(default=True)
+    expiry_date = models.DateTimeField(null=True, blank=True)
+
+    def is_valid(self):
+        return self.active and (not self.expiry_date or self.expiry_date > timezone.now())
+
+    def __str__(self):
+        return f"{self.code} ({self.discount_percent}%)"
+
+
+class OrderOTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(default=timezone.now)
+    verified = models.BooleanField(default=False)
+
+    def generate_otp(self):
+        self.otp = str(random.randint(100000, 999999))
+        self.created_at = timezone.now()
+        self.verified = False
+        self.save()
+
+    def is_valid(self):
+        return (timezone.now() - self.created_at).seconds < 300  # 5 mins
+
+    def __str__(self):
+        return f"OTP for Order #{self.order.id}"
