@@ -24,7 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     list_display = ('img_id', 'p_id', 'slug')
-    search_fields = ('slug',)
+    search_fields = ('slug','p_id')
     prepopulated_fields = {'slug': ('p_id',)}
     autocomplete_fields = ['p_id']
 
