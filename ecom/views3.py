@@ -27,160 +27,69 @@ def search(request,s):
     from rapidfuzz import fuzz
     from django.db.models import Case, When
     
-    if query:
-        exact_product_name_matches = []
-        exact_matches = []
-        phrase_matches = []
-        word_matches = []
-        fuzzy_matches = []
+    import re, unicodedata
+    from rapidfuzz import fuzz
+    from django.db.models import Case, When, Value, IntegerField, Q
     
+    if query:
         # --- Normalize helper ---
         def normalize(text):
             text = str(text).lower()
-            text = text.replace("&", "and")  # handle & vs and
-            text = text.replace("–", "-")  # normalize dash
-            text = re.sub(r'[^a-z0-9]+', ' ', text)  # remove punctuation & special chars
-            text = re.sub(r'\s+', ' ', text).strip()  # collapse spaces
+            text = text.replace("&", "and").replace("–", "-").replace("—", "-").replace("\xa0", " ")
+            text = unicodedata.normalize("NFKD", text)
+            text = re.sub(r"[^a-z0-9]+", " ", text)
+            text = re.sub(r"\s+", " ", text).strip()
             return text
     
         query_norm = normalize(query)
-        query_words = query_norm.split()
     
-        # ✅ Step 0️⃣: DB-level direct match (guarantee exact hits)
-        from django.db.models import Q
-        db_exact = Product.objects.filter(
-            Q(p_name__iexact=query) | Q(p_name__icontains=query)
-        )
-        db_exact = list(db_exact.distinct())
+        # Step 1️⃣: Try to find an exact name match (normalized comparison)
+        all_products = list(Product.objects.all())
+        exact_product = None
     
-        # Step 1️⃣: Exact / near-exact product name match
-        for product in candidates:
-            name_norm = normalize(product.p_name)
+        for p in all_products:
+            if normalize(p.p_name) == query_norm:
+                exact_product = p
+                break
     
-            # Strong exact check (ignoring special chars and case)
-            if name_norm == query_norm or fuzz.ratio(query_norm, name_norm) >= 94:
-                exact_product_name_matches.append(product)
-                continue
+        # Step 2️⃣: Fallback – fuzzy & related search
+        matched_products = []
+        for p in all_products:
+            name_norm = normalize(p.p_name)
+            combined = normalize(f"{p.p_name} {p.brand_name} {p.category.c_name}")
     
-        # Step 2️⃣: Exact combined fields match (brand + category + name)
-        for product in candidates:
-            if product in exact_product_name_matches:
-                continue
-            combined = normalize(f"{product.p_name} {product.brand_name} {product.category.c_name}")
-            if combined == query_norm:
-                exact_matches.append(product)
-                continue
+            # Fuzzy and semantic matches
+            if fuzz.ratio(query_norm, name_norm) >= 80 or query_norm in combined:
+                matched_products.append(p)
     
-        # Step 3️⃣: Phrase match (query substring in product fields)
-        for product in candidates:
-            if product in exact_product_name_matches or product in exact_matches:
-                continue
-            combined = normalize(f"{product.p_name} {product.brand_name} {product.category.c_name}")
-            if query_norm in combined:
-                phrase_matches.append(product)
-                continue
+        # Step 3️⃣: If exact product exists, put it at the top
+        if exact_product:
+            matched_products = [exact_product] + [p for p in matched_products if p.p_id != exact_product.p_id]
     
-        # Step 4️⃣: Word match (at least one word from query)
-        for product in candidates:
-            if product in exact_product_name_matches or product in exact_matches or product in phrase_matches:
-                continue
-            combined = normalize(f"{product.p_name} {product.brand_name} {product.category.c_name}")
-            if any(word in combined for word in query_words):
-                word_matches.append(product)
-                continue
+        # Step 4️⃣: Remove duplicates while preserving order
+        seen = set()
+        matched_products = [p for p in matched_products if not (p.p_id in seen or seen.add(p.p_id))]
     
-        # Step 5️⃣: Fuzzy similarity (fallback)
-        hierarchy = [
-            ("p_name", 75),
-            ("brand_name", 70),
-            ("category__c_name", 65),
-            ("main_category_diff", 60),
-        ]
-    
-        for field, threshold in hierarchy:
-            for product in candidates:
-                if product in exact_product_name_matches or product in exact_matches or product in phrase_matches or product in word_matches:
-                    continue
-                if field == "category__c_name":
-                    value = product.category.c_name
-                else:
-                    value = getattr(product, field, "")
-                if fuzz.partial_ratio(query_norm, normalize(str(value))) >= threshold:
-                    fuzzy_matches.append(product)
-    
-        # ✅ Step 6️⃣: Combine — DB hits always first, then strongest to weakest
-        matched_products = (
-            db_exact
-            + [p for p in exact_product_name_matches if p not in db_exact]
-            + [p for p in exact_matches if p not in db_exact and p not in exact_product_name_matches]
-            + [p for p in phrase_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches]
-            + [p for p in word_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches]
-            + [p for p in fuzzy_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches and p not in word_matches]
-        )
-        # ✅ Force DB exact results first (even if duplicates)
-        matched_products = sorted(
-            matched_products,
-            key=lambda p: 0 if normalize(p.p_name) == query_norm else 1
-        )
-        # --- Step: Assign numeric match scores (exact product = always first) ---
-        def compute_match_score(product):
-            name_norm = normalize(product.p_name)
-            score = fuzz.ratio(name_norm, normalize(query))
-        
-            # Strong exact equality (same normalized text)
-            if name_norm == normalize(query):
-                return 1000  # absolute top
-        
-            # Very close match
-            elif score >= 97:
-                return 900
-        
-            # Contains full query phrase
-            elif normalize(query) in name_norm:
-                return 800
-        
-            # Word-level partial overlap
-            elif any(word in name_norm for word in normalize(query).split()):
-                return 700
-        
-            # Default fuzzy ratio score
-            return score
-        
-        # Sort descending by score (higher = stronger match)
-        matched_products = sorted(
-            matched_products,
-            key=lambda p: compute_match_score(p),
-            reverse=True
-        )
-
-        # ✅ Step 7️⃣: Preserve display order (force exact top)
-        # ✅ Step 7️⃣: Preserve display order (force exact top)
-        from django.db.models import Case, When, Value, IntegerField
-        
+        # Step 5️⃣: Preserve the same order in the DB queryset
         matched_ids = [p.p_id for p in matched_products]
-        
         if matched_ids:
             preserve_order = Case(
                 *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
                 output_field=IntegerField(),
             )
-        
-            # Force Django to follow this exact order
+    
             filtered_products = (
                 Product.objects.filter(p_id__in=matched_ids)
                 .annotate(_order=preserve_order)
                 .order_by("_order")
             )
-        
-            # 🚨 Critical: clear any model-level ordering (e.g., ordering = ['p_name'])
+    
+            # 🚨 Disable default model ordering (if any)
             filtered_products.query.clear_ordering(force=True)
-        
-            # Convert queryset to usable data
             results = get_product_data1(filtered_products)
         else:
             results = []
-        
-        
+       
 
 
 
