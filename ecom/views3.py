@@ -125,14 +125,30 @@ def search(request,s):
         )
 
     
-        # ✅ Step 7️⃣: Preserve display order
+        # ✅ Step 7️⃣: Preserve display order (force exact top)
+        from django.db.models import Case, When, Value, IntegerField
+        
         matched_ids = [p.p_id for p in matched_products]
+        
         if matched_ids:
-            preserve_order = Case(*[When(p_id=pid, then=pos) for pos, pid in enumerate(matched_ids)])
-            filtered_products = Product.objects.filter(p_id__in=matched_ids).order_by(preserve_order)
+            # Build order mapping for the database
+            preserve_order = Case(
+                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
+                output_field=IntegerField(),
+            )
+        
+            # Force Django to follow this exact order, ignoring model defaults
+            filtered_products = (
+                Product.objects.filter(p_id__in=matched_ids)
+                .annotate(_order=preserve_order)
+                .order_by("_order")
+            )
+        
+            # Convert queryset to usable data
             results = get_product_data1(filtered_products)
         else:
             results = []
+
 
 
 
