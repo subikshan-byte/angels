@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Password | Angels Glam & Glow</title>
+  <title>Verify OTP | Angels Glam & Glow</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
     body {
-      background: linear-gradient(135deg, #f8e8ef, #f0d7e9);
+      background: linear-gradient(135deg, #ffe1ec, #f9d9ea);
       font-family: 'Poppins', sans-serif;
       display: flex;
       justify-content: center;
@@ -33,7 +33,7 @@
     }
 
     h2 {
-      color: #7b1fa2;
+      color: #ad1457;
       margin-bottom: 20px;
       font-weight: 600;
     }
@@ -43,22 +43,25 @@
       flex-direction: column;
     }
 
-    input[type="password"] {
+    input[type="text"] {
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 8px;
       margin-bottom: 15px;
       outline: none;
       transition: 0.3s;
+      text-align: center;
+      letter-spacing: 4px;
+      font-size: 16px;
     }
 
-    input[type="password"]:focus {
-      border-color: #7b1fa2;
-      box-shadow: 0 0 5px rgba(123, 31, 162, 0.3);
+    input[type="text"]:focus {
+      border-color: #ad1457;
+      box-shadow: 0 0 5px rgba(173, 20, 87, 0.3);
     }
 
     button {
-      background-color: #7b1fa2;
+      background-color: #ad1457;
       color: #fff;
       border: none;
       padding: 10px;
@@ -69,7 +72,7 @@
     }
 
     button:hover {
-      background-color: #5e1780;
+      background-color: #8e1148;
     }
 
     .msg {
@@ -81,14 +84,13 @@
 </head>
 <body>
   <div class="container">
-    <h2>Reset Password</h2>
+    <h2>Verify OTP</h2>
     <form method="POST">
       {% csrf_token %}
-      {{ form.new_password }}
-      {{ form.confirm_password }}
-      <button type="submit">Reset Password</button>
+      {{ form.otp }}
+      <button type="submit">Verify OTP</button>
     </form>
-    <p class="msg">Enter your new password below.</p>
+    <p class="msg">Enter the 6-digit OTP sent to your email.</p>
   </div>
 </body>
 </html>
