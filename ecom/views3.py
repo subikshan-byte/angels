@@ -126,28 +126,40 @@ def search(request,s):
 
     
         # ✅ Step 7️⃣: Preserve display order (force exact top)
-        from django.db.models import Case, When, Value, IntegerField
-        
-        matched_ids = [p.p_id for p in matched_products]
-        
-        if matched_ids:
-            # Build order mapping for the database
-            preserve_order = Case(
-                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
-                output_field=IntegerField(),
-            )
-        
-            # Force Django to follow this exact order, ignoring model defaults
-            filtered_products = (
-                Product.objects.filter(p_id__in=matched_ids)
-                .annotate(_order=preserve_order)
-                .order_by("_order")
-            )
-        
-            # Convert queryset to usable data
-            results = get_product_data1(filtered_products)
-        else:
-            results = []
+   from django.db.models import Case, When, Value, IntegerField
+    
+    # --- Step: force exact matches to the very top ---
+    # treat anything ≥97% similar to query as "exact"
+    def very_close(product):
+        return fuzz.ratio(normalize(product.p_name), normalize(query)) >= 97
+    
+    matched_products = sorted(
+        matched_products,
+        key=lambda p: 0 if very_close(p) else 1
+    )
+    
+    # --- Step: preserve display order exactly ---
+    matched_ids = [p.p_id for p in matched_products]
+    
+    if matched_ids:
+        preserve_order = Case(
+            *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
+            output_field=IntegerField(),
+        )
+    
+        qs = (
+            Product.objects.filter(p_id__in=matched_ids)
+            .annotate(_order=preserve_order)
+            .order_by("_order")
+        )
+    
+        # explicitly drop model default ordering if it exists
+        qs.query.clear_ordering(force=True)
+    
+        results = get_product_data1(qs)
+    else:
+        results = []
+
 
 
 
