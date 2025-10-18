@@ -26,7 +26,28 @@
     <div class="checkoutarea sp_bottom_100 sp_top_100">
         <div class="container">
             <div class="row">
-
+                <div class="user-details-card">
+                    <h2>Profile Information</h2>
+                    <div class="user-info">
+                        <div class="info-item">
+                            <div class="info-label">Name:</div>
+                            <div class="info-value" id="display-name"> {{request.user.first_name}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value" id="display-email">{{ request.user.email}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Mobile:</div>
+                            <div class="info-value" id="display-mobile">+91 {{ profile.mobile}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address:</div>
+                            <div class="info-value" id="display-address">{{ profile.address}}</div>
+                        </div>
+                    </div>
+                    <button class="edit-btn" id="open-edit-modal">Edit Profile</button>
+                </div>
                 <div class="col-lg-6 col-md-12 col-12">
                     <div class="checkoutarea__payment__wraper">
                         <div class="checkoutarea__total">
