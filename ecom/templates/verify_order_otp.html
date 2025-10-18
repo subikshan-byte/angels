@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Order OTP</title>
+  <style>
+    body { background: #f2f2f2; font-family: 'Poppins'; display:flex; align-items:center; justify-content:center; height:100vh; }
+    .box { background:white; padding:40px; border-radius:10px; text-align:center; width:320px; box-shadow:0 5px 20px rgba(0,0,0,0.1); }
+    input { width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:6px; }
+    button { padding:10px; background:#4a6de5; color:white; border:none; border-radius:6px; cursor:pointer; width:100%; }
+    button:hover { background:#3a5bd0; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Verify Your Order</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" name="otp" placeholder="Enter OTP">
+      <button type="submit">Verify</button>
+    </form>
+    {% for message in messages %}
+      <p style="color:red;">{{ message }}</p>
+    {% endfor %}
+  </div>
+</body>
+</html>
