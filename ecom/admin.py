@@ -92,4 +92,15 @@ class OrderAdmin(admin.ModelAdmin):
     @admin.action(description="Mark selected orders as Delivered")
     def mark_as_delivered(self, request, queryset):
         queryset.update(status='delivered')
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ('code', 'discount_percent', 'active', 'expiry_date', 'is_valid_display')
+    list_filter = ('active', 'expiry_date')
+    search_fields = ('code',)
+    ordering = ('-expiry_date',)
 
+    def is_valid_display(self, obj):
+        """Show whether the coupon is currently valid in the list display."""
+        return obj.is_valid()
+    is_valid_display.short_description = "Valid?"
+    is_valid_display.boolean = True 
