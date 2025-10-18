@@ -1,19 +1,26 @@
 import razorpay
+import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .models import Product, Order, OrderItem, Coupon
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
+from django.utils import timezone
+from .models import Product, Order, OrderItem, Coupon, OrderOTP
 
+
+# -------------------- BUY NOW --------------------
 @login_required
 def buy_now(request, slug):
     product = get_object_or_404(Product, slug=slug)
     discount = 0
     total_amount = product.price
+    quantity = int(request.POST.get("quantity", 1))
 
     if request.method == "POST":
-        quantity = int(request.POST.get("quantity", 1))
         coupon_code = request.POST.get("coupon", "").strip().upper()
+        address = request.POST.get("address", "").strip()
 
         # --- Coupon Check ---
         if coupon_code:
@@ -28,16 +35,22 @@ def buy_now(request, slug):
             except Coupon.DoesNotExist:
                 messages.error(request, "Invalid coupon code.")
 
-        # --- Razorpay Calculation ---
         total_amount = total_amount * quantity
-        razorpay_amount = int(total_amount * 100)  # convert to paise
+        razorpay_amount = int(total_amount * 100)
 
+        # --- Razorpay Order ---
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create({
             "amount": razorpay_amount,
             "currency": "INR",
             "payment_capture": "1"
         })
+
+        # Save updated address if provided
+        if address:
+            profile = request.user.userprofile
+            profile.address = address
+            profile.save()
 
         return render(request, "checkout.html", {
             "product": product,
@@ -52,19 +65,13 @@ def buy_now(request, slug):
     return redirect("product", p=slug)
 
 
-# ---------------- SUCCESS VIEW ----------------
-from django.views.decorators.csrf import csrf_exempt
-from django.core.mail import send_mail
-from django.contrib import messages
-from .models import OrderOTP
-
+# -------------------- PAYMENT SUCCESS --------------------
 @csrf_exempt
 @login_required
 def payment_success(request):
     product_slug = request.GET.get("product_slug")
     quantity = int(request.GET.get("quantity", 1))
     payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
-
     product = get_object_or_404(Product, slug=product_slug)
 
     # --- Create Order ---
@@ -75,6 +82,7 @@ def payment_success(request):
         address=request.user.userprofile.address
     )
 
+    # --- Create Order Item ---
     OrderItem.objects.create(
         order=order,
         product=product,
@@ -82,37 +90,84 @@ def payment_success(request):
         price=product.price
     )
 
-    # --- OTP Generation ---
-    otp_obj, _ = OrderOTP.objects.get_or_create(user=request.user, order=order)
-    otp_obj.generate_otp()
+    # --- Generate and Send OTP ---
+    otp_code = str(random.randint(100000, 999999))
+    otp_obj, _ = OrderOTP.objects.update_or_create(
+        user=request.user,
+        order=order,
+        defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False},
+    )
 
-    # --- Email OTP ---
     send_mail(
         subject="Your Order Verification OTP",
-        message=f"Dear {request.user.first_name}, your OTP for order #{order.id} is {otp_obj.otp}. It will expire in 5 minutes.",
+        message=f"Dear {request.user.first_name}, your OTP for order #{order.id} is {otp_code}. It expires in 5 minutes.",
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[request.user.email],
     )
 
-    messages.success(request, "Payment successful! OTP sent to your email for order verification.")
+    messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
     return redirect("verify_order_otp")
+
+
+# -------------------- VERIFY ORDER OTP --------------------
 @login_required
 def verify_order_otp(request):
     otp_obj = OrderOTP.objects.filter(user=request.user).last()
 
+    if not otp_obj:
+        messages.error(request, "No OTP found. Please make a new purchase.")
+        return redirect("home")
+
     if request.method == "POST":
         entered_otp = request.POST.get("otp")
-        if otp_obj and otp_obj.otp == entered_otp and otp_obj.is_valid():
+        if otp_obj.otp == entered_otp and otp_obj.is_valid():
             otp_obj.verified = True
             otp_obj.save()
             otp_obj.order.status = "confirmed"
             otp_obj.order.save()
-            messages.success(request, "Order verified successfully!")
+            messages.success(request, f"Order #{otp_obj.order.id} verified successfully!")
             return redirect("myaccount")
         else:
-            messages.error(request, "Invalid or expired OTP.")
+            messages.error(request, "Invalid or expired OTP. Please try again.")
 
-    return render(request, "verify_order_otp.html")
+    return render(request, "verify_order_otp.html", {"otp_obj": otp_obj})
+
+
+# -------------------- OPTIONAL: COD SUPPORT --------------------
+@login_required
+def cod_order(request, slug):
+    """For Cash On Delivery checkout flow"""
+    product = get_object_or_404(Product, slug=slug)
+    quantity = int(request.POST.get("quantity", 1))
+    address = request.POST.get("address", "").strip()
+
+    order = Order.objects.create(
+        user=request.user,
+        status="pending",
+        payment_id="COD",
+        address=address or request.user.userprofile.address
+    )
+
+    OrderItem.objects.create(order=order, product=product, quantity=quantity, price=product.price)
+
+    # --- OTP Verification ---
+    otp_code = str(random.randint(100000, 999999))
+    otp_obj, _ = OrderOTP.objects.update_or_create(
+        user=request.user,
+        order=order,
+        defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False},
+    )
+
+    send_mail(
+        subject="COD Order Verification OTP",
+        message=f"Dear {request.user.first_name}, your OTP for order #{order.id} is {otp_code}. Please verify it to confirm delivery.",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[request.user.email],
+    )
+
+    messages.info(request, "COD order placed! Please verify OTP sent to your email.")
+    return redirect("verify_order_otp")
+
 from django.shortcuts import redirect, get_object_or_404
 from .models import CartItem
 
