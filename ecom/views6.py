@@ -113,3 +113,33 @@ def verify_order_otp(request):
             messages.error(request, "Invalid or expired OTP.")
 
     return render(request, "verify_order_otp.html")
+from django.shortcuts import redirect, get_object_or_404
+from .models import CartItem
+
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponse
+from .models import CartItem
+
+def update_cart_quantity(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        quantity = request.POST.get("quantity")
+
+        try:
+            quantity = int(quantity)
+        except (TypeError, ValueError):
+            quantity = cart_item.quantity  # fallback to current quantity
+
+        if action == "increase":
+            cart_item.quantity = quantity + 1
+        elif action == "decrease" and quantity > 1:
+            cart_item.quantity = quantity - 1
+        else:
+            cart_item.quantity = quantity
+
+        cart_item.save()
+        return HttpResponse(action)
+
+    return redirect('cart')
