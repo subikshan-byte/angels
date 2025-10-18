@@ -254,7 +254,7 @@ sendOtpBtn.addEventListener("click", () => {
 verifyOtpBtn.addEventListener("click", () => {
     const otp = otpInput.value.trim();
     if (!otp) return (otpMessage.textContent = "Please enter OTP");
-    fetch("{% url 'verify_checkout_otp' %}", {
+    fetch("{% url 'verify_order_otp' %}", {
         method: "POST",
         headers: {
             "X-CSRFToken": "{{ csrf_token }}",
