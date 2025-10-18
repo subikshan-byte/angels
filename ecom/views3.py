@@ -123,20 +123,42 @@ def search(request,s):
             matched_products,
             key=lambda p: 0 if normalize(p.p_name) == query_norm else 1
         )
+        # --- Step: Assign numeric match scores (exact product = always first) ---
+        def compute_match_score(product):
+            name_norm = normalize(product.p_name)
+            score = fuzz.ratio(name_norm, normalize(query))
+        
+            # Strong exact equality (same normalized text)
+            if name_norm == normalize(query):
+                return 1000  # absolute top
+        
+            # Very close match
+            elif score >= 97:
+                return 900
+        
+            # Contains full query phrase
+            elif normalize(query) in name_norm:
+                return 800
+        
+            # Word-level partial overlap
+            elif any(word in name_norm for word in normalize(query).split()):
+                return 700
+        
+            # Default fuzzy ratio score
+            return score
+        
+        # Sort descending by score (higher = stronger match)
+        matched_products = sorted(
+            matched_products,
+            key=lambda p: compute_match_score(p),
+            reverse=True
+        )
 
-    
         # ✅ Step 7️⃣: Preserve display order (force exact top)
         from django.db.models import Case, When, Value, IntegerField
         
         # --- Step: force exact matches to the very top ---
         # treat anything ≥97% similar to query as "exact"
-        def very_close(product):
-            return fuzz.ratio(normalize(product.p_name), normalize(query)) >= 97
-        
-        matched_products = sorted(
-            matched_products,
-            key=lambda p: 0 if very_close(p) else 1
-        )
         
         # --- Step: preserve display order exactly ---
         matched_ids = [p.p_id for p in matched_products]
