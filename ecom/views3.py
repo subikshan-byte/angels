@@ -76,16 +76,21 @@ def search(request,s):
         scored = [sp for sp in scored if sp[0] >= 60]  # keep relevant only
         scored.sort(key=lambda sp: sp[0], reverse=True)
     
-        matched_products = [p for _, p in scored]
+            # --- Preserve order in DB (force exact product on top) --------------
+        matched_products = sorted(
+            matched_products,
+            key=lambda p: 0 if normalize(p.p_name) == query_norm else 1
+        )
     
-        # --- Preserve order in DB ------------------------------------------
         matched_ids = [p.p_id for p in matched_products]
+    
         if matched_ids:
             preserve_order = Case(
                 *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
                 output_field=IntegerField(),
             )
     
+            # enforce our custom order explicitly
             filtered_products = (
                 Product.objects.filter(p_id__in=matched_ids)
                 .annotate(_order=preserve_order)
@@ -95,8 +100,7 @@ def search(request,s):
             results = get_product_data1(filtered_products)
         else:
             results = []
-    else:
-        results = get_product_data1(Product.objects.all())
+
 
 
 
