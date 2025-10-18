@@ -134,9 +134,9 @@ def search(request,s):
                     same_category_products = clean_group
                 else:
                     same_main_category_diff_products = clean_group
-    else:
-        # If no query, just show all products
-        results = get_product_data1(candidates)
+        else:
+            # If no query, just show all products
+            results = get_product_data1(candidates)
 
     # --- APPLY FILTERS ---
     filtered_products = Product.objects.filter(p_id__in=[r["p_id"] for r in results])
