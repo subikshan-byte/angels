@@ -24,6 +24,8 @@ def search(request,s):
     # Fetch all products (we’ll filter later)
     candidates = Product.objects.all()
     import re
+    from rapidfuzz import fuzz
+    from django.db.models import Case, When
     
     if query:
         exact_product_name_matches = []
@@ -34,7 +36,9 @@ def search(request,s):
     
         # --- Normalize helper ---
         def normalize(text):
-            text = text.lower()
+            text = str(text).lower()
+            text = text.replace("&", "and")  # handle & vs and
+            text = text.replace("–", "-")  # normalize dash
             text = re.sub(r'[^a-z0-9]+', ' ', text)  # remove punctuation & special chars
             text = re.sub(r'\s+', ' ', text).strip()  # collapse spaces
             return text
@@ -42,11 +46,19 @@ def search(request,s):
         query_norm = normalize(query)
         query_words = query_norm.split()
     
+        # ✅ Step 0️⃣: DB-level direct match (guarantee exact hits)
+        from django.db.models import Q
+        db_exact = Product.objects.filter(
+            Q(p_name__iexact=query) | Q(p_name__icontains=query)
+        )
+        db_exact = list(db_exact.distinct())
+    
         # Step 1️⃣: Exact / near-exact product name match
         for product in candidates:
             name_norm = normalize(product.p_name)
-            # exact or 95% fuzzy match for high similarity
-            if name_norm == query_norm or fuzz.ratio(query_norm, name_norm) >= 95:
+    
+            # Strong exact check (ignoring special chars and case)
+            if name_norm == query_norm or fuzz.ratio(query_norm, name_norm) >= 94:
                 exact_product_name_matches.append(product)
                 continue
     
@@ -97,23 +109,25 @@ def search(request,s):
                 if fuzz.partial_ratio(query_norm, normalize(str(value))) >= threshold:
                     fuzzy_matches.append(product)
     
-        # Step 6️⃣: Combine — strongest to weakest
+        # ✅ Step 6️⃣: Combine — DB hits always first, then strongest to weakest
         matched_products = (
-            exact_product_name_matches
-            + [p for p in exact_matches if p not in exact_product_name_matches]
-            + [p for p in phrase_matches if p not in exact_product_name_matches and p not in exact_matches]
-            + [p for p in word_matches if p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches]
-            + [p for p in fuzzy_matches if p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches and p not in word_matches]
+            db_exact
+            + [p for p in exact_product_name_matches if p not in db_exact]
+            + [p for p in exact_matches if p not in db_exact and p not in exact_product_name_matches]
+            + [p for p in phrase_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches]
+            + [p for p in word_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches]
+            + [p for p in fuzzy_matches if p not in db_exact and p not in exact_product_name_matches and p not in exact_matches and p not in phrase_matches and p not in word_matches]
         )
     
-        # Preserve order
-        from django.db.models import Case, When
+        # ✅ Step 7️⃣: Preserve display order
         matched_ids = [p.p_id for p in matched_products]
-        preserve_order = Case(*[When(p_id=pid, then=pos) for pos, pid in enumerate(matched_ids)])
-        filtered_products = Product.objects.filter(p_id__in=matched_ids).order_by(preserve_order)
-    
-        # Convert to usable data
-        results = get_product_data1(filtered_products)
+        if matched_ids:
+            preserve_order = Case(*[When(p_id=pid, then=pos) for pos, pid in enumerate(matched_ids)])
+            filtered_products = Product.objects.filter(p_id__in=matched_ids).order_by(preserve_order)
+            results = get_product_data1(filtered_products)
+        else:
+            results = []
+
 
 
         if matched_products:
