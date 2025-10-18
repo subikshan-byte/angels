@@ -171,15 +171,21 @@ class Order(models.Model):
         ('delivered', 'Delivered'),
         ('cancelled', 'Cancelled')
     ]
+    PAYMENT_METHOD_CHOICES = [
+        ('online', 'Online Payment'),
+        ('cod', 'Cash on Delivery'),
+    ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     address = models.TextField(blank=True, null=True)
     payment_id = models.CharField(max_length=100, blank=True, null=True)  # Razorpay payment ID
-
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES, default='cod')
     def total_price(self):
         return sum(item.subtotal() for item in self.items.all())
+    def __str__(self):
+        return f"Order #{self.id} by {self.user.username} ({self.payment_method})"
 
 
 
