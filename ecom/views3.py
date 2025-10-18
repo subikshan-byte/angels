@@ -19,6 +19,7 @@ def search(request,s):
 
     results = []
     same_category_products = []
+    matched_products=[]
     same_main_category_diff_products = []
 
     # Fetch all products (we’ll filter later)
