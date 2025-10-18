@@ -23,10 +23,6 @@ def search(request,s):
 
     # Fetch all products (we’ll filter later)
     candidates = Product.objects.all()
-    import re
-    from rapidfuzz import fuzz
-    from django.db.models import Case, When
-    
     import re, unicodedata
     from rapidfuzz import fuzz
     from django.db.models import Case, When, Value, IntegerField, Q
@@ -55,31 +51,43 @@ def search(request,s):
             if name == query_norm:
                 return 100
     
-            # 2️⃣ strong substring (brand/name contains query)
-            if query_norm in name or query_norm in brand:
+            # 2️⃣ exact brand name
+            if brand == query_norm:
+                return 99
+    
+            # 3️⃣ strong substring (brand/name/category contains full query)
+            if query_norm in name or query_norm in brand or query_norm in category:
                 return 90
     
-            # 3️⃣ keyword overlap (any query word in combined fields)
+            # 4️⃣ keyword overlap (any query word in name/brand/category)
             if any(w in combined for w in query_words):
                 return 80
     
-            # 4️⃣ fuzzy ratio 70–89
+            # 5️⃣ fuzzy similarity (partial ratio)
             ratio = fuzz.partial_ratio(query_norm, combined)
-            if ratio >= 70:
-                return ratio  # 70-89 region
+            if ratio >= 60:
+                return ratio  # will be between 60-89
     
             return 0  # not relevant
     
         # --- Score & collect -----------------------------------------------
         candidates = list(Product.objects.all())
-        scored = [(score_product(p), p) for p in candidates]
-        scored = [sp for sp in scored if sp[0] >= 60]  # keep relevant only
+        scored = [(score_product(p), p) for p in candidates if score_product(p) >= 60]
+    
+        # Sort strictly by score (descending)
         scored.sort(key=lambda sp: sp[0], reverse=True)
     
-            # --- Preserve order in DB (force exact product on top) --------------
+        # Extract ordered products
+        matched_products = [p for _, p in scored]
+    
+        # --- Preserve order in DB (100/99 first) ----------------------------
+        # Sort again in Python so 100% product names and 99% brand matches appear top
         matched_products = sorted(
             matched_products,
-            key=lambda p: 0 if normalize(p.p_name) == query_norm else 1
+            key=lambda p: (
+                0 if normalize(p.p_name) == query_norm else
+                (1 if normalize(p.brand_name) == query_norm else 2)
+            )
         )
     
         matched_ids = [p.p_id for p in matched_products]
@@ -90,7 +98,6 @@ def search(request,s):
                 output_field=IntegerField(),
             )
     
-            # enforce our custom order explicitly
             filtered_products = (
                 Product.objects.filter(p_id__in=matched_ids)
                 .annotate(_order=preserve_order)
@@ -100,6 +107,8 @@ def search(request,s):
             results = get_product_data1(filtered_products)
         else:
             results = []
+    else:
+        results = get_product_data1(Product.objects.all())
 
 
 
