@@ -11,6 +11,7 @@ from .models import Product, Order, OrderItem, Coupon, OrderOTP
 
 
 # -------------------- BUY NOW --------------------
+@csrf_exempt
 @login_required
 def buy_now(request, slug):
     product = get_object_or_404(Product, slug=slug)
