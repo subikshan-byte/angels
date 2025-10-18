@@ -1,1 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Order Summary | Angels Glam & Glow{% endblock %}
 
+{% block content %}
+
+<div class="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="breadcrumb__title">
+          <h1>Order Summary</h1>
+          <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li class="color__blue">Order Summary</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="checkoutarea sp_bottom_100 sp_top_100">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-12">
+        <div class="checkoutarea__payment__wraper">
+          <div class="checkoutarea__total">
+            <h3>Review Your Order</h3>
+            <form method="POST" action="{% url 'order_check' %}">
+              {% csrf_token %}
+              <div class="checkoutarea__table__wraper">
+                <table class="checkoutarea__table">
+                  <thead>
+                    <tr>
+                      <td>Product</td>
+                      <td class="text-right">Price</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                      <td>{{ item.product.p_name }} (x{{ item.quantity }})</td>
+                      <td class="text-right">₹ {{ item.subtotal|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                      <td><strong>Subtotal</strong></td>
+                      <td class="text-right"><strong>₹ {{ subtotal|floatformat:2 }}</strong></td>
+                    </tr>
+                    {% if discount %}
+                    <tr>
+                      <td>Coupon Discount</td>
+                      <td class="text-right text-success">- ₹ {{ discount|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td><strong>Total</strong></td>
+                      <td class="text-right"><strong>₹ {{ total|floatformat:2 }}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="checkoutarea__inputbox">
+                <label for="coupon">Enter Coupon Code (Number)</label>
+                <input type="number" id="coupon" name="coupon" placeholder="e.g. 12345" min="10000" max="99999">
+              </div>
+
+              <div class="button-group">
+                <button type="submit" name="apply_coupon" class="btn-outline">Apply Coupon</button>
+                <button type="submit" name="proceed_later" class="btn-primary">Proceed Later</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .text-right { text-align: right; }
+  .text-success { color: #28a745; }
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: var(--transition);
+  }
+  input[type="number"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139,115,85,0.2);
+  }
+</style>
+
+{% endblock %}
