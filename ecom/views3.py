@@ -32,9 +32,9 @@ def search(request,s):
     from django.db.models import Case, When, Value, IntegerField, Q
     
     if query:
-        # --- Normalize helper ---
+        # --- Normalizer -----------------------------------------------------
         def normalize(text):
-            text = str(text).lower()
+            text = str(text or "").lower()
             text = text.replace("&", "and").replace("–", "-").replace("—", "-").replace("\xa0", " ")
             text = unicodedata.normalize("NFKD", text)
             text = re.sub(r"[^a-z0-9]+", " ", text)
@@ -42,35 +42,43 @@ def search(request,s):
             return text
     
         query_norm = normalize(query)
+        query_words = query_norm.split()
     
-        # Step 1️⃣: Try to find an exact name match (normalized comparison)
-        all_products = list(Product.objects.all())
-        exact_product = None
+        # --- Scoring helper -------------------------------------------------
+        def score_product(p):
+            name = normalize(p.p_name)
+            brand = normalize(p.brand_name)
+            category = normalize(p.category.c_name)
+            combined = f"{name} {brand} {category}"
     
-        for p in all_products:
-            if normalize(p.p_name) == query_norm:
-                exact_product = p
-                break
+            # 1️⃣ exact product name
+            if name == query_norm:
+                return 100
     
-        # Step 2️⃣: Fallback – fuzzy & related search
-        matched_products = []
-        for p in all_products:
-            name_norm = normalize(p.p_name)
-            combined = normalize(f"{p.p_name} {p.brand_name} {p.category.c_name}")
+            # 2️⃣ strong substring (brand/name contains query)
+            if query_norm in name or query_norm in brand:
+                return 90
     
-            # Fuzzy and semantic matches
-            if fuzz.ratio(query_norm, name_norm) >= 80 or query_norm in combined:
-                matched_products.append(p)
+            # 3️⃣ keyword overlap (any query word in combined fields)
+            if any(w in combined for w in query_words):
+                return 80
     
-        # Step 3️⃣: If exact product exists, put it at the top
-        if exact_product:
-            matched_products = [exact_product] + [p for p in matched_products if p.p_id != exact_product.p_id]
+            # 4️⃣ fuzzy ratio 70–89
+            ratio = fuzz.partial_ratio(query_norm, combined)
+            if ratio >= 70:
+                return ratio  # 70-89 region
     
-        # Step 4️⃣: Remove duplicates while preserving order
-        seen = set()
-        matched_products = [p for p in matched_products if not (p.p_id in seen or seen.add(p.p_id))]
+            return 0  # not relevant
     
-        # Step 5️⃣: Preserve the same order in the DB queryset
+        # --- Score & collect -----------------------------------------------
+        candidates = list(Product.objects.all())
+        scored = [(score_product(p), p) for p in candidates]
+        scored = [sp for sp in scored if sp[0] >= 60]  # keep relevant only
+        scored.sort(key=lambda sp: sp[0], reverse=True)
+    
+        matched_products = [p for _, p in scored]
+    
+        # --- Preserve order in DB ------------------------------------------
         matched_ids = [p.p_id for p in matched_products]
         if matched_ids:
             preserve_order = Case(
@@ -83,13 +91,13 @@ def search(request,s):
                 .annotate(_order=preserve_order)
                 .order_by("_order")
             )
-    
-            # 🚨 Disable default model ordering (if any)
             filtered_products.query.clear_ordering(force=True)
             results = get_product_data1(filtered_products)
         else:
             results = []
-       
+    else:
+        results = get_product_data1(Product.objects.all())
+
 
 
 
