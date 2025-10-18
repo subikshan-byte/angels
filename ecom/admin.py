@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, Size, Cart, CartItem, UserProfile, Order, OrderItem
+from .models import Category, Product, ProductImage, Size, Cart, CartItem, UserProfile, Order, OrderItem,Coupon
 admin.site.site_header = "Zapwaves Administration"
 admin.site.site_title = "Zapwaves Admin Portal"
 admin.site.index_title = "Welcome to Zapwaves Dashboard"
