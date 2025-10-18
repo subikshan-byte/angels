@@ -149,7 +149,7 @@ body {
 <div class="checkout-container">
     <!-- PROFILE -->
     <div class="user-details-card">
-        <h2>Profile Information</h2>
+        <h2>ORDER DELIVERY INFORMATION</h2>
         <div class="user-info">
             <div class="info-item">
                 <div class="info-label">Name:</div>
@@ -193,11 +193,7 @@ body {
                 </div>
             </div>
 
-            <!-- Address -->
-            <div class="address-section">
-                <label for="address">Delivery Address</label>
-                <textarea name="address" id="address" rows="3" required>{{ request.user.userprofile.address }}</textarea>
-            </div>
+           
 
             <!-- OTP Trigger -->
             <button type="button" class="otp-btn" id="send-otp">Proceed to OTP Verification</button>
