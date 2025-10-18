@@ -162,12 +162,28 @@ body {
 
 <div class="checkout-container">
     <!-- PROFILE -->
-    <div class="profile-card">
-        <h2>Profile Information</h2>
-        <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
-        <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
-        <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
-    </div>
+    <div class="user-details-card">
+                    <h2>Profile Information</h2>
+                    <div class="user-info">
+                        <div class="info-item">
+                            <div class="info-label">Name:</div>
+                            <div class="info-value" id="display-name"> {{request.user.first_name}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value" id="display-email">{{ request.user.email}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Mobile:</div>
+                            <div class="info-value" id="display-mobile">+91 {{ profile.mobile}}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address:</div>
+                            <div class="info-value" id="display-address">{{ profile.address}}</div>
+                        </div>
+                    </div>
+                    <button class="edit-btn" id="open-edit-modal">Edit Profile</button>
+                </div>
 
     <!-- ORDER -->
     <div class="order-card">
@@ -179,12 +195,6 @@ body {
                 <tr><td>Price</td><td>₹{{ product.price }}</td></tr>
                 <tr><td><strong>Total</strong></td><td><strong>₹{{ total_amount }}</strong></td></tr>
             </table>
-
-            <div class="address-section">
-                <label for="address">Delivery Address</label>
-                <textarea id="address" name="address" required>{{ profile.address }}</textarea>
-            </div>
-
             <div class="coupon-section">
                 <label for="coupon">Have a Coupon?</label>
                 <div class="coupon-input-wrap">
