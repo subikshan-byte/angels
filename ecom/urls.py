@@ -1,6 +1,6 @@
 from django.urls import path,include
 from . import views
-from . import views3,views2,views4,views5,views6,views7,views8,forgetpass
+from . import views3,views2,views4,views5,views6,views7,views8,forgetpass,check
 urlpatterns = [
     path('',views.home,name='home'),
     path('<str:s>/search', views3.search, name='search'),
@@ -28,6 +28,7 @@ path('checkout/cart/', views7.cart_checkout, name='cart_checkout'),
       path('forgot-password/', forgetpass.forgot_password, name='forgot_password'),
     path('verify-otp/', forgetpass.verify_otp, name='verify_otp'),
     path('reset-password/', forgetpass.reset_password, name='reset_password'),
+    path('order-check/', check.order_check, name='order_check'),
 ]
 
 
