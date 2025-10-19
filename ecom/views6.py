@@ -163,37 +163,17 @@ def verify_order_otp(request):
 # -------------------- OPTIONAL: COD SUPPORT --------------------
 @login_required
 def cod_order(request, slug):
-    """For Cash On Delivery checkout flow"""
     product = get_object_or_404(Product, slug=slug)
-    quantity = int(request.POST.get("quantity", 1))
-    address = request.POST.get("address", "").strip()
-
     order = Order.objects.create(
         user=request.user,
         status="pending",
         payment_id="COD",
-        address=address or request.user.userprofile.address
+        address=request.user.userprofile.address
     )
+    OrderItem.objects.create(order=order, product=product, quantity=1, price=product.price)
+    messages.success(request, f"Your COD order #{order.id} has been placed successfully!")
+    return redirect("myaccount")
 
-    OrderItem.objects.create(order=order, product=product, quantity=quantity, price=product.price)
-
-    # --- OTP Verification ---
-    otp_code = str(random.randint(100000, 999999))
-    otp_obj, _ = OrderOTP.objects.update_or_create(
-        user=request.user,
-        order=order,
-        defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False},
-    )
-
-    send_mail(
-        subject="COD Order Verification OTP",
-        message=f"Dear {request.user.first_name}, your OTP for order #{order.id} is {otp_code}. Please verify it to confirm delivery.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[request.user.email],
-    )
-
-    messages.info(request, "COD order placed! Please verify OTP sent to your email.")
-    return redirect("verify_order_otp")
 
 from django.shortcuts import redirect, get_object_or_404
 from .models import CartItem
