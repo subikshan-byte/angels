@@ -21,6 +21,8 @@ path('payment/success/', views6.payment_success, name='payment_success'),
     path("cod/<slug:slug>/", views6.cod_order, name="cod_order"),
 path('cart/update/<int:cart_item_id>/', views6.update_cart_quantity, name='update_cart_quantity'),
 path('checkout/cart/', views7.cart_checkout, name='cart_checkout'),
+    path("send-checkout-otp/", views6.send_checkout_otp, name="send_checkout_otp"),
+
 
     # Payment success for cart
     path('payment/success-cart/', views7.payment_success_cart, name='cart_payment_success'),
