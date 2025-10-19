@@ -111,27 +111,42 @@ def payment_success(request):
 
 
 # -------------------- VERIFY ORDER OTP --------------------
+from django.http import JsonResponse
+import json
+from django.utils import timezone
+from datetime import timedelta
+from django.contrib.auth.decorators import login_required
+from .models import OrderOTP
+
 @login_required
 def verify_order_otp(request):
+    """AJAX view to verify OTP"""
+    if request.method != "POST":
+        return JsonResponse({"status": "invalid_method"}, status=405)
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+        entered_otp = data.get("otp")
+    except Exception as e:
+        return JsonResponse({"status": "bad_request", "error": str(e)}, status=400)
+
     otp_obj = OrderOTP.objects.filter(user=request.user).last()
-
     if not otp_obj:
-        messages.error(request, "No OTP found. Please make a new purchase.")
-        return redirect("home")
+        return JsonResponse({"status": "no_otp"}, status=404)
 
-    if request.method == "POST":
-        entered_otp = request.POST.get("otp")
-        if otp_obj.otp == entered_otp and otp_obj.is_valid():
-            otp_obj.verified = True
-            otp_obj.save()
-            otp_obj.order.status = "confirmed"
-            otp_obj.order.save()
-            messages.success(request, f"Order #{otp_obj.order.id} verified successfully!")
-            return redirect("myaccount")
-        else:
-            messages.error(request, "Invalid or expired OTP. Please try again.")
+    # --- OTP validity check (expires in 5 min) ---
+    if (timezone.now() - otp_obj.created_at) > timedelta(minutes=5):
+        return JsonResponse({"status": "expired"}, status=400)
 
-    return render(request, "verify_order_otp.html", {"otp_obj": otp_obj})
+    if otp_obj.otp == entered_otp:
+        otp_obj.verified = True
+        otp_obj.save()
+        otp_obj.order.status = "confirmed"
+        otp_obj.order.save()
+        return JsonResponse({"status": "verified"}, status=200)
+
+    return JsonResponse({"status": "invalid"}, status=400)
+
 
 
 # -------------------- OPTIONAL: COD SUPPORT --------------------
