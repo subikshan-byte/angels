@@ -18,6 +18,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+/* Layout */
 .checkout-container {
   max-width: 1100px;
   margin: 40px auto;
@@ -26,11 +27,13 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 30px;
 }
-
 @media (max-width: 768px) {
-  .checkout-container { grid-template-columns: 1fr; }
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
 }
 
+/* Profile Card */
 .profile-card, .order-card {
   background: white;
   border-radius: 12px;
@@ -54,14 +57,33 @@ body {
 .info-label { color: #555; font-weight: 600; }
 .info-value { color: #333; }
 
-.coupon-section {
+/* Input sections */
+.address-section, .coupon-section {
   background: #f9f9f9;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 20px;
 }
-
+.address-section label, .coupon-section label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+  display: block;
+}
+.address-section textarea, .coupon-section input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+}
+.address-section textarea:focus, .coupon-section input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.1);
+  outline: none;
+}
+.coupon-input-wrap { display: flex; gap: 10px; }
 .apply-btn, .otp-btn {
   background-color: var(--primary);
   color: white;
@@ -74,6 +96,7 @@ body {
 }
 .apply-btn:hover, .otp-btn:hover { background-color: var(--primary-light); }
 
+/* Razorpay Button */
 .default__button {
   background-color: var(--primary);
   color: white;
@@ -91,20 +114,6 @@ body {
   background-color: var(--primary-light);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(74, 109, 229, 0.2);
-}
-
-.payment-methods {
-  margin: 15px 0;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 15px;
-  background: #f9f9f9;
-}
-.payment-methods label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
 }
 
 /* OTP Modal */
@@ -139,47 +148,58 @@ body {
 </style>
 
 <div class="checkout-container">
-  <!-- Profile -->
-  <div class="profile-card">
-    <h2>Order Delivery Information</h2>
-    <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
-    <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
-    <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
-    <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ profile.address }}</div></div>
-    <a href="{% url 'myaccount' %}"><button class="apply-btn">Edit Profile</button></a>
+  <!-- PROFILE -->
+  <div class="user-details-card">
+    <h2>ORDER DELIVERY INFORMATION</h2>
+    <div class="user-info">
+      <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
+      <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
+      <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
+      <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ profile.address }}</div></div>
+    </div>
+    <a href="{% url 'myaccount' %}">
+      <button name="edit_profile" class="apply-btn">Edit Profile</button>
+    </a>
   </div>
 
-  <!-- Order -->
+  <!-- ORDER -->
   <div class="order-card">
     <h3>Your Order</h3>
-    <table>
-      <tr><td>Product</td><td>{{ product.p_name }}</td></tr>
-      <tr><td>Price</td><td>₹{{ product.price }}</td></tr>
-      <tr><td><strong>Total</strong></td><td><strong>₹{{ total_amount }}</strong></td></tr>
-    </table>
+    <form method="POST" id="checkout-form" action="{% url 'buy_now' product.slug %}">
+      {% csrf_token %}
+      <table class="order-table">
+        <tr><td>Product</td><td>{{ product.p_name }}</td></tr>
+        <tr><td>Price</td><td>₹{{ product.price }}</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>₹{{ total_amount }}</strong></td></tr>
+      </table>
 
-    <!-- Payment Options -->
-    <div class="payment-methods">
-      <label><input type="radio" name="payment_method" value="razorpay" checked> Pay Online (Razorpay)</label>
-      <label><input type="radio" name="payment_method" value="cod"> Cash on Delivery</label>
-    </div>
+      <!-- Coupon -->
+      <div class="coupon-section">
+        <label for="coupon">Have a Coupon?</label>
+        <div class="coupon-input-wrap">
+          <input type="text" id="coupon" name="coupon" placeholder="Enter coupon code" value="{{ request.POST.coupon }}">
+          <button type="submit" name="apply_coupon" class="apply-btn">Apply</button>
+        </div>
+      </div>
 
-    <button type="button" class="otp-btn" id="send-otp">Proceed to OTP Verification</button>
+      <!-- OTP Trigger -->
+      <button type="button" class="otp-btn" id="send-otp">Proceed to OTP Verification</button>
 
-    <!-- Razorpay -->
-    <div id="razorpay-container" style="display:none; margin-top:15px;">
-      <script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        data-key="{{ razorpay_key }}"
-        data-amount="{{ total_amount|floatformat:'0' }}00"
-        data-currency="INR"
-        data-order_id="{{ order_id }}"
-        data-buttontext="Pay Now"
-        data-name="Angels Glam & Glow"
-        data-description="Order Payment"
-        data-theme.color="#4a6de5">
-      </script>
-    </div>
+      <!-- Razorpay -->
+      <div id="razorpay-container" style="display:none; margin-top:15px;">
+        <script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          data-key="{{ razorpay_key }}"
+          data-amount="{{ total_amount|floatformat:'0' }}00"
+          data-currency="INR"
+          data-order_id="{{ order_id }}"
+          data-buttontext="Pay Now"
+          data-name="Angels Glam & Glow"
+          data-description="Order Payment"
+          data-theme.color="#4a6de5">
+        </script>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -187,7 +207,7 @@ body {
 <div class="modal-overlay" id="otp-modal">
   <div class="modal-content">
     <h4>Verify Your OTP</h4>
-    <p>We’ve sent an OTP to <b>{{ request.user.email }}</b></p>
+    <p>We’ve sent an OTP to your email: <b>{{ request.user.email }}</b></p>
     <input type="text" id="otp-input" class="otp-input" placeholder="Enter 6-digit OTP">
     <p id="otp-message"></p>
     <button class="otp-btn" id="verify-otp">Verify OTP</button>
@@ -195,6 +215,7 @@ body {
 </div>
 
 <script>
+// --- CSRF Helper ---
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -211,6 +232,7 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+// --- Elements ---
 const otpModal = document.getElementById("otp-modal");
 const sendOtpBtn = document.getElementById("send-otp");
 const verifyOtpBtn = document.getElementById("verify-otp");
@@ -218,43 +240,52 @@ const otpInput = document.getElementById("otp-input");
 const otpMessage = document.getElementById("otp-message");
 const razorpayContainer = document.getElementById("razorpay-container");
 
+// --- Step 1: Send OTP ---
 sendOtpBtn.addEventListener("click", () => {
   fetch("{% url 'send_checkout_otp' %}", {
     method: "POST",
-    headers: {"X-CSRFToken": csrftoken, "Content-Type": "application/json"},
+    headers: {
+      "X-CSRFToken": csrftoken,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({})
   })
   .then(res => res.json())
   .then(data => {
-    if (data.status === "sent") otpModal.style.display = "flex";
-    else alert("⚠️ Failed to send OTP.");
-  });
+    if (data.status === "sent") {
+      otpModal.style.display = "flex";
+    } else {
+      alert("⚠️ Failed to send OTP. Please try again.");
+    }
+  })
+  .catch(() => alert("⚠️ Network error while sending OTP."));
 });
 
+// --- Step 2: Verify OTP ---
 verifyOtpBtn.addEventListener("click", () => {
   const otp = otpInput.value.trim();
-  if (!otp) return (otpMessage.textContent = "Please enter OTP", otpMessage.className = "error-msg");
+  if (!otp) {
+    otpMessage.textContent = "Please enter the OTP.";
+    otpMessage.className = "error-msg";
+    return;
+  }
 
   fetch("{% url 'verify_order_otp' %}", {
     method: "POST",
-    headers: {"X-CSRFToken": csrftoken, "Content-Type": "application/json"},
+    headers: {
+      "X-CSRFToken": csrftoken,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ otp })
   })
   .then(res => res.json())
   .then(data => {
     if (data.status === "verified") {
-      otpMessage.textContent = "✅ OTP verified!";
+      otpMessage.textContent = "✅ OTP verified successfully!";
       otpMessage.className = "success-msg";
-
-      const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-
       setTimeout(() => {
         otpModal.style.display = "none";
-        if (paymentMethod === "razorpay") {
-          razorpayContainer.style.display = "block";
-        } else {
-          window.location.href = "{% url 'cod_order' product.slug %}";
-        }
+        razorpayContainer.style.display = "block";
       }, 800);
     } else {
       otpMessage.textContent = "❌ Invalid or expired OTP.";
@@ -262,7 +293,7 @@ verifyOtpBtn.addEventListener("click", () => {
     }
   })
   .catch(() => {
-    otpMessage.textContent = "⚠️ Network error.";
+    otpMessage.textContent = "⚠️ Server or network error.";
     otpMessage.className = "error-msg";
   });
 });
