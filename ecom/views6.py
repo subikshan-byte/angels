@@ -119,27 +119,42 @@ from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from .models import OrderOTP
 
+from django.http import JsonResponse
+import json
+
 @login_required
+@csrf_exempt
 def verify_order_otp(request):
-    otp_obj = OrderOTP.objects.filter(user=request.user).last()
-
-    if not otp_obj:
-        messages.error(request, "No OTP found. Please make a new purchase.")
-        return redirect("home")
-
+    """
+    AJAX-based OTP verification for checkout.
+    Returns JSON {status: "verified"} or {status: "invalid"}.
+    """
     if request.method == "POST":
-        entered_otp = request.POST.get("otp")
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            entered_otp = data.get("otp")
+        except Exception:
+            return JsonResponse({"status": "error", "message": "Invalid request format"})
+
+        otp_obj = OrderOTP.objects.filter(user=request.user).last()
+        if not otp_obj:
+            return JsonResponse({"status": "no_otp", "message": "No OTP found"})
+
+        # Verify OTP
         if otp_obj.otp == entered_otp and otp_obj.is_valid():
             otp_obj.verified = True
             otp_obj.save()
-            otp_obj.order.status = "confirmed"
-            otp_obj.order.save()
-            messages.success(request, f"Order #{otp_obj.order.id} verified successfully!")
-            return redirect("myaccount")
+            if otp_obj.order:
+                otp_obj.order.status = "confirmed"
+                otp_obj.order.save()
+            return JsonResponse({"status": "verified"})
         else:
-            messages.error(request, "Invalid or expired OTP. Please try again.")
+            return JsonResponse({"status": "invalid"})
 
+    # If accessed directly via browser, show normal page
+    otp_obj = OrderOTP.objects.filter(user=request.user).last()
     return render(request, "verify_order_otp.html", {"otp_obj": otp_obj})
+
 
 
 
