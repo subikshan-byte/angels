@@ -199,3 +199,30 @@ def update_cart_quantity(request, item_id):
         return HttpResponse(action)
 
     return redirect('cart')
+from django.http import JsonResponse
+import json
+
+@login_required
+def send_checkout_otp(request):
+    """Send OTP before payment via AJAX"""
+    if request.method == "POST":
+        otp_code = str(random.randint(100000, 999999))
+        otp_obj, _ = OrderOTP.objects.update_or_create(
+            user=request.user,
+            defaults={
+                "otp": otp_code,
+                "created_at": timezone.now(),
+                "verified": False,
+            },
+        )
+
+        send_mail(
+            subject="Your Order Verification OTP",
+            message=f"Dear {request.user.first_name}, your OTP is {otp_code}. It will expire in 5 minutes.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[request.user.email],
+        )
+
+        return JsonResponse({"status": "sent"})
+
+    return JsonResponse({"status": "error"}, status=400)
