@@ -12,210 +12,122 @@
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-body {
-  background-color: white;
-  color: var(--text);
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Layout */
-.checkout-container {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-@media (max-width: 768px) {
-  .checkout-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Profile Card */
-.profile-card, .order-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  padding: 25px;
-}
-
-.profile-card h2, .order-card h3 {
-  color: var(--primary);
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 10px;
-  margin-bottom: 15px;
-}
-
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
-.info-label { color: #555; font-weight: 600; }
-.info-value { color: #333; }
-
-/* Input sections */
-.address-section, .coupon-section {
-  background: #f9f9f9;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-.address-section label, .coupon-section label {
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 8px;
-  display: block;
-}
-.address-section textarea, .coupon-section input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 15px;
-}
-.address-section textarea:focus, .coupon-section input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.1);
-  outline: none;
-}
+/* trimmed styles same as you provided earlier - kept for brevity in code block */
+body { background-color: white; color: var(--text); font-family: 'Poppins', sans-serif; }
+.checkout-container { max-width: 1100px; margin: 40px auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+@media (max-width: 768px) { .checkout-container { grid-template-columns: 1fr; } }
+.profile-card, .order-card { background: white; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; }
+.profile-card h2, .order-card h3 { color: var(--primary); border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+.info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.info-label { color: #555; font-weight: 600; } .info-value { color: #333; }
+.address-section, .coupon-section { background: #f9f9f9; border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+.address-section label, .coupon-section label { font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
+.address-section textarea, .coupon-section input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; }
+.address-section textarea:focus, .coupon-section input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.1); outline: none; }
 .coupon-input-wrap { display: flex; gap: 10px; }
-.apply-btn, .otp-btn {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
+.apply-btn, .otp-btn { background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
 .apply-btn:hover, .otp-btn:hover { background-color: var(--primary-light); }
-
-/* Razorpay Button */
-.default__button {
-  background-color: var(--primary);
-  color: white;
-  padding: 14px 25px;
-  border-radius: 8px;
-  width: 100%;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  display: block;
-  transition: 0.3s;
-}
-.default__button:hover {
-  background-color: var(--primary-light);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(74, 109, 229, 0.2);
-}
-
-/* OTP Modal */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: var(--shadow);
-  text-align: center;
-}
+.default__button { background-color: var(--primary); color: white; padding: 14px 25px; border-radius: 8px; width: 100%; text-align: center; border: none; cursor: pointer; font-weight: 500; display: block; transition: 0.3s; }
+.default__button:hover { background-color: var(--primary-light); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(74, 109, 229, 0.2); }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: white; border-radius: 12px; padding: 25px; width: 90%; max-width: 400px; box-shadow: var(--shadow); text-align: center; }
 .modal-content h4 { margin-bottom: 10px; color: var(--primary); }
-.otp-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-top: 10px;
-}
+.otp-input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; margin-top: 10px; }
 .success-msg { color: #28a745; font-weight: 600; margin-top: 8px; }
 .error-msg { color: #e74c3c; font-weight: 600; margin-top: 8px; }
+.small-muted { font-size: 13px; color: #666; margin-top: 8px; }
+.payment-options { display:flex; gap:10px; margin-top:12px; justify-content:center; }
+.payment-options button { padding:10px 14px; border-radius:8px; font-weight:600; cursor:pointer; border: none; }
+.payment-cod { background:#2ecc71; color:white; } .payment-online { background:#3498db; color:white; }
 </style>
 
 <div class="checkout-container">
-  <!-- PROFILE -->
-  <div class="user-details-card">
+  <!-- PROFILE (editable address) -->
+  <div class="user-details-card profile-card">
     <h2>ORDER DELIVERY INFORMATION</h2>
     <div class="user-info">
       <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
       <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
       <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
-      <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ profile.address }}</div></div>
     </div>
-    <a href="{% url 'myaccount' %}">
-      <button name="edit_profile" class="apply-btn">Edit Profile</button>
-    </a>
+
+    <form id="address-form">
+      {% csrf_token %}
+      <div class="address-section">
+        <label for="addr">Delivery Address</label>
+        <textarea id="addr" name="address" rows="4">{{ profile.address }}</textarea>
+        <div style="margin-top:10px;">
+          <button type="button" id="save-address" class="apply-btn">Save Address</button>
+          <span id="address-msg" class="small-muted"></span>
+        </div>
+      </div>
+    </form>
+
+    <a href="{% url 'myaccount' %}"><button name="edit_profile" class="apply-btn" style="margin-top:8px;">My Account</button></a>
   </div>
 
-  <!-- ORDER -->
+  <!-- ORDER SUMMARY / COUPON -->
   <div class="order-card">
     <h3>Your Order</h3>
-    <form method="POST" id="checkout-form" action="{% url 'buy_now' product.slug %}">
-      {% csrf_token %}
-      <table class="order-table">
-        <tr><td>Product</td><td>{{ product.p_name }}</td></tr>
-        <tr><td>Price</td><td>₹{{ product.price }}</td></tr>
-        <tr><td><strong>Total</strong></td><td><strong>₹{{ total_amount }}</strong></td></tr>
-      </table>
 
-      <!-- Coupon -->
+    <table class="order-table" style="width:100%; margin-bottom:12px;">
+      <tr><td>Product</td><td style="text-align:right;">{{ product.p_name }}</td></tr>
+      <tr><td>Price</td><td style="text-align:right;">₹{{ product.price }}</td></tr>
+      <tr><td><strong>Total</strong></td><td style="text-align:right;"><strong id="display-total">₹{{ total_amount }}</strong></td></tr>
+    </table>
+
+    <form method="post" id="coupon-form">
+      {% csrf_token %}
       <div class="coupon-section">
         <label for="coupon">Have a Coupon?</label>
         <div class="coupon-input-wrap">
           <input type="text" id="coupon" name="coupon" placeholder="Enter coupon code" value="{{ request.POST.coupon }}">
-          <button type="submit" name="apply_coupon" class="apply-btn">Apply</button>
+          <button type="button" id="apply-coupon" class="apply-btn">Apply</button>
         </div>
-      </div>
-
-      <!-- OTP Trigger -->
-      <button type="button" class="otp-btn" id="send-otp">Proceed to OTP Verification</button>
-
-      <!-- Razorpay -->
-      <div id="razorpay-container" style="display:none; margin-top:15px;">
-        <script
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          data-key="{{ razorpay_key }}"
-          data-amount="{{ total_amount|floatformat:'0' }}00"
-          data-currency="INR"
-          data-order_id="{{ order_id }}"
-          data-buttontext="Pay Now"
-          data-name="Angels Glam & Glow"
-          data-description="Order Payment"
-          data-theme.color="#4a6de5">
-        </script>
+        <div id="coupon-msg" class="small-muted"></div>
       </div>
     </form>
+
+    <input type="hidden" id="product-slug" value="{{ product.slug }}">
+    <input type="hidden" id="product-qty" value="{{ quantity|default:1 }}">
+
+    <!-- Step 1: OTP trigger -->
+    <button type="button" class="otp-btn" id="send-otp" style="width:100%;">Proceed to OTP Verification</button>
+
+    <!-- Razorpay placeholder - only shown after OTP verified and user picks online payment -->
+    <div id="razorpay-container" style="display:none; margin-top:15px;">
+      <!-- create_razorpay_order will return order_id used by razorpay checkout -->
+      <button id="pay-online-launch" class="default__button">Pay Online (Razorpay)</button>
+    </div>
   </div>
 </div>
 
-<!-- OTP MODAL -->
-<div class="modal-overlay" id="otp-modal">
+<!-- OTP modal -->
+<div class="modal-overlay" id="otp-modal" role="dialog" aria-hidden="true">
   <div class="modal-content">
     <h4>Verify Your OTP</h4>
-    <p>We’ve sent an OTP to your email: <b>{{ request.user.email }}</b></p>
-    <input type="text" id="otp-input" class="otp-input" placeholder="Enter 6-digit OTP">
-    <p id="otp-message"></p>
-    <button class="otp-btn" id="verify-otp">Verify OTP</button>
+    <p class="small-muted">We’ll send a 6-digit OTP to: <b>{{ request.user.email }}</b></p>
+    <input type="text" id="otp-input" class="otp-input" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric">
+    <div id="otp-message" class="small-muted"></div>
+    <div style="margin-top:12px;">
+      <button class="otp-btn" id="verify-otp">Verify OTP</button>
+      <button class="apply-btn" id="resend-otp" style="background:#f39c12;">Resend OTP</button>
+    </div>
+
+    <!-- after verify, show payment options -->
+    <div id="payment-choices" style="display:none; margin-top:14px;">
+      <p class="small-muted">Choose payment method:</p>
+      <div class="payment-options">
+        <button class="payment-cod" id="choose-cod">Cash on Delivery</button>
+        <button class="payment-online" id="choose-online">Pay Online</button>
+      </div>
+      <div id="payment-msg" class="small-muted"></div>
+    </div>
   </div>
 </div>
 
 <script>
-// --- CSRF Helper ---
+// csrf helper (from cookie)
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -232,70 +144,229 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
-// --- Elements ---
-const otpModal = document.getElementById("otp-modal");
-const sendOtpBtn = document.getElementById("send-otp");
-const verifyOtpBtn = document.getElementById("verify-otp");
-const otpInput = document.getElementById("otp-input");
-const otpMessage = document.getElementById("otp-message");
-const razorpayContainer = document.getElementById("razorpay-container");
+// elements
+const sendOtpBtn = document.getElementById('send-otp');
+const otpModal = document.getElementById('otp-modal');
+const verifyOtpBtn = document.getElementById('verify-otp');
+const resendOtpBtn = document.getElementById('resend-otp');
+const otpInput = document.getElementById('otp-input');
+const otpMessage = document.getElementById('otp-message');
+const paymentChoices = document.getElementById('payment-choices');
+const chooseCod = document.getElementById('choose-cod');
+const chooseOnline = document.getElementById('choose-online');
+const razorpayContainer = document.getElementById('razorpay-container');
+const payOnlineLaunch = document.getElementById('pay-online-launch');
+const productSlug = document.getElementById('product-slug').value;
+const productQty = document.getElementById('product-qty').value;
+const couponInput = document.getElementById('coupon');
+const applyCouponBtn = document.getElementById('apply-coupon');
+const couponMsg = document.getElementById('coupon-msg');
+const displayTotal = document.getElementById('display-total');
+const saveAddressBtn = document.getElementById('save-address');
+const addressField = document.getElementById('addr');
+const addressMsg = document.getElementById('address-msg');
 
-// --- Step 1: Send OTP ---
-sendOtpBtn.addEventListener("click", () => {
+let lastVerified = false;  // whether OTP is verified for this session
+
+// helper to show modal
+function openOtpModal() {
+  otpModal.style.display = 'flex';
+  otpInput.value = '';
+  otpMessage.textContent = '';
+  paymentChoices.style.display = 'none';
+}
+function closeOtpModal() {
+  otpModal.style.display = 'none';
+}
+
+// SEND OTP (AJAX)
+sendOtpBtn.addEventListener('click', () => {
   fetch("{% url 'send_checkout_otp' %}", {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "X-CSRFToken": csrftoken,
-      "Content-Type": "application/json"
+      'X-CSRFToken': csrftoken,
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({})
+    body: JSON.stringify({})  // no payload required
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(data => {
-    if (data.status === "sent") {
-      otpModal.style.display = "flex";
+    if (data.status === 'sent') {
+      openOtpModal();
+      otpMessage.textContent = 'OTP sent to your email.';
+      otpMessage.className = 'small-muted';
     } else {
-      alert("⚠️ Failed to send OTP. Please try again.");
+      alert('Failed to send OTP. Try again.');
     }
   })
-  .catch(() => alert("⚠️ Network error while sending OTP."));
+  .catch(() => alert('Network error while sending OTP.'));
 });
 
-// --- Step 2: Verify OTP ---
-verifyOtpBtn.addEventListener("click", () => {
-  const otp = otpInput.value.trim();
-  if (!otp) {
-    otpMessage.textContent = "Please enter the OTP.";
-    otpMessage.className = "error-msg";
-    return;
-  }
+// RESEND OTP
+resendOtpBtn.addEventListener('click', () => {
+  fetch("{% url 'send_checkout_otp' %}", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  }).then(r=>r.json()).then(data=>{
+    if (data.status==='sent') {
+      otpMessage.textContent = 'OTP resent.';
+      otpMessage.className = 'small-muted';
+    } else {
+      otpMessage.textContent = 'Failed to resend OTP.';
+    }
+  }).catch(()=> otpMessage.textContent = 'Network error.');
+});
 
+// VERIFY OTP
+verifyOtpBtn.addEventListener('click', () => {
+  const otp = otpInput.value.trim();
+  if (!otp) { otpMessage.textContent = 'Please enter OTP.'; otpMessage.className = 'error-msg'; return; }
   fetch("{% url 'verify_order_otp' %}", {
-    method: "POST",
-    headers: {
-      "X-CSRFToken": csrftoken,
-      "Content-Type": "application/json"
-    },
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
     body: JSON.stringify({ otp })
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(data => {
-    if (data.status === "verified") {
-      otpMessage.textContent = "✅ OTP verified successfully!";
-      otpMessage.className = "success-msg";
-      setTimeout(() => {
-        otpModal.style.display = "none";
-        razorpayContainer.style.display = "block";
-      }, 800);
+    if (data.status === 'verified') {
+      otpMessage.textContent = 'OTP verified. Choose a payment method.';
+      otpMessage.className = 'success-msg';
+      paymentChoices.style.display = 'block';
+      lastVerified = true;
+    } else if (data.status === 'no_otp') {
+      otpMessage.textContent = 'No OTP found. Please resend.';
+      otpMessage.className = 'error-msg';
     } else {
-      otpMessage.textContent = "❌ Invalid or expired OTP.";
-      otpMessage.className = "error-msg";
+      otpMessage.textContent = 'Invalid or expired OTP.';
+      otpMessage.className = 'error-msg';
     }
   })
-  .catch(() => {
-    otpMessage.textContent = "⚠️ Server or network error.";
-    otpMessage.className = "error-msg";
+  .catch(()=> { otpMessage.textContent = 'Server error.'; otpMessage.className = 'error-msg'; });
+});
+
+// APPLY COUPON (AJAX)
+applyCouponBtn.addEventListener('click', () => {
+  const code = couponInput.value.trim();
+  fetch("{% url 'buy_now' product.slug %}", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'apply_coupon', coupon: code, quantity: productQty })
+  }).then(r => r.json())
+    .then(data => {
+      if (data.status === 'ok' && data.total_amount !== undefined) {
+        displayTotal.textContent = '₹' + data.total_amount;
+        couponMsg.textContent = data.message || 'Coupon applied';
+      } else {
+        couponMsg.textContent = data.message || 'Invalid coupon';
+      }
+    }).catch(()=> couponMsg.textContent = 'Network error.');
+});
+
+// SAVE ADDRESS (AJAX) - saves to UserProfile immediately
+saveAddressBtn.addEventListener('click', () => {
+  const address = addressField.value.trim();
+  fetch("{% url 'edit' %}", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'save_address', address })
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    if (data.status === 'ok') {
+      addressMsg.textContent = 'Address saved.';
+      addressMsg.className = 'small-muted';
+    } else {
+      addressMsg.textContent = 'Failed to save.';
+    }
+  }).catch(()=> addressMsg.textContent = 'Network error.');
+});
+
+// CHOOSE COD (AJAX) -> place order directly and redirect to myaccount
+chooseCod.addEventListener('click', () => {
+  if (!lastVerified) { otpMessage.textContent='Please verify OTP first.'; otpMessage.className='error-msg'; return; }
+  chooseCod.disabled = true;
+  fetch("{% url 'place_cod_order' %}", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      product_slug: productSlug,
+      quantity: parseInt(productQty || '1', 10),
+      coupon: couponInput.value.trim(),
+      address: addressField.value.trim()
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    chooseCod.disabled = false;
+    if (data.status === 'placed') {
+      window.location.href = data.redirect; // go to myaccount
+    } else {
+      document.getElementById('payment-msg').textContent = data.message || 'Failed to place COD order.';
+    }
+  })
+  .catch(()=> {
+    chooseCod.disabled = false;
+    document.getElementById('payment-msg').textContent = 'Network error placing COD order.';
   });
 });
+
+// CHOOSE ONLINE (create razorpay order server-side then open checkout)
+chooseOnline.addEventListener('click', () => {
+  if (!lastVerified) { otpMessage.textContent='Please verify OTP first.'; otpMessage.className='error-msg'; return; }
+  chooseOnline.disabled = true;
+  fetch("{% url 'create_razorpay_order' %}", {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      product_slug: productSlug,
+      quantity: parseInt(productQty || '1',10),
+      coupon: couponInput.value.trim(),
+      address: addressField.value.trim()
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    chooseOnline.disabled = false;
+    if (data.status === 'created') {
+      // open razorpay checkout
+      const options = {
+        "key": data.key,
+        "amount": data.amount, // in paise
+        "currency": "INR",
+        "order_id": data.order_id,
+        "handler": function (response){
+          // After payment success, forward to server endpoint to confirm and create Order
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = "{% url 'payment_success' %}?product_slug=" + encodeURIComponent(productSlug) + "&quantity=" + encodeURIComponent(productQty);
+          const csrfInput = document.createElement('input');
+          csrfInput.type = 'hidden'; csrfInput.name = 'csrfmiddlewaretoken'; csrfInput.value = csrftoken;
+          form.appendChild(csrfInput);
+          const rpInput = document.createElement('input');
+          rpInput.type = 'hidden'; rpInput.name = 'razorpay_payment_id'; rpInput.value = response.razorpay_payment_id;
+          form.appendChild(rpInput);
+          document.body.appendChild(form);
+          form.submit();
+        },
+        "modal": { "escape": false }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    } else {
+      document.getElementById('payment-msg').textContent = data.message || 'Failed to create payment.';
+    }
+  })
+  .catch(()=> {
+    chooseOnline.disabled = false;
+    document.getElementById('payment-msg').textContent = 'Network error creating payment.';
+  });
+});
+
+// small helper to close modal when clicking outside
+otpModal.addEventListener('click', (e) => {
+  if (e.target === otpModal) closeOtpModal();
+});
 </script>
+
 {% endblock %}
