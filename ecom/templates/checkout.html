@@ -223,7 +223,7 @@ body {
         <p>We’ve sent an OTP to your email: <b>{{ request.user.email }}</b></p>
         <input type="text" id="otp-input" class="otp-input" placeholder="Enter 6-digit OTP">
         <p id="otp-message" class="error-msg"></p>
-        <button class="verify-btn" id="verify-otp">Verify OTP</button>
+        <button class="verify-btn" id="verify-otp" href="{% url 'verify_order_otp' %}>Verify OTP</button>
     </div>
 </div>
 
