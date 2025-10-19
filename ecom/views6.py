@@ -121,35 +121,26 @@ from .models import OrderOTP
 
 @login_required
 def verify_order_otp(request):
-    if request.method != "POST":
-        return JsonResponse({"status": "invalid_method"}, status=405)
+    otp_obj = OrderOTP.objects.filter(user=request.user).last()
 
-    try:
-        data = json.loads(request.body.decode("utf-8"))
-        entered_otp = data.get("otp")
-    except Exception as e:
-        return JsonResponse({"status": "bad_request", "error": str(e)}, status=400)
-
-    otp_obj = OrderOTP.objects.filter(user=request.user, order__isnull=False).last()
     if not otp_obj:
-        return JsonResponse({"status": "no_otp"}, status=404)
+        messages.error(request, "No OTP found. Please make a new purchase.")
+        return redirect("home")
 
-    # OTP expiry check
-    if (timezone.now() - otp_obj.created_at).total_seconds() > 300:
-        return JsonResponse({"status": "expired"}, status=400)
-
-    if otp_obj.otp == entered_otp:
-        otp_obj.verified = True
-        otp_obj.save()
-
-        # ✅ Only update order if it exists
-        if otp_obj.order:
+    if request.method == "POST":
+        entered_otp = request.POST.get("otp")
+        if otp_obj.otp == entered_otp and otp_obj.is_valid():
+            otp_obj.verified = True
+            otp_obj.save()
             otp_obj.order.status = "confirmed"
             otp_obj.order.save()
+            messages.success(request, f"Order #{otp_obj.order.id} verified successfully!")
+            return redirect("myaccount")
+        else:
+            messages.error(request, "Invalid or expired OTP. Please try again.")
 
-        return JsonResponse({"status": "verified"}, status=200)
+    return render(request, "verify_order_otp.html", {"otp_obj": otp_obj})
 
-    return JsonResponse({"status": "invalid"}, status=400)
 
 
 
