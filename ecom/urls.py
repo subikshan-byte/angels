@@ -24,6 +24,7 @@ path('checkout/cart/', views7.cart_checkout, name='cart_checkout'),
     path("send-checkout-otp/", views6.send_checkout_otp, name="send_checkout_otp"),
     path('create-razorpay-order/', views6.create_razorpay_order, name='create_razorpay_order'),
 path('place-cod-order/', views6.place_cod_order, name='place_cod_order'),
+path('apply-coupon/', views6.apply_coupon, name='apply_coupon'),
 
 
 
