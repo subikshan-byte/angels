@@ -22,6 +22,9 @@ path('payment/success/', views6.payment_success, name='payment_success'),
 path('cart/update/<int:cart_item_id>/', views6.update_cart_quantity, name='update_cart_quantity'),
 path('checkout/cart/', views7.cart_checkout, name='cart_checkout'),
     path("send-checkout-otp/", views6.send_checkout_otp, name="send_checkout_otp"),
+    path('create-razorpay-order/', views6.create_razorpay_order, name='create_razorpay_order'),
+path('place-cod-order/', views6.place_cod_order, name='place_cod_order'),
+
 
 
     # Payment success for cart
