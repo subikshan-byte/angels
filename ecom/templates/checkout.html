@@ -283,7 +283,8 @@ verifyOtpBtn.addEventListener("click", () => {
 
   console.log("Sending OTP:", otp);
 
-  fetch("{% url 'verify_order_otp' %}", {
+  fetch("/verify-order-otp/", {
+
     method: "POST",
     headers: {
       "X-CSRFToken": csrftoken,
