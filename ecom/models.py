@@ -247,5 +247,8 @@ class OrderOTP(models.Model):
     def is_valid(self):
         return (timezone.now() - self.created_at).seconds < 300  # 5 mins
 
+    
     def __str__(self):
-        return f"OTP for Order #{self.order.id}"
+        if self.order:
+            return f"OTP for Order #{self.order.id}"
+        return f"OTP (no order linked)"
