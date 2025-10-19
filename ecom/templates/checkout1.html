@@ -1,1072 +1,211 @@
 {% extends "base.html" %}
-{%block title %}Checkout{% endblock title %}
+{% block title %}Checkout{% endblock title %}
 {% block content %}
 <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #4a6de5;
-            --secondary: #f8f9fa;
-            --accent: #ff6b6b;
-            --text: #333;
-            --light-text: #777;
-            --border: #e0e0e0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        body {
-            background-color: white;
-            color: var(--text);
-            line-height: 1.6;
-            padding: 15px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Account Section Styles */
-        .account-section {
-            padding: 20px 0;
-        }
-
-        .account-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .account-header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: var(--primary);
-        }
-
-        .account-header p {
-            color: var(--light-text);
-            font-size: 16px;
-        }
-
-        .account-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .account-content {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .account-header h1 {
-                font-size: 24px;
-            }
-            
-            body {
-                padding: 10px;
-            }
-        }
-
-        /* User Details Card */
-        .user-details-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 25px;
-            height: fit-content;
-        }
-
-        .user-details-card h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            color: var(--primary);
-        }
-
-        .user-info {
-            margin-top: 10px;
-        }
-
-        .info-item {
-            display: flex;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: 600;
-            width: 120px;
-            color: var(--light-text);
-            flex-shrink: 0;
-        }
-
-        .info-value {
-            flex: 1;
-            word-break: break-word;
-        }
-
-        @media (max-width: 480px) {
-            .info-item {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            .info-label {
-                width: 100%;
-            }
-            
-            .user-details-card {
-                padding: 20px;
-            }
-        }
-
-        .edit-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 15px;
-            transition: background-color 0.3s;
-            font-size: 16px;
-        }
-
-        .edit-btn:hover {
-            background-color: #3a5bd0;
-        }
-
-        /* Order History Section Styles */
-        .order-section {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 25px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .order-section h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            color: var(--primary);
-        }
-
-        .order-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .order-tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-            flex-shrink: 0;
-        }
-
-        .order-tab.active {
-            color: var(--primary);
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .order-tab:hover {
-            color: var(--primary);
-        }
-
-        .order-table-container {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin-bottom: 30px;
-        }
-
-        .order-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-
-        .order-table th {
-            text-align: left;
-            padding: 15px 10px;
-            border-bottom: 2px solid var(--border);
-            color: var(--light-text);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .order-table td {
-            padding: 15px 10px;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        .product-thumbnail img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .product-name a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .product-name a:hover {
-            color: var(--primary);
-        }
-
-        .product-price {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* Quantity Display */
-        .quantity-display {
-            display: inline-block;
-            padding: 6px 12px;
-            background: var(--secondary);
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .product-subtotal {
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .order-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .status-delivered {
-            background: #e6f7ee;
-            color: #0a9c4d;
-        }
-
-        .status-processing {
-            background: #fff4e6;
-            color: #ff8c00;
-        }
-
-        .status-shipped {
-            background: #e6f3ff;
-            color: #1890ff;
-        }
-
-        .status-out-for-delivery {
-            background: #e6f3ff;
-            color: #1890ff;
-        }
-
-        .status-order-received {
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .status-cancelled {
-            background: #ffe6e6;
-            color: #ff3333;
-        }
-
-        /* Order Summary */
-        .order-summary {
-            background: var(--secondary);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .order-summary h4 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .summary-row:last-child {
-            border-bottom: none;
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--primary);
-        }
-
-        .reorder-btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 15px;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .reorder-btn:hover {
-            background-color: #ff5252;
-        }
-
-        /* Improved Popup Modal Styles */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            animation: modalFadeIn 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .modal-header h3 {
-            color: var(--primary);
-            font-size: 22px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--light-text);
-            transition: color 0.3s;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-btn:hover {
-            color: var(--accent);
-        }
-
-        .modal-body {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            flex-shrink: 0;
-        }
-
-        .cancel-btn {
-            background: var(--secondary);
-            color: var(--text);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .cancel-btn:hover {
-            background: #e9ecef;
-        }
-
-        .save-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .save-btn:hover {
-            background-color: #3a5bd0;
-        }
-
-        /* Mobile-specific improvements */
-        @media (max-width: 768px) {
-            .order-section {
-                padding: 20px 15px;
-            }
-            
-            .order-table th, 
-            .order-table td {
-                padding: 12px 8px;
-                font-size: 14px;
-            }
-            
-            .product-thumbnail img {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .order-status {
-                font-size: 12px;
-                padding: 4px 8px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .order-section {
-                padding: 15px 12px;
-            }
-            
-            .order-table th, 
-            .order-table td {
-                padding: 10px 6px;
-                font-size: 13px;
-            }
-            
-            .product-thumbnail img {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .order-status {
-                font-size: 11px;
-                padding: 3px 6px;
-            }
-            
-            .modal-body {
-                padding: 15px;
-            }
-            
-            .modal-header, .modal-footer {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 375px) {
-            .modal-content {
-                max-height: 85vh;
-            }
-            
-            .form-group input {
-                padding: 10px;
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
-            
-            .modal-footer {
-                flex-direction: column;
-            }
-            
-            .modal-footer button {
-                width: 100%;
-            }
-            
-            .order-table th, 
-            .order-table td {
-                padding: 8px 4px;
-                font-size: 12px;
-            }
-            
-            .product-thumbnail img {
-                width: 45px;
-                height: 45px;
-            }
-            
-            .quantity-display {
-                padding: 4px 8px;
-                font-size: 12px;
-            }
-        }
-
-        /* Ensure no horizontal overflow */
-        .order-section, .user-details-card {
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-    </style>
-<h2>Cart Checkout</h2>
-        <div class="breadcrumb">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="breadcrumb__title">
-                            <h1>Checkout</h1>
-                            <ul>
-                                <li>
-                                    <a href="{% url "home" %}">Home</a>
-                                </li>
-                                <li class="color__blue">
-                                   Checkout
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+:root {
+  --primary: #4a6de5;
+  --primary-light: #5e82f2;
+  --secondary: #f8f9fa;
+  --accent: #ff6b6b;
+  --text: #333;
+  --border: #e0e0e0;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+body { background-color: white; color: var(--text); font-family: 'Poppins', sans-serif; }
+.checkout-container { max-width: 1100px; margin: 40px auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+@media (max-width: 768px) { .checkout-container { grid-template-columns: 1fr; } }
+
+.card { background: white; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; }
+.card h2, .card h3 { color: var(--primary); border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+
+.info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.info-label { color: #555; font-weight: 600; } 
+.info-value { color: #333; text-align: right; }
+
+.address-section, .coupon-section { background: #f9f9f9; border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+.address-section label, .coupon-section label { font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
+.address-section textarea, .coupon-section input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; }
+.address-section textarea:focus, .coupon-section input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(74,109,229,0.1); outline: none; }
+
+.apply-btn, .otp-btn { background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+.apply-btn:hover, .otp-btn:hover { background-color: var(--primary-light); }
+.default__button { background-color: var(--primary); color: white; padding: 14px 25px; border-radius: 8px; width: 100%; text-align: center; border: none; cursor: pointer; font-weight: 500; display: block; transition: 0.3s; }
+.default__button:hover { background-color: var(--primary-light); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(74,109,229,0.2); }
+
+.payment-options { display:flex; gap:10px; margin-top:12px; justify-content:center; }
+.payment-options button { padding:10px 14px; border-radius:8px; font-weight:600; cursor:pointer; border: none; }
+.payment-cod { background:#2ecc71; color:white; } 
+.payment-online { background:#3498db; color:white; }
+
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
+.modal-content { background:white; border-radius:12px; padding:25px; width:90%; max-width:400px; box-shadow:var(--shadow); text-align:center; }
+.modal-content h4 { margin-bottom:10px; color:var(--primary); }
+.otp-input { width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; margin-top:10px; }
+.success-msg { color:#28a745; font-weight:600; margin-top:8px; }
+.error-msg { color:#e74c3c; font-weight:600; margin-top:8px; }
+.small-muted { font-size:13px; color:#666; margin-top:8px; }
+</style>
+
+<div class="checkout-container">
+  <!-- LEFT SIDE: PROFILE & ADDRESS -->
+  <div class="card">
+    <h2>Delivery Information</h2>
+    <div class="user-info">
+      <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
+      <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
+      <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
+    </div>
+    <form id="address-form">
+      {% csrf_token %}
+      <div class="address-section">
+        <label for="addr">Delivery Address</label>
+        <textarea id="addr" name="address" rows="4">{{ profile.address }}</textarea>
+        <div style="margin-top:10px;">
+          <button type="button" id="save-address" class="apply-btn">Save Address</button>
+          <span id="address-msg" class="small-muted"></span>
         </div>
-         <!-- breadcrumb__end -->
-    <!-- checkout__section__start -->
-    <div class="checkoutarea sp_bottom_100 sp_top_100">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-12">
-                    <h2>Profile Information</h2>
-                    <div class="user-info">
-                        <div class="info-item">
-                            <div class="info-label">Name:</div>
-                            <div class="info-value" id="display-name"> {{request.user.first_name}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Email:</div>
-                            <div class="info-value" id="display-email">{{ request.user.email}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Mobile:</div>
-                            <div class="info-value" id="display-mobile">+91 {{ profile.mobile}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Address:</div>
-                            <div class="info-value" id="display-address">{{ profile.address}}</div>
-                        </div>
-                    </div>
-                    <button class="edit-btn" id="open-edit-modal">Edit Profile</button>
-                </div>
-                <div class="col-lg-6 col-md-12 col-12">
-                    <div class="checkoutarea__payment__wraper">
-                        <div class="checkoutarea__total">
-                            <h3>Your Order</h3>
-                            <form action="#" method="post">
-                                <div class="checkoutarea__table__wraper">
-                                    <table class="checkoutarea__table">
-                                        <thead>
-                                            <tr class="checkoutarea__item">
-                                                <td class="checkoutarea__ctg__type">Product</td>
-                                                <td class="checkoutarea__cgt__des">Pricing</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for item in items %}
-                                            <tr class="checkoutarea__item prd-name">
-                                                <td class="checkoutarea__ctg__type">{{ item.product.p_name }}</td>
-                                                <td class="checkoutarea__cgt__des">Rs. {{ item.product.price }}</td>
-                                            </tr>
-                                        
-                                            <tr class="checkoutarea__item">
-                                                <td class="checkoutarea__ctg__type">Subtotal</td>
-                                                <td class="checkoutarea__cgt__des">Rs.{{ item.subtotal }}</td>
-                                            </tr>
-                                           {% endfor %}
-                                            <tr class="checkoutarea__item">
-                                                <td class="checkoutarea__item">Payment</td>
-                                                <td class="checkoutarea__cgt__des ship-opt">
-                                                    <div class="checkoutarea__shipp">
-                                                        <input type="radio" id="pay-toggle2" name="ship" checked>
-                                                        <label for="pay-toggle2">Pay Online</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="checkoutarea__item">
-                                                <td class="checkoutarea__itemcrt-total">Total</td>
-                                                <td class="checkoutarea__cgt__des prc-total">Rs. {{ total_amount }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </form>
-                        </div>
-                               <div class="modal-overlay" id="edit-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Edit Profile</h3>
-                <button class="close-btn" id="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-<form method="POST" id="edit-profile-form" action="{% url "edit" %}">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="edit-name">Full Name</label>
-        <input type="text" id="edit-name" name="name" value="{{ request.user.first_name }}">
-    </div>
+      </div>
+    </form>
+    <a href="{% url 'myaccount' %}">
+      <button name="edit_profile" class="apply-btn" style="margin-top:8px;">My Account</button>
+    </a>
+  </div>
 
-    <div class="form-group">
-        <label for="edit-email">Email Address</label>
-        <input type="email" id="edit-email" name="email" value="{{ request.user.email }}">
-    </div>
+  <!-- RIGHT SIDE: ORDER + PAYMENT -->
+  <div class="card">
+    <h3>Your Order</h3>
+    <table style="width:100%; margin-bottom:12px;">
+      <tr><th>Product</th><th style="text-align:right;">Price</th></tr>
+      {% for item in items %}
+      <tr><td>{{ item.product.p_name }}</td><td style="text-align:right;">₹{{ item.product.price }}</td></tr>
+      {% endfor %}
+      <tr><td><strong>Total</strong></td><td style="text-align:right;"><strong id="display-total">₹{{ total_amount }}</strong></td></tr>
+    </table>
 
-    <div class="form-group">
-        <label for="edit-mobile">Mobile Number</label>
-        <input type="tel" id="edit-mobile" name="mobile" value="{{ profile.mobile }}">
-    </div>
-
-    <div class="form-group">
-        <label for="edit-address">Delivery Address</label>
-        <input type="text" id="edit-address" name="address" value="{{  profile.address }}">
-    </div>
- <button class="save-btn" id="save-profile" style:"align:center">Save Changes</button>
-</form>
-
-            </div>
-            <div class="modal-footer">
-                <button class="cancel-btn" id="cancel-edit">Cancel</button>
-               
-            </div>
+    <!-- COUPON -->
+    <form method="post" id="coupon-form">
+      {% csrf_token %}
+      <div class="coupon-section">
+        <label for="coupon">Have a Coupon?</label>
+        <div style="display:flex; gap:10px;">
+          <input type="text" id="coupon" name="coupon" placeholder="Enter coupon code">
+          <button type="button" id="apply-coupon" class="apply-btn">Apply</button>
         </div>
+        <div id="coupon-msg" class="small-muted"></div>
+      </div>
+    </form>
+
+    <!-- OTP Step -->
+    <button type="button" class="otp-btn" id="send-otp" style="width:100%;">Proceed to OTP Verification</button>
+
+    <!-- Razorpay button (hidden until verified & selected) -->
+    <div id="razorpay-container" style="display:none; margin-top:15px;">
+      <button id="pay-online-launch" class="default__button">Pay Online (Razorpay)</button>
     </div>
+  </div>
+</div>
 
-    <script>
-        // Modal functionality
-        const editModal = document.getElementById('edit-modal');
-        const openModalBtn = document.getElementById('open-edit-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-        const cancelEditBtn = document.getElementById('cancel-edit');
-        const saveProfileBtn = document.getElementById('save-profile');
-        
-        // Open modal
-        openModalBtn.addEventListener('click', function() {
-            editModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        // Close modal functions
-        function closeModal() {
-            editModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelEditBtn.addEventListener('click', closeModal);
-        
-        // Close modal when clicking outside content
-        editModal.addEventListener('click', function(e) {
-            if (e.target === editModal) {
-                closeModal();
-            }
-        });
-        
-        // Save profile changes
-        saveProfileBtn.addEventListener('click', function() {
-            // Get values from form
-            const name = document.getElementById('edit-name').value;
-            const email = document.getElementById('edit-email').value;
-            const mobile = document.getElementById('edit-mobile').value;
-            const address = document.getElementById('edit-address').value;
-            const city = document.getElementById('edit-city').value;
-            const state = document.getElementById('edit-state').value;
-            const pincode = document.getElementById('edit-pincode').value;
-            
-            // Update display values
-            document.getElementById('display-name').textContent = name;
-            document.getElementById('display-email').textContent = email;
-            document.getElementById('display-mobile').textContent = mobile;
-            document.getElementById('display-address').textContent = address;
-            document.getElementById('display-city').textContent = city;
-            document.getElementById('display-state').textContent = state;
-            document.getElementById('display-pincode').textContent = pincode;
-            
-            // Close modal
-            closeModal();
-            
-            // Show success message
-            alert('Profile updated successfully!');
-        });
-        
-        // Tab switching functionality
-        document.querySelectorAll('.order-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                document.querySelectorAll('.order-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab
-                this.classList.add('active');
-            });
-        });
-        
-        // Reorder button
-        document.querySelector('.reorder-btn').addEventListener('click', function() {
-            alert('Selected items would be added to cart for reordering.');
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && editModal.style.display === 'flex') {
-                closeModal();
-            }
-        });
-    </script>
-                        <div class="checkoutarea__payment clearfix">
-                            <div class="checkoutarea__payment__toggle">
-                               <form action="{{ callback_url }}" method="POST">
-    {% csrf_token %}
-    <script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        data-key="{{ razorpay_key }}"
-        data-amount="{{ total_amount|floatformat:2|floatformat:"0" }}00"  <!-- amount in paise -->
-        data-currency="INR"
-        data-order_id="{{ order_id }}"
-        data-buttontext="Pay with Razorpay"
-        data-name="Your Store Name"
-        data-description="Cart Payment"
-        data-theme.color="#F37254">
-    </script>
-    <input type="hidden" name="items" value="{{ items|length }}">
-</form> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- OTP MODAL -->
+<div class="modal-overlay" id="otp-modal">
+  <div class="modal-content">
+    <h4>Verify Your OTP</h4>
+    <p class="small-muted">We’ve sent a 6-digit OTP to your email: <b>{{ request.user.email }}</b></p>
+    <input type="text" id="otp-input" class="otp-input" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric">
+    <div id="otp-message" class="small-muted"></div>
+    <div style="margin-top:12px;">
+      <button class="otp-btn" id="verify-otp">Verify OTP</button>
+      <button class="apply-btn" id="resend-otp" style="background:#f39c12;">Resend OTP</button>
     </div>
-    <style>
-                :root {
-            --primary: #8B7355;
-            --primary-light: #a58c6d;
-            --secondary: #2c3e50;
-            --accent: #e74c3c;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --gray: #6c757d;
-            --gray-light: #e9ecef;
-            --border: #dee2e6;
-            --success: #28a745;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
+    <div id="payment-choices" style="display:none; margin-top:14px;">
+      <p class="small-muted">Choose payment method:</p>
+      <div class="payment-options">
+        <button class="payment-cod" id="choose-cod">Cash on Delivery</button>
+        <button class="payment-online" id="choose-online">Pay Online</button>
+      </div>
+      <div id="payment-msg" class="small-muted"></div>
+    </div>
+  </div>
+</div>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<script>
+// === CSRF ===
+function getCookie(name){let v=null;if(document.cookie){document.cookie.split(';').forEach(c=>{c=c.trim();if(c.startsWith(name+'='))v=decodeURIComponent(c.substring(name.length+1));});}return v;}
+const csrftoken=getCookie('csrftoken');
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: white;
-            color: var(--dark);
-            line-height: 1.6;
-        }
+// ELEMENTS
+const sendOtpBtn=document.getElementById('send-otp'),otpModal=document.getElementById('otp-modal'),
+verifyOtpBtn=document.getElementById('verify-otp'),resendOtpBtn=document.getElementById('resend-otp'),
+otpInput=document.getElementById('otp-input'),otpMsg=document.getElementById('otp-message'),
+paymentChoices=document.getElementById('payment-choices'),chooseCod=document.getElementById('choose-cod'),
+chooseOnline=document.getElementById('choose-online'),couponInput=document.getElementById('coupon'),
+applyCouponBtn=document.getElementById('apply-coupon'),couponMsg=document.getElementById('coupon-msg'),
+displayTotal=document.getElementById('display-total'),addressField=document.getElementById('addr'),
+addressMsg=document.getElementById('address-msg'),saveAddressBtn=document.getElementById('save-address'),
+razorpayContainer=document.getElementById('razorpay-container');
 
-        .checkoutarea {
-            padding: 60px 0;
-        }
+let lastVerified=false;
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
+// MODAL HANDLERS
+function openOtpModal(){otpModal.style.display='flex';otpInput.value='';otpMsg.textContent='';paymentChoices.style.display='none';}
+function closeOtpModal(){otpModal.style.display='none';}
+otpModal.addEventListener('click',e=>{if(e.target===otpModal)closeOtpModal();});
 
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 -15px;
-        }
+// === SEND OTP ===
+sendOtpBtn.addEventListener('click',()=>{
+fetch("{% url 'send_checkout_otp' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}})
+.then(r=>r.json()).then(d=>{if(d.status==='sent'){openOtpModal();otpMsg.textContent='OTP sent.';}else alert('Failed to send OTP.');})
+.catch(()=>alert('Network error.'));
+});
 
-        .col-xl-6, .col-lg-6, .col-md-12 {
-            padding: 0 15px;
-        }
+// === RESEND OTP ===
+resendOtpBtn.addEventListener('click',()=>{
+fetch("{% url 'send_checkout_otp' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}})
+.then(r=>r.json()).then(d=>{otpMsg.textContent=d.status==='sent'?'OTP resent.':'Failed to resend.';});
+});
 
-        .checkoutarea__billing, .checkoutarea__payment__wraper {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 30px;
-            margin-bottom: 30px;
-            transition: var(--transition);
-        }
+// === VERIFY OTP ===
+verifyOtpBtn.addEventListener('click',()=>{
+const otp=otpInput.value.trim();
+if(!otp){otpMsg.textContent='Enter OTP';otpMsg.className='error-msg';return;}
+fetch("{% url 'verify_order_otp' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({otp})})
+.then(r=>r.json()).then(d=>{
+if(d.status==='verified'){otpMsg.textContent='Verified!';otpMsg.className='success-msg';paymentChoices.style.display='block';lastVerified=true;}
+else{otpMsg.textContent='Invalid OTP';otpMsg.className='error-msg';}
+});
+});
 
-        .checkoutarea__billing:hover, .checkoutarea__payment__wraper:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-        }
+// === APPLY COUPON ===
+applyCouponBtn.addEventListener('click',()=>{
+fetch("{% url 'apply_coupon' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim()})})
+.then(r=>r.json()).then(d=>{
+if(d.status==='ok'){displayTotal.textContent='₹'+d.total;couponMsg.textContent='Coupon applied!';}
+else{couponMsg.textContent='Invalid coupon.';}
+});
+});
 
-        .checkoutarea__billing__heading h2, .checkoutarea__total h3 {
-            font-weight: 600;
-            color: var(--secondary);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--gray-light);
-            position: relative;
-        }
+// === SAVE ADDRESS ===
+saveAddressBtn.addEventListener('click',()=>{
+fetch("{% url 'edit' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim()})})
+.then(r=>r.json()).then(d=>{addressMsg.textContent=d.status==='ok'?'Saved!':'Failed.';});
+});
 
-        .checkoutarea__billing__heading h2:after, .checkoutarea__total h3:after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 80px;
-            height: 2px;
-            background: var(--primary);
-        }
+// === CHOOSE COD ===
+chooseCod.addEventListener('click',()=>{
+if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
+fetch("{% url 'place_cod_order' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim(),coupon:couponInput.value.trim()})})
+.then(r=>r.json()).then(d=>{if(d.status==='placed')window.location.href=d.redirect;else document.getElementById('payment-msg').textContent=d.message;});
+});
 
-        .checkoutarea__inputbox {
-            margin-bottom: 20px;
-        }
-
-        .checkoutarea__inputbox label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--secondary);
-        }
-
-        .checkoutarea__inputbox input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        .checkoutarea__inputbox input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.2);
-        }
-
-        .checkoutarea__table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .checkoutarea__table thead {
-            border-bottom: 2px solid var(--gray-light);
-        }
-
-        .checkoutarea__item {
-            padding: 15px 0;
-            border-bottom: 1px solid var(--gray-light);
-        }
-
-        .checkoutarea__ctg__type, .checkoutarea__cgt__des {
-            padding: 12px 0;
-            text-align: left;
-        }
-
-        .checkoutarea__cgt__des {
-            text-align: right;
-            font-weight: 500;
-        }
-
-        .prd-name .checkoutarea__ctg__type, .prd-name .checkoutarea__cgt__des {
-            padding: 8px 0;
-        }
-
-        .checkoutarea__itemcrt-total, .prc-total {
-            font-weight: 600;
-            font-size: 18px;
-            color: var(--primary);
-        }
-
-        .checkoutarea__shipp {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .checkoutarea__shipp input[type="radio"] {
-            margin-right: 10px;
-            accent-color: var(--primary);
-        }
-
-        .checkoutarea__shipp label {
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(139, 115, 85, 0.1);
-        }
-
-        .default__button {
-            background-color: var(--primary);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-            transition: var(--transition);
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .default__button:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
-        }
-
-        .checkoutarea__payment__total {
-            margin-top: 25px;
-        }
-
-        @media (min-width: 992px) {
-            .col-lg-6 {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-        }
-
-        @media (max-width: 991px) {
-            .checkoutarea {
-                padding: 40px 0;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .checkoutarea__billing, .checkoutarea__payment__wraper {
-                padding: 20px;
-            }
-            
-            .checkoutarea__table__wraper {
-                overflow-x: auto;
-            }
-        }
-    </style>
-<!-- Razorpay Payment Button -->
-
+// === CHOOSE ONLINE ===
+chooseOnline.addEventListener('click',()=>{
+if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
+fetch("{% url 'create_razorpay_order' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim(),address:addressField.value.trim()})})
+.then(r=>r.json()).then(data=>{
+if(data.status==='created'){
+const opt={key:data.key,amount:data.amount,currency:'INR',order_id:data.order_id,
+handler:function(res){window.location.href="{% url 'payment_success' %}?pid="+res.razorpay_payment_id;},theme:{color:'#4a6de5'}};
+new Razorpay(opt).open();
+}});
+});
+</script>
 {% endblock %}
