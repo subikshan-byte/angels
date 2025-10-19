@@ -175,7 +175,7 @@ class Order(models.Model):
         ('online', 'Online Payment'),
         ('cod', 'Cash on Delivery'),
     ]
-
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
