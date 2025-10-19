@@ -1,35 +1,67 @@
 import razorpay
 import random
+import json
+from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt  # only used on views that intentionally need it
 from django.core.mail import send_mail
 from django.utils import timezone
-from .models import Product, Order, OrderItem, Coupon, OrderOTP
+from django.http import JsonResponse, HttpResponseBadRequest
+from .models import Product, Order, OrderItem, Coupon, OrderOTP, UserProfile
 
-
-# -------------------- BUY NOW --------------------
-@csrf_exempt
+# -------------------- BUY NOW (kept for legacy use; still works) --------------------
 @login_required
 def buy_now(request, slug):
+    """
+    This view is kept for compatibility: in previous code you used POST to buy_now to render checkout.
+    We now favour AJAX endpoints for creating payments.
+    It still supports coupon apply when posting normally.
+    """
     product = get_object_or_404(Product, slug=slug)
-    discount = 0
-    total_amount = product.price
+    discount = Decimal('0')
+    total_amount = Decimal(product.price or 0)
     quantity = int(request.POST.get("quantity", 1))
 
+    # If JSON request (AJAX coupon apply), accept JSON payload
     if request.method == "POST":
-        coupon_code = request.POST.get("coupon", "").strip().upper()
-        address = request.POST.get("address", "").strip()
+        # handle JSON or form
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except Exception:
+            data = request.POST
 
-        # --- Coupon Check ---
+        coupon_code = data.get("coupon", "").strip() if data else ""
+        action = data.get("action") if isinstance(data, dict) else request.POST.get("action")
+
+        if action == 'apply_coupon' and coupon_code:
+            try:
+                coupon = Coupon.objects.get(code=coupon_code.upper())
+                if coupon.is_valid():
+                    discount = (Decimal(product.price) * Decimal(coupon.discount_percent)) / Decimal(100)
+                    total_amount = (Decimal(product.price) - discount) * Decimal(quantity)
+                    return JsonResponse({
+                        "status": "ok",
+                        "discount": float(discount),
+                        "total_amount": float(total_amount),
+                        "message": f"{coupon.discount_percent}% discount applied"
+                    })
+                else:
+                    return JsonResponse({"status": "error", "message": "Coupon expired or inactive."})
+            except Coupon.DoesNotExist:
+                return JsonResponse({"status": "error", "message": "Invalid coupon code."})
+
+        # legacy: render checkout page if regular HTML POST
+        # compute total and create razorpay order server-side for older flow
+        coupon_code = request.POST.get("coupon", "").strip().upper()
         if coupon_code:
             try:
                 coupon = Coupon.objects.get(code=coupon_code)
                 if coupon.is_valid():
-                    discount = (product.price * coupon.discount_percent) / 100
-                    total_amount = product.price - discount
+                    discount = (Decimal(product.price) * Decimal(coupon.discount_percent)) / Decimal(100)
+                    total_amount = (Decimal(product.price) - discount) * Decimal(quantity)
                     messages.success(request, f"{coupon.discount_percent}% discount applied!")
                 else:
                     messages.error(request, "Coupon expired or inactive.")
@@ -38,8 +70,6 @@ def buy_now(request, slug):
 
         total_amount = total_amount * quantity
         razorpay_amount = int(total_amount * 100)
-
-        # --- Razorpay Order ---
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create({
             "amount": razorpay_amount,
@@ -47,7 +77,7 @@ def buy_now(request, slug):
             "payment_capture": "1"
         })
 
-        # Save updated address if provided
+        address = request.POST.get("address", "").strip()
         if address:
             profile = request.user.userprofile
             profile.address = address
@@ -57,7 +87,7 @@ def buy_now(request, slug):
             "product": product,
             "quantity": quantity,
             "discount": discount,
-            "total_amount": total_amount,
+            "total_amount": float(total_amount),
             "order_id": razorpay_order["id"],
             "razorpay_key": settings.RAZORPAY_KEY_ID,
             "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}"
@@ -66,24 +96,28 @@ def buy_now(request, slug):
     return redirect("product", p=slug)
 
 
-# -------------------- PAYMENT SUCCESS --------------------
+# -------------------- PAYMENT SUCCESS (Razorpay posts back here) --------------------
 @csrf_exempt
 @login_required
 def payment_success(request):
+    """
+    Razorpay sends back the payment_id (via form submission we do in JS).
+    This view creates the Order in DB (so we don't create it earlier).
+    """
     product_slug = request.GET.get("product_slug")
     quantity = int(request.GET.get("quantity", 1))
     payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
     product = get_object_or_404(Product, slug=product_slug)
 
-    # --- Create Order ---
+    # Create Order (payment confirmed by Razorpay)
     order = Order.objects.create(
         user=request.user,
         status="paid",
         payment_id=payment_id,
+        payment_method='online',
         address=request.user.userprofile.address
     )
 
-    # --- Create Order Item ---
     OrderItem.objects.create(
         order=order,
         product=product,
@@ -91,7 +125,7 @@ def payment_success(request):
         price=product.price
     )
 
-    # --- Generate and Send OTP ---
+    # generate OTP for verification after payment (optional - you already had this behaviour)
     otp_code = str(random.randint(100000, 999999))
     otp_obj, _ = OrderOTP.objects.update_or_create(
         user=request.user,
@@ -110,69 +144,190 @@ def payment_success(request):
     return redirect("verify_order_otp")
 
 
-# -------------------- VERIFY ORDER OTP --------------------
-from django.http import JsonResponse
-from django.http import JsonResponse
-import json
-from django.utils import timezone
-from datetime import timedelta
-from django.contrib.auth.decorators import login_required
-from .models import OrderOTP
-
-from django.http import JsonResponse
-import json
-
+# -------------------- SEND CHECKOUT OTP (AJAX) --------------------
 @login_required
-@csrf_exempt
+def send_checkout_otp(request):
+    """
+    AJAX endpoint to send a pre-payment OTP to the user (used before showing payment options).
+    """
+    if request.method == "POST":
+        otp_code = str(random.randint(100000, 999999))
+        otp_obj, _ = OrderOTP.objects.update_or_create(
+            user=request.user,
+            defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False, "order": None},
+        )
+
+        send_mail(
+            subject="Your Checkout OTP - Angels Glam & Glow",
+            message=f"Dear {request.user.first_name}, your checkout OTP is {otp_code}. It expires in 5 minutes.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[request.user.email],
+        )
+
+        return JsonResponse({"status": "sent"})
+    return JsonResponse({"status": "error"}, status=400)
+
+
+# -------------------- VERIFY ORDER OTP (AJAX) --------------------
+@login_required
 def verify_order_otp(request):
     """
-    AJAX-based OTP verification for checkout.
-    Returns JSON {status: "verified"} or {status: "invalid"}.
+    Verify OTP sent earlier. Accepts JSON POST {otp: "xxxxxx"}.
+    If verified, returns {"status": "verified"}.
     """
     if request.method == "POST":
         try:
             data = json.loads(request.body.decode("utf-8"))
             entered_otp = data.get("otp")
         except Exception:
-            return JsonResponse({"status": "error", "message": "Invalid request format"})
+            return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
 
         otp_obj = OrderOTP.objects.filter(user=request.user).last()
         if not otp_obj:
             return JsonResponse({"status": "no_otp", "message": "No OTP found"})
 
-        # Verify OTP
         if otp_obj.otp == entered_otp and otp_obj.is_valid():
             otp_obj.verified = True
             otp_obj.save()
-            if otp_obj.order:
-                otp_obj.order.status = "confirmed"
-                otp_obj.order.save()
+            # don't alter orders here — code that creates orders will set status accordingly
             return JsonResponse({"status": "verified"})
         else:
             return JsonResponse({"status": "invalid"})
-
-    # If accessed directly via browser, show normal page
+    # Fallback: render the existing page if user navigates directly
     otp_obj = OrderOTP.objects.filter(user=request.user).last()
     return render(request, "verify_order_otp.html", {"otp_obj": otp_obj})
 
 
-
-
-
-
-# -------------------- OPTIONAL: COD SUPPORT --------------------
+# -------------------- CREATE RAZORPAY ORDER (AJAX) --------------------
 @login_required
-def cod_order(request, slug):
-    product = get_object_or_404(Product, slug=slug)
+def create_razorpay_order(request):
+    """
+    Called after OTP verification when user chooses online payment.
+    Expects JSON: { product_slug, quantity, coupon, address }
+    Returns JSON: { status: "created", order_id, amount, key }
+    """
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "POST required"}, status=400)
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+
+    product_slug = data.get("product_slug")
+    quantity = int(data.get("quantity", 1))
+    coupon_code = (data.get("coupon") or "").strip().upper()
+    address = (data.get("address") or "").strip()
+
+    product = get_object_or_404(Product, slug=product_slug)
+
+    # calculate total with coupon
+    total = Decimal(product.price)
+    if coupon_code:
+        try:
+            coupon = Coupon.objects.get(code=coupon_code)
+            if coupon.is_valid():
+                discount = (total * Decimal(coupon.discount_percent)) / Decimal(100)
+                total = (total - discount)
+            else:
+                return JsonResponse({"status": "error", "message": "Coupon expired or inactive."})
+        except Coupon.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Invalid coupon."})
+
+    total = total * Decimal(quantity)
+    paise = int(total * 100)
+
+    # optionally save address
+    if address:
+        profile = request.user.userprofile
+        profile.address = address
+        profile.save()
+
+    # create razorpay order
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    try:
+        razorpay_order = client.order.create({"amount": paise, "currency": "INR", "payment_capture": 1})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": "Razorpay error: " + str(e)})
+
+    return JsonResponse({
+        "status": "created",
+        "order_id": razorpay_order["id"],
+        "amount": paise,
+        "key": settings.RAZORPAY_KEY_ID
+    })
+
+
+# -------------------- PLACE COD ORDER (AJAX) --------------------
+@login_required
+def place_cod_order(request):
+    """
+    Called after OTP verification when user chooses COD.
+    Expects JSON: { product_slug, quantity, coupon, address }
+    Creates Order with payment_method='cod' and returns redirect URL.
+    """
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "POST required"}, status=400)
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+
+    product_slug = data.get("product_slug")
+    quantity = int(data.get("quantity", 1))
+    coupon_code = (data.get("coupon") or "").strip().upper()
+    address = (data.get("address") or "").strip()
+
+    product = get_object_or_404(Product, slug=product_slug)
+
+    # calculate total with coupon (we store it on order items price)
+    total = Decimal(product.price)
+    if coupon_code:
+        try:
+            coupon = Coupon.objects.get(code=coupon_code)
+            if coupon.is_valid():
+                discount = (total * Decimal(coupon.discount_percent)) / Decimal(100)
+                total = (total - discount)
+            else:
+                return JsonResponse({"status": "error", "message": "Coupon expired or inactive."})
+        except Coupon.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Invalid coupon."})
+
+    # save address if provided
+    if address:
+        profile = request.user.userprofile
+        profile.address = address
+        profile.save()
+
+    # create order & order item
     order = Order.objects.create(
         user=request.user,
         status="pending",
         payment_id="COD",
-        address=request.user.userprofile.address
+        payment_method="cod",
+        address=address or request.user.userprofile.address
     )
-    OrderItem.objects.create(order=order, product=product, quantity=1, price=product.price)
-    messages.success(request, f"Your COD order #{order.id} has been placed successfully!")
-    return redirect("myaccount")
+
+    OrderItem.objects.create(order=order, product=product, quantity=quantity, price=product.price)
+
+    # generate verification OTP for order (optional)
+    otp_code = str(random.randint(100000, 999999))
+    otp_obj, _ = OrderOTP.objects.update_or_create(
+        user=request.user,
+        order=order,
+        defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False},
+    )
+
+    send_mail(
+        subject="Your COD Order OTP",
+        message=f"Dear {request.user.first_name}, your OTP for COD order #{order.id} is {otp_code}. Please verify to confirm delivery.",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[request.user.email],
+    )
+
+    return JsonResponse({"status": "placed", "redirect": "/myaccount/"})
+
 
 
 from django.shortcuts import redirect, get_object_or_404
@@ -205,30 +360,3 @@ def update_cart_quantity(request, item_id):
         return HttpResponse(action)
 
     return redirect('cart')
-from django.http import JsonResponse
-import json
-
-@login_required
-def send_checkout_otp(request):
-    """Send OTP before payment via AJAX"""
-    if request.method == "POST":
-        otp_code = str(random.randint(100000, 999999))
-        otp_obj, _ = OrderOTP.objects.update_or_create(
-            user=request.user,
-            defaults={
-                "otp": otp_code,
-                "created_at": timezone.now(),
-                "verified": False,
-            },
-        )
-
-        send_mail(
-            subject="Your Order Verification OTP",
-            message=f"Dear {request.user.first_name}, your OTP is {otp_code}. It will expire in 5 minutes.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[request.user.email],
-        )
-
-        return JsonResponse({"status": "sent"})
-
-    return JsonResponse({"status": "error"}, status=400)
