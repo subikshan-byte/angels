@@ -112,6 +112,7 @@ def payment_success(request):
 
 # -------------------- VERIFY ORDER OTP --------------------
 from django.http import JsonResponse
+from django.http import JsonResponse
 import json
 from django.utils import timezone
 from datetime import timedelta
@@ -120,7 +121,6 @@ from .models import OrderOTP
 
 @login_required
 def verify_order_otp(request):
-    """AJAX view to verify OTP"""
     if request.method != "POST":
         return JsonResponse({"status": "invalid_method"}, status=405)
 
@@ -130,22 +130,27 @@ def verify_order_otp(request):
     except Exception as e:
         return JsonResponse({"status": "bad_request", "error": str(e)}, status=400)
 
-    otp_obj = OrderOTP.objects.filter(user=request.user).last()
+    otp_obj = OrderOTP.objects.filter(user=request.user, order__isnull=False).last()
     if not otp_obj:
         return JsonResponse({"status": "no_otp"}, status=404)
 
-    # --- OTP validity check (expires in 5 min) ---
-    if (timezone.now() - otp_obj.created_at) > timedelta(minutes=5):
+    # OTP expiry check
+    if (timezone.now() - otp_obj.created_at).total_seconds() > 300:
         return JsonResponse({"status": "expired"}, status=400)
 
     if otp_obj.otp == entered_otp:
         otp_obj.verified = True
         otp_obj.save()
-        otp_obj.order.status = "confirmed"
-        otp_obj.order.save()
+
+        # ✅ Only update order if it exists
+        if otp_obj.order:
+            otp_obj.order.status = "confirmed"
+            otp_obj.order.save()
+
         return JsonResponse({"status": "verified"}, status=200)
 
     return JsonResponse({"status": "invalid"}, status=400)
+
 
 
 
