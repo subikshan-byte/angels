@@ -255,7 +255,7 @@ const razorpayContainer = document.getElementById("razorpay-container");
 
 // --- Step 1: Send OTP ---
 sendOtpBtn.addEventListener("click", () => {
-    fetch("{% url 'payment_success' %}", {
+    fetch("{% url 'send_checkout_otp' %}", {
         method: "POST",
         headers: {
             "X-CSRFToken": csrftoken,
