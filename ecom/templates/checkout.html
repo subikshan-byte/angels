@@ -275,30 +275,63 @@ sendOtpBtn.addEventListener("click", () => {
 // --- Step 2: Verify OTP ---
 verifyOtpBtn.addEventListener("click", () => {
     const otp = otpInput.value.trim();
-    if (!otp) return (otpMessage.textContent = "Please enter OTP");
+
+    // --- Basic input check ---
+    if (!otp) {
+        otpMessage.textContent = "Please enter OTP";
+        otpMessage.className = "error-msg";
+        return;
+    }
+
+    // --- Debug log ---
+    console.log("Verifying OTP:", otp);
 
     fetch("{% url 'verify_order_otp' %}", {
         method: "POST",
         headers: {
-            "X-CSRFToken": csrftoken,
+            "X-CSRFToken": csrftoken,   // ✅ important for Django POST
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ otp })
+        body: JSON.stringify({ otp: otp })
     })
-    .then(res => res.json())
+    .then(res => {
+        // ✅ Handle non-200 responses safely
+        if (!res.ok) {
+            throw new Error("Server error: " + res.status);
+        }
+        return res.json();
+    })
     .then(data => {
+        console.log("OTP verify response:", data);
+
         if (data.status === "verified") {
-            otpMessage.textContent = "OTP verified successfully!";
+            otpMessage.textContent = "✅ OTP verified successfully!";
             otpMessage.className = "success-msg";
+
             setTimeout(() => {
                 otpModal.style.display = "none";
                 razorpayContainer.style.display = "block";
             }, 800);
+
+        } else if (data.status === "invalid") {
+            otpMessage.textContent = "❌ Invalid or expired OTP.";
+            otpMessage.className = "error-msg";
+
+        } else if (data.status === "no_otp") {
+            otpMessage.textContent = "⚠️ No OTP found. Try generating a new one.";
+            otpMessage.className = "error-msg";
+
         } else {
-            otpMessage.textContent = "Invalid or expired OTP.";
+            otpMessage.textContent = "⚠️ Unexpected response from server.";
             otpMessage.className = "error-msg";
         }
+    })
+    .catch(error => {
+        console.error("Error verifying OTP:", error);
+        otpMessage.textContent = "⚠️ Network or server error.";
+        otpMessage.className = "error-msg";
     });
 });
+
 </script>
 {% endblock %}
