@@ -145,27 +145,37 @@ def payment_success(request):
 
 
 # -------------------- SEND CHECKOUT OTP (AJAX) --------------------
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import OrderOTP
+
 @login_required
 def send_checkout_otp(request):
-    """
-    AJAX endpoint to send a pre-payment OTP to the user (used before showing payment options).
-    """
-    if request.method == "POST":
-        otp_code = str(random.randint(100000, 999999))
-        otp_obj, _ = OrderOTP.objects.update_or_create(
-            user=request.user,
-            defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False, "order": None},
-        )
+    try:
+        otp = get_random_string(length=6, allowed_chars='0123456789')
+
+        # ✅ Delete any old OTP for this user first
+        OrderOTP.objects.filter(user=request.user).delete()
+
+        # ✅ Create new OTP safely
+        otp_obj = OrderOTP.objects.create(user=request.user, otp=otp)
 
         send_mail(
-            subject="Your Checkout OTP - Angels Glam & Glow",
-            message=f"Dear {request.user.first_name}, your checkout OTP is {otp_code}. It expires in 5 minutes.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
+            subject="Your Checkout OTP",
+            message=f"Your OTP for checkout is: {otp}",
+            from_email="no-reply@zapwaves.com",
             recipient_list=[request.user.email],
+            fail_silently=False,
         )
 
         return JsonResponse({"status": "sent"})
-    return JsonResponse({"status": "error"}, status=400)
+
+    except Exception as e:
+        print("❌ Error sending OTP:", e)
+        return JsonResponse({"status": "error", "message": str(e)})
+
 
 
 # -------------------- VERIFY ORDER OTP (AJAX) --------------------
