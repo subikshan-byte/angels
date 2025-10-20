@@ -201,7 +201,7 @@ def place_cod_order(request):
     # Remove OTP verification
     request.session.pop("otp_verified", None)
 
-    return JsonResponse({"status": "placed", "redirect": "/myaccount/"})
+    return JsonResponse({"status": "placed", "redirect": "/myaccount"})
 
 
 # ------------------ CREATE RAZORPAY ORDER (AJAX) ------------------
