@@ -159,7 +159,7 @@ class UserProfile(models.Model):
     first_name = models.CharField(max_length=100, null=True, blank=True)
     address = models.TextField(blank=True, null=True)
     mobile = models.CharField(max_length=15)
-
+    zip_code = models.CharField(max_length=10, null=True, blank=True) 
     def __str__(self):
         return self.user.username
 # ---------------- ORDER ----------------
