@@ -168,7 +168,7 @@ def place_cod_order(request):
     total_amount = sum(item.subtotal() for item in items)
     if coupon:
         try:
-            cpn = Coupon.objects.get(code__iexact=coupon, is_active=True)
+            cpn = Coupon.objects.get(code__iexact=coupon, active=True)
             total_amount -= cpn.discount_amount
         except Coupon.DoesNotExist:
             pass
