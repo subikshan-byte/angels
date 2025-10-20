@@ -41,6 +41,12 @@ def check_userprofile_complete(user):
 # -------------------- BUY NOW (kept for legacy use; still works) --------------------
 @login_required
 def buy_now(request, slug):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    redirect_response = check_userprofile_complete(request.user)
+    if redirect_response:
+        return redirect_response 
     """
     This view is kept for compatibility: in previous code you used POST to buy_now to render checkout.
     We now favour AJAX endpoints for creating payments.
