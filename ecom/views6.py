@@ -14,13 +14,14 @@ from .models import Product, Order, OrderItem, Coupon, OrderOTP, UserProfile
 from django.shortcuts import redirect
 from .models import UserProfile
 
-def check_userprofile_complete(user):
+def check_userprofile_complete(request):
     """
     Checks whether the UserProfile of the given user has all required fields filled.
     If any are empty, returns a redirect to /myaccount/.
     Otherwise, returns None (continue as normal).
     """
     try:
+        user = request.user
         profile = UserProfile.objects.get(user=user)
     except UserProfile.DoesNotExist:
         # UserProfile not created yet → redirect to myaccount
@@ -46,7 +47,7 @@ def buy_now(request, slug):
     if not request.user.is_authenticated:
         return redirect("login")
 
-    redirect_response = check_userprofile_complete(request.user)
+    redirect_response = check_userprofile_complete(request)
     if redirect_response:
         return redirect_response 
     """
