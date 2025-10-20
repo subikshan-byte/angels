@@ -40,7 +40,25 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
 .payment-options button { padding:10px 14px; border-radius:8px; font-weight:600; cursor:pointer; border: none; }
 .payment-cod { background:#2ecc71; color:white; } .payment-online { background:#3498db; color:white; }
 </style>
-
+<div class="breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb__title">
+                            <h1>My Account</h1>
+                            <ul>
+                                <li>
+                                    <a href="{% url "home" %}">Home</a>
+                                </li>
+                                <li class="color__blue">
+                                   CHECK OUT
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 <div class="checkout-container">
   <!-- PROFILE (editable address) -->
   <div class="user-details-card profile-card">
