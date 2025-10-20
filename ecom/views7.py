@@ -174,11 +174,12 @@ def place_cod_order(request):
 
     # Create order
     order = Order.objects.create(
-        user=request.user,
-        status="COD",
-        address=address or request.user.userprofile.address,
-        total=total_amount,
-    )
+    user=request.user,
+    total_price=cart_total,
+    address=address,
+    payment_mode='COD'
+)
+
 
     for item in items:
         OrderItem.objects.create(
