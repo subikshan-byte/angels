@@ -26,7 +26,8 @@ def search(request,s):
     candidates = Product.objects.all()
     import re, unicodedata
     from rapidfuzz import fuzz
-    from django.db.models import Case, When, Value, IntegerField, Q
+    from django.db.models import Case, When, Value, IntegerField
+    from .models import Product
     
     if query:
         # --- Normalizer -----------------------------------------------------
@@ -48,50 +49,48 @@ def search(request,s):
             category = normalize(p.category.c_name)
             combined = f"{name} {brand} {category}"
     
-            # 1️⃣ exact product name
-            if name == query_norm:
-                return 100
+            # Fuzzy match ratios
+            name_ratio = fuzz.token_sort_ratio(query_norm, name)
+            brand_ratio = fuzz.token_sort_ratio(query_norm, brand)
+            combined_ratio = fuzz.partial_ratio(query_norm, combined)
     
-            # 2️⃣ exact brand name
-            if brand == query_norm:
-                return 99
+            # Highest ratio among fields
+            best_ratio = max(name_ratio, brand_ratio, combined_ratio)
     
-            # 3️⃣ strong substring (brand/name/category contains full query)
-            if query_norm in name or query_norm in brand or query_norm in category:
-                return 90
+            return best_ratio, name_ratio, brand_ratio
     
-            # 4️⃣ keyword overlap (any query word in name/brand/category)
-            if any(w in combined for w in query_words):
-                return 80
+        # --- Score & categorize ---------------------------------------------
+        result1, result2, result3 = [], [], []
     
-            # 5️⃣ fuzzy similarity (partial ratio)
-            ratio = fuzz.partial_ratio(query_norm, combined)
-            if ratio >= 60:
-                return ratio  # will be between 60-89
+        for p in Product.objects.all():
+            score, name_ratio, brand_ratio = score_product(p)
     
-            return 0  # not relevant
+            # Group based on logic
+            if name_ratio >= 90 or score >= 90:
+                result1.append(p)
+            elif brand_ratio >= 85:
+                result2.append(p)
+            elif score >= 75:
+                result3.append(p)
     
-        # --- Score & collect -----------------------------------------------
-        candidates = list(Product.objects.all())
-        scored = [(score_product(p), p) for p in candidates if score_product(p) >= 60]
-    
-        # Sort strictly by score (descending)
-        scored.sort(key=lambda sp: sp[0], reverse=True)
-    
-        # Extract ordered products
-        matched_products = [p for _, p in scored]
-    
-        # --- Preserve order in DB (100/99 first) ----------------------------
-        # Sort again in Python so 100% product names and 99% brand matches appear top
-        matched_products = sorted(
-            matched_products,
-            key=lambda p: (
-                0 if normalize(p.p_name) == query_norm else
-                (1 if normalize(p.brand_name) == query_norm else 2)
+        # --- Preserve order by relevance ------------------------------------
+        def order_key(p):
+            n = normalize(p.p_name)
+            b = normalize(p.brand_name)
+            return (
+                0 if n == query_norm else
+                (1 if b == query_norm else 2)
             )
-        )
     
-        matched_ids = [p.p_id for p in matched_products]
+        result1.sort(key=order_key)
+        result2.sort(key=order_key)
+        result3.sort(key=order_key)
+    
+        # --- Combine --------------------------------------------------------
+        combined_results = result1 + result2 + result3
+    
+        # Preserve DB order
+        matched_ids = [p.p_id for p in combined_results]
     
         if matched_ids:
             preserve_order = Case(
@@ -110,6 +109,7 @@ def search(request,s):
             results = []
     else:
         results = get_product_data1(Product.objects.all())
+
 
 
 
