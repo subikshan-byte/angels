@@ -151,6 +151,7 @@ def edit(request):
 # ------------------ PLACE COD ORDER ------------------
 @login_required
 def place_cod_order(request):
+    from django.db.models import Sum
     import json
     data = json.loads(request.body.decode("utf-8"))
     if not request.session.get("otp_verified"):
@@ -173,6 +174,7 @@ def place_cod_order(request):
             pass
 
     # Create order
+    cart_total = cart_items.aggregate(total=Sum('total_price'))['total'] or 0
     order = Order.objects.create(
     user=request.user,
     total_price=cart_total,
