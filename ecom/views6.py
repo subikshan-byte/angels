@@ -154,7 +154,7 @@ def send_checkout_otp(request):
         otp_code = str(random.randint(100000, 999999))
         otp_obj, _ = OrderOTP.objects.update_or_create(
             user=request.user,
-            defaults={"otp": otp}
+            defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False, "order": None},
         )
 
         send_mail(
