@@ -174,7 +174,8 @@ def place_cod_order(request):
             pass
 
     # Create order
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart_items =CartItem.objects.filter(cart__user=request.user)
+
 
     # ✅ Step 2: Calculate total price
     cart_total = cart_items.aggregate(total=Sum('total_price'))['total'] or 0
