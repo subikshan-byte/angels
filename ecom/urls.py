@@ -31,7 +31,7 @@ path('create-razorpay-order-cart/', views6.create_razorpay_order, name='create_r
 path("send-checkout-otp-cart/", views7.send_checkout_otp, name="send_checkout_otp1"),
 path('verify-order-otp-cart/', views7.verify_order_otp, name='verify_order_otp1'),
     # Payment success for cart
-    path('payment/success-cart/', views6.payment_success_cart, name='payment_success'),
+    path('payment/success-cart/', views6.payment_success, name='payment_success'),
     path('payment/success-cart/', views7.payment_success_cart, name='payment_success1'),
     path("about",views8.about,name="about"),
     path("contact",views8.contact,name="contact"),
