@@ -22,7 +22,7 @@ def check_userprofile_complete(user):
         return redirect("/myaccount")
 
     # Fields that must not be empty
-    required_fields = ["first_name", "address", "mobile",,"zipcode"]
+    required_fields = ["first_name", "address", "mobile","zipcode"]
 
     for field in required_fields:
         value = getattr(profile, field, None)
