@@ -205,42 +205,44 @@ def place_cod_order(request):
 
 
 # ------------------ CREATE RAZORPAY ORDER (AJAX) ------------------
+import json
+import razorpay
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.db.models import Sum
+from .models import CartItem
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
 @login_required
-def create_razorpay_order(request):
-    import json
-    data = json.loads(request.body.decode("utf-8"))
-    address = data.get("address")
-    coupon = data.get("coupon")
-
-    cart = Cart.objects.get(user=request.user)
-    items = cart.items.all()
-    if not items.exists():
-        return JsonResponse({"status": "error", "message": "Cart is empty"})
-
-    total_amount = sum(item.subtotal() for item in items)
-    if coupon:
+@csrf_exempt
+def create_razorpay_order_cart(request):
+    if request.method == 'POST':
         try:
-            cpn = Coupon.objects.get(code__iexact=coupon, is_active=True)
-            total_amount -= cpn.discount_amount
-        except Coupon.DoesNotExist:
-            pass
+            cart_items = CartItem.objects.filter(cart__user=request.user)
+            total_amount = sum(item.product.price * item.quantity for item in cart_items)
+            amount_paise = int(total_amount * 100)
 
-    total_paise = int(total_amount * 100)
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-    order = client.order.create({"amount": total_paise, "currency": "INR", "payment_capture": "1"})
+            # Create Razorpay order
+            razorpay_order = razorpay_client.order.create({
+                'amount': amount_paise,
+                'currency': 'INR',
+                'payment_capture': '1'
+            })
 
-    request.session["pending_order"] = {
-        "address": address,
-        "total_amount": total_amount,
-        "order_id": order["id"],
-    }
+            return JsonResponse({
+                'status': 'created',
+                'order_id': razorpay_order['id'],
+                'amount': amount_paise,
+                'key': settings.RAZORPAY_KEY_ID
+            })
+        except Exception as e:
+            print("Error creating Razorpay order for cart:", e)
+            return JsonResponse({'status': 'error', 'message': 'Error creating Razorpay order.'}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
 
-    return JsonResponse({
-        "status": "created",
-        "order_id": order["id"],
-        "amount": total_paise,
-        "key": settings.RAZORPAY_KEY_ID,
-    })
 
 
 # ------------------ PAYMENT SUCCESS (RAZORPAY) ------------------
