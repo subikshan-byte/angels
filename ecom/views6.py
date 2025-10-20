@@ -348,7 +348,7 @@ def place_cod_order(request):
         recipient_list=[request.user.email],
     )
 
-    return JsonResponse({"status": "placed", "redirect": "/myaccount/"})
+    return JsonResponse({"status": "placed", "redirect": "/myaccount"})
 
 
 
