@@ -192,14 +192,14 @@ fetch("{% url 'edit' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Conten
 // === CHOOSE COD ===
 chooseCod.addEventListener('click',()=>{
 if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
-fetch("{% url 'place_cod_order' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim(),coupon:couponInput.value.trim()})})
+fetch("{% url 'place_cod_order1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim(),coupon:couponInput.value.trim()})})
 .then(r=>r.json()).then(d=>{if(d.status==='placed')window.location.href=d.redirect;else document.getElementById('payment-msg').textContent=d.message;});
 });
 
 // === CHOOSE ONLINE ===
 chooseOnline.addEventListener('click',()=>{
 if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
-fetch("{% url 'create_razorpay_order' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim(),address:addressField.value.trim()})})
+fetch("{% url 'create_razorpay_order1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim(),address:addressField.value.trim()})})
 .then(r=>r.json()).then(data=>{
 if(data.status==='created'){
 const opt={key:data.key,amount:data.amount,currency:'INR',order_id:data.order_id,
