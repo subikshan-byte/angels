@@ -36,6 +36,16 @@ def check_userprofile_complete(user):
 # ------------------ CHECKOUT PAGE ------------------
 @login_required
 def cart_checkout(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    redirect_response = check_userprofile_complete(request.user)
+    if redirect_response:
+        return redirect_response  # redirects to /myaccount/ if incomplete
+
+    # ✅ All profile fields complete — continue checkout
+    ...
+
     cart = Cart.objects.get(user=request.user)
     items = cart.items.all()
 
