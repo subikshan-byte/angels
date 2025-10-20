@@ -184,7 +184,7 @@ def place_cod_order(request):
     user=request.user,
     price=cart_total,
     address=address,
-    payment_mode='cod'
+    payment_method='cod'
 )
 
 
