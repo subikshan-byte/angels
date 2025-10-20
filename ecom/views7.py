@@ -19,16 +19,16 @@ def check_userprofile_complete(user):
         profile = UserProfile.objects.get(user=user)
     except UserProfile.DoesNotExist:
         # UserProfile not created yet → redirect to myaccount
-        return redirect("/myaccount/")
+        return redirect("/myaccount")
 
     # Fields that must not be empty
-    required_fields = ["first_name", "address", "mobile"]
+    required_fields = ["first_name", "address", "mobile",,"zipcode"]
 
     for field in required_fields:
         value = getattr(profile, field, None)
         if not value or str(value).strip() == "":
             # Found an empty or null field → redirect
-            return redirect("/myaccount/")
+            return redirect("/myaccount")
 
     # ✅ All required fields filled → continue
     return None
