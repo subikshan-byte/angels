@@ -40,6 +40,7 @@ path('verify-order-otp-cart/', views7.verify_order_otp, name='verify_order_otp1'
     path('verify-otp/', forgetpass.verify_otp, name='verify_otp'),
     path('reset-password/', forgetpass.reset_password, name='reset_password'),
     path('order-check/', check.order_check, name='order_check'),
+    path("online-payment",views8.paymentrazor,name="razor")
 ]
 
 
