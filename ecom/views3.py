@@ -4,7 +4,10 @@ from .models import Cart, CartItem, Product,Category,Size, UserProfile
 from .views import get_product_data1
 from rapidfuzz import fuzz
 from django.db.models import Count
-
+import re, unicodedata
+from rapidfuzz import fuzz
+from django.db.models import Case, When, Value, IntegerField
+from .models import Product
 
 def search(request,s):
     if(s=='0'):
