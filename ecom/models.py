@@ -232,7 +232,7 @@ class Coupon(models.Model):
 
 
 class OrderOTP(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToManyField(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     otp = models.CharField(max_length=6)
     created_at = models.DateTimeField(default=timezone.now)
