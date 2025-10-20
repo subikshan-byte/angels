@@ -169,7 +169,7 @@ def place_cod_order(request):
     if coupon:
         try:
             cpn = Coupon.objects.get(code__iexact=coupon, active=True)
-            total_amount -= cpn.discount_amount
+            total_amount -= cpn.discount_percent
         except Coupon.DoesNotExist:
             pass
 
