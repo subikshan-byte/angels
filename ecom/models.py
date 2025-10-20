@@ -156,8 +156,9 @@ class CartItem(models.Model):
         return self.quantity * self.product.price
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
     address = models.TextField(blank=True, null=True)
-    mobile = models.CharField(max_length=15, blank=True, null=True)
+    mobile = models.CharField(max_length=15)
 
     def __str__(self):
         return self.user.username
