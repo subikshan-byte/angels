@@ -178,9 +178,8 @@ def place_cod_order(request):
 
 
     # ✅ Step 2: Calculate total price
-    cart_total = cart_items.aggregate(total=Sum('total_price'))['total'] or 0
+    cart_total = sum(item.product.price * item.quantity for item in cart_items)
 
-    cart_total = cart_items.aggregate(total=Sum('total_price'))['total'] or 0
     order = Order.objects.create(
     user=request.user,
     total_price=cart_total,
