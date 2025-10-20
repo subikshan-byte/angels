@@ -1059,523 +1059,7 @@
                 </div>
             </div>
         </div>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Angels Glam & Glow Chatbot</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffeef8 0%, #fff5f7 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .chat-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .chat-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .chat-button:hover {
-            transform: scale(1.1);
-        }
-
-        .chat-button svg {
-            width: 30px;
-            height: 30px;
-            fill: white;
-        }
-
-        .chat-container {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 380px;
-            height: 550px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            flex-direction: column;
-            overflow: hidden;
-            animation: slideUp 0.3s ease;
-        }
-
-        .chat-container.active {
-            display: flex;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-            color: white;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .chat-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .chat-header-text h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .chat-header-text p {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: #fafafa;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.bot {
-            flex-direction: row;
-        }
-
-        .message.user {
-            flex-direction: row-reverse;
-        }
-
-        .message-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .message.bot .message-avatar {
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-            color: white;
-        }
-
-        .message.user .message-avatar {
-            background: #e0e0e0;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            line-height: 1.5;
-            font-size: 14px;
-        }
-
-        .message.bot .message-content {
-            background: white;
-            color: #333;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message.user .message-content {
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .quick-replies {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-            padding: 0 10px;
-        }
-
-        .quick-reply-btn {
-            background: white;
-            border: 2px solid #ff6b9d;
-            color: #ff6b9d;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .quick-reply-btn:hover {
-            background: #ff6b9d;
-            color: white;
-        }
-
-        .chat-input-area {
-            padding: 15px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #f0f0f0;
-            border-radius: 25px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .chat-input:focus {
-            border-color: #ff6b9d;
-        }
-
-        .send-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease;
-        }
-
-        .send-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .send-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
-        }
-
-        .typing-indicator {
-            display: none;
-            padding: 12px 16px;
-            background: white;
-            border-radius: 18px;
-            border-bottom-left-radius: 4px;
-            width: fit-content;
-        }
-
-        .typing-indicator.active {
-            display: block;
-        }
-
-        .typing-indicator span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ff6b9d;
-            margin: 0 2px;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .chat-container {
-                width: calc(100% - 40px);
-                height: calc(100vh - 140px);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="chat-widget">
-        <button class="chat-button" id="chatButton">
-            <svg viewBox="0 0 24 24">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
-            </svg>
-        </button>
-
-        <div class="chat-container" id="chatContainer">
-            <div class="chat-header">
-                <div class="chat-header-info">
-                    <div class="chat-avatar">✨</div>
-                    <div class="chat-header-text">
-                        <h3>Angels Glam & Glow</h3>
-                        <p>Online now • Replies instantly</p>
-                    </div>
-                </div>
-                <button class="close-btn" id="closeBtn">×</button>
-            </div>
-
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="message-avatar">✨</div>
-                    <div class="message-content">
-                        Hi there! 👋 Welcome to Angels Glam & Glow! I'm here to help you find the perfect beauty products. How can I assist you today?
-                    </div>
-                </div>
-                <div class="quick-replies" id="quickReplies">
-                    <button class="quick-reply-btn" data-reply="Show me trending products">🔥 Trending Products</button>
-                    <button class="quick-reply-btn" data-reply="I need skincare recommendations">💆‍♀️ Skincare Help</button>
-                    <button class="quick-reply-btn" data-reply="What's your shipping policy?">📦 Shipping Info</button>
-                    <button class="quick-reply-btn" data-reply="Tell me about your best sellers">⭐ Best Sellers</button>
-                </div>
-            </div>
-
-            <div class="chat-input-area">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
-                <button class="send-btn" id="sendBtn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const chatButton = document.getElementById('chatButton');
-        const chatContainer = document.getElementById('chatContainer');
-        const closeBtn = document.getElementById('closeBtn');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const quickReplies = document.getElementById('quickReplies');
-
-        const responses = {
-            greeting: "Hello! 😊 I'm so glad you're here! How can I help you find your perfect beauty products today?",
-            
-            products: "We have an amazing collection! 💄 Our trending items include:\n\n• Herbal Essences Bio Aloe & Bamboo Shampoo + Conditioner\n• Mamaearth Tea Tree Anti-Dandruff Conditioner\n• Flawless Finish Foundation\n• Aroma Magic Oil Balancing Shampoo\n\nWhat type of product are you looking for?",
-            
-            skincare: "Great choice! 🌟 For skincare, we recommend:\n\n• Tea Tree products for acne-prone skin\n• Aloe & Bamboo range for hydration\n• Oil balancing products for combination skin\n\nWhat's your skin type or concern?",
-            
-            haircare: "We have fantastic haircare options! 💇‍♀️\n\n• Herbal Essences for soft, smooth hair (sulphate & paraben free!)\n• Tea Tree conditioner for dandruff control\n• Oil balancing shampoo for healthy scalp\n\nWould you like details on any of these?",
-            
-            shipping: "We've got you covered! 📦\n\n✅ FREE shipping on orders over ₹1000\n✅ Fast delivery across India\n✅ Secure packaging\n✅ Track your order easily\n\nIs there anything specific about delivery you'd like to know?",
-            
-            returns: "Your satisfaction matters! 💝\n\n✅ 15-day money-back guarantee\n✅ Easy return process\n✅ Full refund on eligible returns\n\nNeed help with a return?",
-            
-            payment: "Shopping is safe with us! 🔒\n\n✅ 100% secure checkout\n✅ Multiple payment options\n✅ Your data is protected\n✅ SSL encrypted transactions\n\nReady to checkout?",
-            
-            bestsellers: "Our customers love these! ⭐\n\n1. Herbal Essences Bio Aloe & Bamboo Set - Perfect for smooth, healthy hair\n2. Mamaearth Tea Tree Conditioner - Great for dandruff control\n3. Flawless Finish Foundation - For that perfect glow!\n\nWant to know more about any of these?",
-            
-            foundation: "Our Flawless Finish Foundation is amazing! ✨\n\n💫 Seamless coverage\n💫 Long-lasting formula\n💫 Skin-nourishing ingredients\n💫 Multiple shades available\n💫 Radiant, natural glow\n\nIt's perfect for all-day wear! Interested?",
-            
-            contact: "I'd love to help you connect! 📞\n\nVisit our website: angels-glamnglow.in\n\nFeel free to browse our products or reach out if you need personalized assistance!",
-            
-            default: "I'm here to help! 😊 I can assist you with:\n\n• Product recommendations\n• Skincare & haircare advice\n• Shipping & delivery info\n• Returns & refunds\n• Payment & security\n\nWhat would you like to know?"
-        };
-
-        function getResponse(input) {
-            const text = input.toLowerCase();
-            
-            if (text.includes('hello') || text.includes('hi') || text.includes('hey')) {
-                return responses.greeting;
-            } else if (text.includes('product') || text.includes('show') || text.includes('trending')) {
-                return responses.products;
-            } else if (text.includes('skin') || text.includes('face') || text.includes('acne')) {
-                return responses.skincare;
-            } else if (text.includes('hair') || text.includes('shampoo') || text.includes('conditioner')) {
-                return responses.haircare;
-            } else if (text.includes('ship') || text.includes('deliver') || text.includes('shipping')) {
-                return responses.shipping;
-            } else if (text.includes('return') || text.includes('refund') || text.includes('money back')) {
-                return responses.returns;
-            } else if (text.includes('payment') || text.includes('pay') || text.includes('secure') || text.includes('checkout')) {
-                return responses.payment;
-            } else if (text.includes('best') || text.includes('popular') || text.includes('seller')) {
-                return responses.bestsellers;
-            } else if (text.includes('foundation') || text.includes('makeup') || text.includes('flawless')) {
-                return responses.foundation;
-            } else if (text.includes('contact') || text.includes('reach') || text.includes('talk')) {
-                return responses.contact;
-            } else {
-                return responses.default;
-            }
-        }
-
-        function addMessage(text, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-            
-            const avatar = document.createElement('div');
-            avatar.className = 'message-avatar';
-            avatar.textContent = isUser ? '👤' : '✨';
-            
-            const content = document.createElement('div');
-            content.className = 'message-content';
-            content.textContent = text;
-            
-            messageDiv.appendChild(avatar);
-            messageDiv.appendChild(content);
-            
-            chatMessages.insertBefore(messageDiv, quickReplies);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function showTyping() {
-            const typing = document.createElement('div');
-            typing.className = 'message bot';
-            typing.id = 'typingIndicator';
-            
-            const avatar = document.createElement('div');
-            avatar.className = 'message-avatar';
-            avatar.textContent = '✨';
-            
-            const indicator = document.createElement('div');
-            indicator.className = 'typing-indicator active';
-            indicator.innerHTML = '<span></span><span></span><span></span>';
-            
-            typing.appendChild(avatar);
-            typing.appendChild(indicator);
-            chatMessages.insertBefore(typing, quickReplies);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function hideTyping() {
-            const typing = document.getElementById('typingIndicator');
-            if (typing) typing.remove();
-        }
-
-        function handleUserMessage(text) {
-            if (!text.trim()) return;
-            
-            addMessage(text, true);
-            chatInput.value = '';
-            
-            showTyping();
-            
-            setTimeout(() => {
-                hideTyping();
-                const response = getResponse(text);
-                addMessage(response);
-            }, 1000 + Math.random() * 1000);
-        }
-
-        chatButton.addEventListener('click', () => {
-            chatContainer.classList.add('active');
-            chatInput.focus();
-        });
-
-        closeBtn.addEventListener('click', () => {
-            chatContainer.classList.remove('active');
-        });
-
-        sendBtn.addEventListener('click', () => {
-            handleUserMessage(chatInput.value);
-        });
-
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleUserMessage(chatInput.value);
-            }
-        });
-
-        quickReplies.addEventListener('click', (e) => {
-            if (e.target.classList.contains('quick-reply-btn')) {
-                handleUserMessage(e.target.dataset.reply);
-            }
-        });
-    </script>
-</body>
-</html>
 
 
 
@@ -1602,6 +1086,517 @@
     <script src="{% static "js/fontawesome.min.js" %}"></script>
     <script src="{% static "js/plugins.js" %}"></script>
     <script src="{% static "js/main.js" %}"></script>
+    <!-- Angels Glam & Glow Chatbot Widget - Paste this before closing </body> tag -->
+<div id="angels-chatbot-widget-root">
+    <style>
+        /* Isolated styles - won't affect your existing website */
+        #angels-chatbot-widget-root * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #angels-chatbot-widget-root {
+            all: initial;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999999;
+        }
+
+        .angels-chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .angels-chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .angels-chat-button svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        .angels-chat-container {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 380px;
+            height: 550px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .angels-chat-container.active {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .angels-chat-header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .angels-chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .angels-chat-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .angels-chat-header-text h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .angels-chat-header-text p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .angels-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+        }
+
+        .angels-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .angels-message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .angels-message.bot {
+            flex-direction: row;
+        }
+
+        .angels-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .angels-message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .angels-message.bot .angels-message-avatar {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+        }
+
+        .angels-message.user .angels-message-avatar {
+            background: #e0e0e0;
+        }
+
+        .angels-message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+
+        .angels-message.bot .angels-message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .angels-message.user .angels-message-content {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .angels-quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 0 10px;
+        }
+
+        .angels-quick-reply-btn {
+            background: white;
+            border: 2px solid #ff6b9d;
+            color: #ff6b9d;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .angels-quick-reply-btn:hover {
+            background: #ff6b9d;
+            color: white;
+        }
+
+        .angels-chat-input-area {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .angels-chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .angels-chat-input:focus {
+            border-color: #ff6b9d;
+        }
+
+        .angels-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .angels-send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .angels-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .angels-send-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .angels-typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+        }
+
+        .angels-typing-indicator.active {
+            display: block;
+        }
+
+        .angels-typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff6b9d;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+
+        .angels-typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .angels-typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .angels-chat-container {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                right: 20px;
+            }
+        }
+    </style>
+
+    <button class="angels-chat-button" id="angelsChatButton">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+        </svg>
+    </button>
+
+    <div class="angels-chat-container" id="angelsChatContainer">
+        <div class="angels-chat-header">
+            <div class="angels-chat-header-info">
+                <div class="angels-chat-avatar">✨</div>
+                <div class="angels-chat-header-text">
+                    <h3>Angels Glam & Glow</h3>
+                    <p>Online now • Replies instantly</p>
+                </div>
+            </div>
+            <button class="angels-close-btn" id="angelsCloseBtn">×</button>
+        </div>
+
+        <div class="angels-chat-messages" id="angelsChatMessages">
+            <div class="angels-message bot">
+                <div class="angels-message-avatar">✨</div>
+                <div class="angels-message-content">Hi there! 👋 Welcome to Angels Glam & Glow! I'm here to help you find the perfect beauty products. How can I assist you today?</div>
+            </div>
+            <div class="angels-quick-replies" id="angelsQuickReplies">
+                <button class="angels-quick-reply-btn" data-reply="Show me trending products">🔥 Trending Products</button>
+                <button class="angels-quick-reply-btn" data-reply="I need skincare recommendations">💆‍♀️ Skincare Help</button>
+                <button class="angels-quick-reply-btn" data-reply="What's your shipping policy?">📦 Shipping Info</button>
+                <button class="angels-quick-reply-btn" data-reply="Tell me about your best sellers">⭐ Best Sellers</button>
+            </div>
+        </div>
+
+        <div class="angels-chat-input-area">
+            <input type="text" class="angels-chat-input" id="angelsChatInput" placeholder="Type your message...">
+            <button class="angels-send-btn" id="angelsSendBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+    
+    const chatButton = document.getElementById('angelsChatButton');
+    const chatContainer = document.getElementById('angelsChatContainer');
+    const closeBtn = document.getElementById('angelsCloseBtn');
+    const chatMessages = document.getElementById('angelsChatMessages');
+    const chatInput = document.getElementById('angelsChatInput');
+    const sendBtn = document.getElementById('angelsSendBtn');
+    const quickReplies = document.getElementById('angelsQuickReplies');
+
+    const responses = {
+        greeting: "Hello! 😊 I'm so glad you're here! How can I help you find your perfect beauty products today?",
+        
+        products: "We have an amazing collection! 💄 Our trending items include:\n\n• Herbal Essences Bio Aloe & Bamboo Shampoo + Conditioner\n• Mamaearth Tea Tree Anti-Dandruff Conditioner\n• Flawless Finish Foundation\n• Aroma Magic Oil Balancing Shampoo\n\nWhat type of product are you looking for?",
+        
+        skincare: "Great choice! 🌟 For skincare, we recommend:\n\n• Tea Tree products for acne-prone skin\n• Aloe & Bamboo range for hydration\n• Oil balancing products for combination skin\n\nWhat's your skin type or concern?",
+        
+        haircare: "We have fantastic haircare options! 💇‍♀️\n\n• Herbal Essences for soft, smooth hair (sulphate & paraben free!)\n• Tea Tree conditioner for dandruff control\n• Oil balancing shampoo for healthy scalp\n\nWould you like details on any of these?",
+        
+        shipping: "We've got you covered! 📦\n\n✅ FREE shipping on orders over ₹1000\n✅ Fast delivery across India\n✅ Secure packaging\n✅ Track your order easily\n\nIs there anything specific about delivery you'd like to know?",
+        
+        returns: "Your satisfaction matters! 💝\n\n✅ 15-day money-back guarantee\n✅ Easy return process\n✅ Full refund on eligible returns\n\nNeed help with a return?",
+        
+        payment: "Shopping is safe with us! 🔒\n\n✅ 100% secure checkout\n✅ Multiple payment options\n✅ Your data is protected\n✅ SSL encrypted transactions\n\nReady to checkout?",
+        
+        bestsellers: "Our customers love these! ⭐\n\n1. Herbal Essences Bio Aloe & Bamboo Set - Perfect for smooth, healthy hair\n2. Mamaearth Tea Tree Conditioner - Great for dandruff control\n3. Flawless Finish Foundation - For that perfect glow!\n\nWant to know more about any of these?",
+        
+        foundation: "Our Flawless Finish Foundation is amazing! ✨\n\n💫 Seamless coverage\n💫 Long-lasting formula\n💫 Skin-nourishing ingredients\n💫 Multiple shades available\n💫 Radiant, natural glow\n\nIt's perfect for all-day wear! Interested?",
+        
+        contact: "I'd love to help you connect! 📞\n\nVisit our website: angels-glamnglow.in\n\nFeel free to browse our products or reach out if you need personalized assistance!",
+        
+        default: "I'm here to help! 😊 I can assist you with:\n\n• Product recommendations\n• Skincare & haircare advice\n• Shipping & delivery info\n• Returns & refunds\n• Payment & security\n\nWhat would you like to know?"
+    };
+
+    function getResponse(input) {
+        const text = input.toLowerCase();
+        
+        if (text.includes('hello') || text.includes('hi') || text.includes('hey')) {
+            return responses.greeting;
+        } else if (text.includes('product') || text.includes('show') || text.includes('trending')) {
+            return responses.products;
+        } else if (text.includes('skin') || text.includes('face') || text.includes('acne')) {
+            return responses.skincare;
+        } else if (text.includes('hair') || text.includes('shampoo') || text.includes('conditioner')) {
+            return responses.haircare;
+        } else if (text.includes('ship') || text.includes('deliver') || text.includes('shipping')) {
+            return responses.shipping;
+        } else if (text.includes('return') || text.includes('refund') || text.includes('money back')) {
+            return responses.returns;
+        } else if (text.includes('payment') || text.includes('pay') || text.includes('secure') || text.includes('checkout')) {
+            return responses.payment;
+        } else if (text.includes('best') || text.includes('popular') || text.includes('seller')) {
+            return responses.bestsellers;
+        } else if (text.includes('foundation') || text.includes('makeup') || text.includes('flawless')) {
+            return responses.foundation;
+        } else if (text.includes('contact') || text.includes('reach') || text.includes('talk')) {
+            return responses.contact;
+        } else {
+            return responses.default;
+        }
+    }
+
+    function addMessage(text, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `angels-message ${isUser ? 'user' : 'bot'}`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'angels-message-avatar';
+        avatar.textContent = isUser ? '👤' : '✨';
+        
+        const content = document.createElement('div');
+        content.className = 'angels-message-content';
+        content.textContent = text;
+        
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+        
+        chatMessages.insertBefore(messageDiv, quickReplies);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping() {
+        const typing = document.createElement('div');
+        typing.className = 'angels-message bot';
+        typing.id = 'angelsTypingIndicator';
+        
+        const avatar = document.createElement('div');
+        avatar.className = 'angels-message-avatar';
+        avatar.textContent = '✨';
+        
+        const indicator = document.createElement('div');
+        indicator.className = 'angels-typing-indicator active';
+        indicator.innerHTML = '<span></span><span></span><span></span>';
+        
+        typing.appendChild(avatar);
+        typing.appendChild(indicator);
+        chatMessages.insertBefore(typing, quickReplies);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function hideTyping() {
+        const typing = document.getElementById('angelsTypingIndicator');
+        if (typing) typing.remove();
+    }
+
+    function handleUserMessage(text) {
+        if (!text.trim()) return;
+        
+        addMessage(text, true);
+        chatInput.value = '';
+        
+        showTyping();
+        
+        setTimeout(function() {
+            hideTyping();
+            const response = getResponse(text);
+            addMessage(response);
+        }, 1000 + Math.random() * 1000);
+    }
+
+    chatButton.addEventListener('click', function() {
+        chatContainer.classList.add('active');
+        chatInput.focus();
+    });
+
+    closeBtn.addEventListener('click', function() {
+        chatContainer.classList.remove('active');
+    });
+
+    sendBtn.addEventListener('click', function() {
+        handleUserMessage(chatInput.value);
+    });
+
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleUserMessage(chatInput.value);
+        }
+    });
+
+    quickReplies.addEventListener('click', function(e) {
+        if (e.target.classList.contains('angels-quick-reply-btn')) {
+            handleUserMessage(e.target.dataset.reply);
+        }
+    });
+})();
+</script>
 
 </body>
 
