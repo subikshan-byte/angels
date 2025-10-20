@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Cart, Product, Order, OrderItem, Coupon, UserProfile
+from .models import Cart, Product, Order,CartItem, OrderItem, Coupon, UserProfile
 
 # ------------------ CHECKOUT PAGE ------------------
 @login_required
