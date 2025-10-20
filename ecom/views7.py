@@ -182,7 +182,7 @@ def place_cod_order(request):
 
     order = Order.objects.create(
     user=request.user,
-    price=total_amount,
+    
     address=address,
     payment_method='cod'
 )
