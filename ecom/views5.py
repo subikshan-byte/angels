@@ -109,6 +109,7 @@ def edit_profile(request):
         # Save Profile table fields
         profile.mobile = request.POST.get("mobile")
         profile.address = request.POST.get("address")
+        profile.zipcode = request.POST.get("zipcode")
         profile.save()
         return redirect("myaccount")
   # redirect after save
