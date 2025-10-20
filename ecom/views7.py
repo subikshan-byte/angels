@@ -6,6 +6,32 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Cart, Product, Order,CartItem, OrderItem, Coupon, UserProfile
+from django.shortcuts import redirect
+from .models import UserProfile
+
+def check_userprofile_complete(user):
+    """
+    Checks whether the UserProfile of the given user has all required fields filled.
+    If any are empty, returns a redirect to /myaccount/.
+    Otherwise, returns None (continue as normal).
+    """
+    try:
+        profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        # UserProfile not created yet → redirect to myaccount
+        return redirect("/myaccount/")
+
+    # Fields that must not be empty
+    required_fields = ["first_name", "address", "mobile"]
+
+    for field in required_fields:
+        value = getattr(profile, field, None)
+        if not value or str(value).strip() == "":
+            # Found an empty or null field → redirect
+            return redirect("/myaccount/")
+
+    # ✅ All required fields filled → continue
+    return None
 
 # ------------------ CHECKOUT PAGE ------------------
 @login_required
