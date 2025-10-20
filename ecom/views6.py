@@ -199,63 +199,75 @@ def verify_order_otp(request):
 
 
 # -------------------- CREATE RAZORPAY ORDER (AJAX) --------------------
+import json
+import razorpay
+from django.http import JsonResponse
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from .models import Product, Order
+from decimal import Decimal
+
 @login_required
 def create_razorpay_order(request):
-    """
-    Called after OTP verification when user chooses online payment.
-    Expects JSON: { product_slug, quantity, coupon, address }
-    Returns JSON: { status: "created", order_id, amount, key }
-    """
-    if request.method != "POST":
-        return JsonResponse({"status": "error", "message": "POST required"}, status=400)
-
-    try:
-        data = json.loads(request.body.decode("utf-8"))
-    except Exception:
-        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
-
-    product_slug = data.get("product_slug")
-    quantity = int(data.get("quantity", 1))
-    coupon_code = (data.get("coupon") or "").strip().upper()
-    address = (data.get("address") or "").strip()
-
-    product = get_object_or_404(Product, slug=product_slug)
-
-    # calculate total with coupon
-    total = Decimal(product.price)
-    if coupon_code:
+    if request.method == "POST":
         try:
-            coupon = Coupon.objects.get(code=coupon_code)
-            if coupon.is_valid():
-                discount = (total * Decimal(coupon.discount_percent)) / Decimal(100)
-                total = (total - discount)
-            else:
-                return JsonResponse({"status": "error", "message": "Coupon expired or inactive."})
-        except Coupon.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "Invalid coupon."})
+            data = json.loads(request.body.decode("utf-8"))
+            coupon_code = data.get("coupon", "").strip()
+            address = data.get("address", "").strip()
 
-    total = total * Decimal(quantity)
-    paise = int(total * 100)
+            # --- STEP 1: Get product and quantity ---
+            product_slug = data.get("product_slug")
+            quantity = int(data.get("quantity", 1))
 
-    # optionally save address
-    if address:
-        profile = request.user.userprofile
-        profile.address = address
-        profile.save()
+            if not product_slug:
+                return JsonResponse({"status": "error", "message": "Product not specified."})
 
-    # create razorpay order
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-    try:
-        razorpay_order = client.order.create({"amount": paise, "currency": "INR", "payment_capture": 1})
-    except Exception as e:
-        return JsonResponse({"status": "error", "message": "Razorpay error: " + str(e)})
+            product = Product.objects.get(slug=product_slug)
+            total = Decimal(product.price) * quantity
 
-    return JsonResponse({
-        "status": "created",
-        "order_id": razorpay_order["id"],
-        "amount": paise,
-        "key": settings.RAZORPAY_KEY_ID
-    })
+            # --- STEP 2: Apply coupon (optional) ---
+            from .models import Coupon  # only if you have Coupon model
+            if coupon_code:
+                try:
+                    coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
+                    if hasattr(coupon, "discount_percent"):
+                        discount = (total * Decimal(coupon.discount_percent)) / 100
+                    else:
+                        discount = getattr(coupon, "discount_amount", Decimal(0))
+                    total -= discount
+                except Coupon.DoesNotExist:
+                    pass  # ignore invalid coupons
+
+            # --- STEP 3: Convert amount to paise (Razorpay expects integer) ---
+            amount_paise = int(total * 100)
+
+            # --- STEP 4: Initialize Razorpay client ---
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+            # --- STEP 5: Create Razorpay order ---
+            razorpay_order = client.order.create({
+                "amount": amount_paise,
+                "currency": "INR",
+                "payment_capture": "1",
+            })
+
+            # --- STEP 6: Return order details to frontend ---
+            return JsonResponse({
+                "status": "created",
+                "order_id": razorpay_order["id"],
+                "amount": amount_paise,
+                "key": settings.RAZORPAY_KEY_ID,
+            })
+
+        except Product.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Product not found."})
+        except Exception as e:
+            # Log the exact error to console
+            print("❌ Razorpay order creation failed:", e)
+            return JsonResponse({"status": "error", "message": str(e)})
+
+    return JsonResponse({"status": "error", "message": "Invalid request method."})
+
 
 
 # -------------------- PLACE COD ORDER (AJAX) --------------------
