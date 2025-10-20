@@ -33,7 +33,7 @@ def check_userprofile_complete(user):
         value = getattr(profile, field, None)
         if not value or str(value).strip() == "":
             # Found an empty or null field → redirect
-            return redirect("/myaccount/")
+            return redirect("/myaccount")
 
     # ✅ All required fields filled → continue
     return None
