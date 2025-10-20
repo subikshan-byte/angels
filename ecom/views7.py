@@ -174,6 +174,11 @@ def place_cod_order(request):
             pass
 
     # Create order
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    # ✅ Step 2: Calculate total price
+    cart_total = cart_items.aggregate(total=Sum('total_price'))['total'] or 0
+
     cart_total = cart_items.aggregate(total=Sum('total_price'))['total'] or 0
     order = Order.objects.create(
     user=request.user,
@@ -192,7 +197,7 @@ def place_cod_order(request):
         )
 
     cart.items.all().delete()
-
+    cart_items.delete()
     # Remove OTP verification
     request.session.pop("otp_verified", None)
 
@@ -270,6 +275,7 @@ def payment_success_cart(request):
         )
 
     cart.items.all().delete()
+    
     request.session.pop("pending_order", None)
     request.session.pop("otp_verified", None)
 
