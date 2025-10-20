@@ -45,7 +45,25 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
 .error-msg { color:#e74c3c; font-weight:600; margin-top:8px; }
 .small-muted { font-size:13px; color:#666; margin-top:8px; }
 </style>
-
+<div class="breadcrumb">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb__title">
+                            <h1>My Account</h1>
+                            <ul>
+                                <li>
+                                    <a href="{% url "home" %}">Home</a>
+                                </li>
+                                <li class="color__blue">
+                                   CHECK OUT
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 <div class="checkout-container">
   <!-- LEFT SIDE: PROFILE & ADDRESS -->
   <div class="card">
