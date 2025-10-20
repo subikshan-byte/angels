@@ -176,7 +176,7 @@ else{otpMsg.textContent='Invalid OTP';otpMsg.className='error-msg';}
 
 // === APPLY COUPON ===
 applyCouponBtn.addEventListener('click',()=>{
-fetch("{% url 'apply_coupon1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim()})})
+fetch("{% url 'apply_coupon' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim()})})
 .then(r=>r.json()).then(d=>{
 if(d.status==='ok'){displayTotal.textContent='₹'+d.total;couponMsg.textContent='Coupon applied!';}
 else{couponMsg.textContent='Invalid coupon.';}
