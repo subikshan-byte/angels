@@ -120,7 +120,7 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       <p class="small-muted">Choose payment method:</p>
       <div class="payment-options">
         <button class="payment-cod" id="choose-cod">Cash on Delivery</button>
-        <button class="payment-online" id="choose-online">Pay Online</button>
+        <a href="(% url "razor" %}<button class="payment-online" id="choose-online">Pay Online</button>
       </div>
       <div id="payment-msg" class="small-muted"></div>
     </div>
@@ -131,7 +131,7 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
 // === CSRF ===
 function getCookie(name){let v=null;if(document.cookie){document.cookie.split(';').forEach(c=>{c=c.trim();if(c.startsWith(name+'='))v=decodeURIComponent(c.substring(name.length+1));});}return v;}
 const csrftoken=getCookie('csrftoken');
-
+paymentrazor
 // ELEMENTS
 const sendOtpBtn=document.getElementById('send-otp'),otpModal=document.getElementById('otp-modal'),
 verifyOtpBtn=document.getElementById('verify-otp'),resendOtpBtn=document.getElementById('resend-otp'),
