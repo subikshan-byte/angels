@@ -84,7 +84,8 @@ def home(request):
         "user": request.user if request.user.is_authenticated else None,
         "cart":products,
         "price":price,
-        "log":log
+        "log":log,
+        "offers": offers
     }
 
     return render(request, 'home.html', context)
