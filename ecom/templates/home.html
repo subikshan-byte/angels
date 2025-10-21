@@ -43,13 +43,12 @@
         </head>
         <body>
           <div class="offer-banner">
-            <div class="slides">
 
+                                      {% for offer in offers %}
                     <div class="slide">
   <img src="{{ offer.image.url }}" alt="{{ offer.title }}">
                                  </div>
-
-         
+{% endfor %}
               
             </div>
           </div>
