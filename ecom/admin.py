@@ -16,7 +16,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('p_id', 'p_name', 'desc', 'price', 'category', 'stock_status', 'slug')  
     list_filter = ('category', 'where_to_display', 'stock_status', 'main_category_diff') 
-    search_fields = ('p_name', 'desc', 'slug', 'brand_name')
+    search_fields = ('p_name', 'desc', 'slug', 'brand_name',"p_id")
     prepopulated_fields = {'slug': ('desc',)}
     autocomplete_fields = ['category']
 
@@ -30,12 +30,7 @@ class ProductImageAdmin(admin.ModelAdmin):
     autocomplete_fields = ['p_id']
 
 # ---------------- SIZE ----------------
-@admin.register(Size)
-class SizeAdmin(admin.ModelAdmin):
-    list_display = ('sid', 'size', 'p_id', 'slug')
-    search_fields = ('size', 'slug')
-    list_filter = ('p_id',)
-    prepopulated_fields = {'slug': ('size',)}
+
 
 # ---------------- CART ----------------
 @admin.register(Cart)
@@ -104,3 +99,11 @@ class CouponAdmin(admin.ModelAdmin):
         return obj.is_valid()
     is_valid_display.short_description = "Valid?"
     is_valid_display.boolean = True 
+from .models import OfferImage
+
+@admin.register(OfferImage)
+class OfferImageAdmin(admin.ModelAdmin):
+    list_display = ("img_id", "title", "active", "slug")
+    list_filter = ("active",)
+    search_fields = ("title", "slug")
+
