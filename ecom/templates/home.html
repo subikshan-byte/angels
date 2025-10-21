@@ -2,7 +2,7 @@
 {% load static %}
 {%block title %}home{% endblock title %}
 {% block content %}
-        <style>
+          <style>
             .offer-banner {
               position: relative;
               width: 100%;
@@ -12,12 +12,12 @@
         
             /* Different heights for PC and mobile */
             .offer-banner {
-              height:100px;
+              height:32vh;
               margin: 10px 5px;  /* desktop */
             }
             @media (max-width: 768px) {
               .offer-banner {
-                height: 60px;  /* mobile */
+                height: 24vh;  /* mobile */
               }
             }
         
@@ -44,15 +44,15 @@
         <body>
           <div class="offer-banner">
             <div class="slides">
-              <div class="slide">
-                <img src="{% static "img/grid/banner1.png" %}" alt="Offer 1">
-              </div>
-              <div class="slide">
-                <img src="{% static "img/grid/banner2.png" %}"  alt="Offer 2">
-              </div>
-              <div class="slide">
-                <img src="{% static "img/grid/banner3.png" %}"  alt="Offer 3">
-              </div>
+              
+                {% for offer in offers %}
+                    <div class="slide">
+  <img src="{{ offer.image.url }}" alt="{{ offer.title }}">
+                                 </div>
+{% endfor %}
+
+         
+              
             </div>
           </div>
         
