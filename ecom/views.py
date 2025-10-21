@@ -35,7 +35,7 @@ def get_product_data(products):
 
 def home(request):
     offers = OfferImage.objects.filter(active=True)
-    return render(request, "home.html", {"offers": offers})
+    
     # ------------------ FIRST PRODUCTS ------------------
     first_products = Product.objects.filter(where_to_display='home', where='first')
     first_product_data = get_product_data(first_products)
