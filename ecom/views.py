@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render,get_object_or_404
-from .models import Cart, CartItem, Product, ProductImage,Size
+from .models import Cart, CartItem, Product, ProductImage,Size,OfferImage
 from datetime import datetime,timedelta
 # Helper function to get product data including first image
 def get_product_data(products):
@@ -34,6 +34,8 @@ def get_product_data(products):
 
 
 def home(request):
+    offers = OfferImage.objects.filter(active=True)
+    return render(request, "home.html", {"offers": offers})
     # ------------------ FIRST PRODUCTS ------------------
     first_products = Product.objects.filter(where_to_display='home', where='first')
     first_product_data = get_product_data(first_products)
