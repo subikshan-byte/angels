@@ -97,25 +97,31 @@ def account_detail(request):
         "price":price,
         "log":log,})
 def edit_profile(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
 
     if request.method == "POST":
-        # Save User table fields
+        # Update User fields
         user.first_name = request.POST.get("name")
         user.email = request.POST.get("email")
         user.save()
 
-        # Save Profile table fields
+        # Update Profile fields
         profile.mobile = request.POST.get("mobile")
         profile.address = request.POST.get("address")
         profile.zipcode = request.POST.get("zipcode")
         profile.save()
+
+        from django.contrib import messages
+        messages.success(request, "Profile updated successfully!")
+
         return redirect("myaccount")
-  # redirect after save
+    
+    return redirect("myaccount")
 
-
-    return redirect("login")
 def remove_from_cart(request, item_id):
     if not request.user.is_authenticated:
         return redirect("login")
