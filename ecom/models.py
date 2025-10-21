@@ -254,3 +254,20 @@ class OrderOTP(models.Model):
         if self.order:
             return f"OTP for Order #{self.order.id}"
         return f"OTP (no order linked)"
+# ---------------- OFFER IMAGE ----------------
+class OfferImage(models.Model):
+    img_id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to="offers", blank=True, null=True)
+    title = models.CharField(max_length=200, blank=True, null=True, default="")
+    active = models.BooleanField(default=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, default="")
+
+    def save(self, *args, **kwargs):
+        # Automatically generate slug if not provided
+        if not self.slug:
+            base_title = self.title or "offer"
+            self.slug = f"offer-{slugify(base_title)}-{self.img_id or '0'}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title or f"Offer Image #{self.img_id}"
