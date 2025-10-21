@@ -62,23 +62,46 @@ def mark_as_delivered(modeladmin, request, queryset):
     queryset.update(status='delivered')
 
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Order, OrderItem, UserProfile
 
 # Inline admin for OrderItem
-class OrderItemInline(admin.TabularInline):  # or admin.StackedInline for detailed view
+class OrderItemInline(admin.TabularInline):  # use admin.StackedInline if you want bigger form
     model = OrderItem
-    extra = 1  # how many empty rows to show
-    fields = ('product', 'quantity', 'price', 'subtotal')  # fields visible in inline
-    readonly_fields = ('subtotal',)  # prevent editing subtotal directly
+    extra = 0  # show only existing items by default
+    fields = ('product', 'quantity', 'price', 'subtotal')
+    readonly_fields = ('subtotal',)
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'status', 'created_at', 'total_price', 'address','payment_method')
-    search_fields = ('user__username', 'id','payment_method')
-    list_filter = ('status', 'created_at','payment_method')
-    list_editable = ('status',)  # inline editing
-    actions = ['mark_as_shipped', 'mark_as_delivered']  # bulk actions
-    inlines = [OrderItemInline]  # combine Order + OrderItems in same page
+    list_display = (
+        'id', 
+        'user', 
+        'get_user_zipcode',
+        'get_ordered_items', 
+        'status', 
+        'created_at', 
+        'total_price', 
+        'address',
+        'payment_method'
+    )
+    search_fields = ('user__username', 'id', 'payment_method')
+    list_filter = ('status', 'created_at', 'payment_method')
+    list_editable = ('status',)
+    inlines = [OrderItemInline]
+    actions = ['mark_as_shipped', 'mark_as_delivered']
+
+    @admin.display(description="Ordered Items")
+    def get_ordered_items(self, obj):
+        """Display ordered products as comma-separated names."""
+        return ", ".join([f"{item.product.p_name} ({item.quantity})" for item in obj.items.all()])
+
+    @admin.display(description="Zipcode")
+    def get_user_zipcode(self, obj):
+        """Fetch user's zipcode from UserProfile model."""
+        try:
+            return obj.user.userprofile.zip_code or "-"
+        except UserProfile.DoesNotExist:
+            return "-"
 
     @admin.action(description="Mark selected orders as Shipped")
     def mark_as_shipped(self, request, queryset):
@@ -87,6 +110,7 @@ class OrderAdmin(admin.ModelAdmin):
     @admin.action(description="Mark selected orders as Delivered")
     def mark_as_delivered(self, request, queryset):
         queryset.update(status='delivered')
+
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     list_display = ('code', 'discount_percent', 'active', 'expiry_date', 'is_valid_display')
