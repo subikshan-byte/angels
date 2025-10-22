@@ -570,7 +570,7 @@
                                     <li><a href="{% url "home" %}">Home</a></li>
 
                                     <li class="menu-item-has-children">
-                                        <a href="{% url "search" s="cosmetic" %}">Cosmetics </a>
+                                        Cosmetics 
                                         <ul class="dropdown">
                                             <li class="menu-item-has-children">
                                                 <a href="{% url "search" s="Makeup" %}">Makeup</a>
@@ -643,7 +643,7 @@
                                     </li>
 
                                     <li class="menu-item-has-children">
-                                        <a href="{% url "search" s="Jewelry" %}">Jewelry </a>
+                                        Jewelry
                                         <ul class="dropdown">
                                             <li class="menu-item-has-children">
                                                 <a href="{% url "search" s="Neck Jewelry" %}">Neck Jewelry</a>
@@ -707,7 +707,7 @@
                                     </li>
 
                                     <li class="menu-item-has-children">
-                                        <a href="{% url "search" s="Saloon Products" %}">Saloon Products</a>
+                                        Saloon Products
                                         <ul class="dropdown">
                                             <li><a href="{% url "search" s="L'Oreal Professionne" %}">L'Oreal Professionnel</a></li>
                                             <li><a href="{% url "search" s="Rica" %}">Rica</a></li>
@@ -726,7 +726,7 @@
                                         </ul>
                                     </li>
 
-                                    <li><a href="{% url "home" %}">About</a></li>
+                                    <li><a href="{% url "about" %}">About</a></li>
                                     <li><a href="{% url "contact" %}">Contact</a></li>
                                 </ul>
                             </nav>
@@ -743,7 +743,10 @@
                             <div class="lang-curr-dropdown account-dropdown-active">
                                 <ul>
                                     {% if is_logged_in %}
-                            <li>
+                                     <li>
+                                    <a class="mobile-account-active" href="{% url "myaccount" %}">My Account <i class="fa fa-angle-down"></i></a>
+                             </li>
+                                    <li>
                                 <a href="{% url "logout" %}">Logout</a>
                             </li>
                         {% else %}
@@ -872,7 +875,7 @@
                                 <p>Free Shipping on All Orders Over Rs.1000!</p>
                             </div>
                             {% else %}
-                            <p> login</p>
+                            <a href="{% url "login" %}">Login</a>
                             {% endif %}
                         </div>
 
