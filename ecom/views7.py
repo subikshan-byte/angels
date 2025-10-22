@@ -66,7 +66,7 @@ def cart_checkout(request):
 
     if not items.exists():
         return redirect("cart")
-
+    
     total_amount = sum(item.subtotal() for item in items)
     total_paise = int(total_amount * 100)
 
