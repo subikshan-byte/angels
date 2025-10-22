@@ -13,33 +13,42 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Product, Order, OrderItem, Coupon, OrderOTP, UserProfile
 from django.shortcuts import redirect
 from .models import UserProfile
+from django.contrib import messages
+from django.shortcuts import redirect
+from ecom.models import UserProfile
 
 def check_userprofile_complete(request):
-    """
-    Checks whether the UserProfile of the given user has all required fields filled.
-    If any are empty, returns a redirect to /myaccount/.
-    Otherwise, returns None (continue as normal).
-    """
-    try:
-        user = request.user
-        profile = UserProfile.objects.get(user=user)
-    except UserProfile.DoesNotExist:
-        # UserProfile not created yet → redirect to myaccount
+    """Checks if user's email, mobile, address, and zip_code in UserProfile are filled."""
+    user = request.user
+
+    if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
 
-    # Fields that must not be empty
-    required_fields = ["first_name", "address", "mobile","zipcode"]
+    # Always ensure profile exists
+    profile, created = UserProfile.objects.get_or_create(user=user)
 
-    for field in required_fields:
-        value = getattr(profile, field, None)
-        if not value or str(value).strip() == "":
-            # Found an empty or null field → redirect
-            messages.warning(request, "Please complete your profile before proceeding.")
-            return redirect("/myaccount")
+    # ✅ Pull all values from UserProfile (not from User)
+    email = (getattr(profile, "email", "") or "").strip()
+    mobile = (getattr(profile, "mobile", "") or "").strip()
+    address = (getattr(profile, "address", "") or "").strip()
+    zip_code = (getattr(profile, "zip_code", getattr(profile, "zipcode", "")) or "").strip()
 
-    # ✅ All required fields filled → continue
+    print("------ DEBUG PROFILE CHECK ------")
+    print("Email:", repr(email))
+    print("Mobile:", repr(mobile))
+    print("Address:", repr(address))
+    print("Zip Code:", repr(zip_code))
+    print("--------------------------------")
+
+    # ✅ Check if any are missing or empty
+    if not email or not mobile or not address or not zip_code:
+        messages.warning(request, "Please complete your profile before proceeding.")
+        return redirect("/myaccount")
+
+    # ✅ Everything is fine — continue normally
     return None
+
 
 # -------------------- BUY NOW (kept for legacy use; still works) --------------------
 @login_required
