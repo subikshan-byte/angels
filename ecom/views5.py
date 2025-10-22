@@ -34,10 +34,10 @@ def account_detail(request):
     if not request.user.is_authenticated:
         return redirect("login")
     
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    
     user = request.user
-    profile = UserProfile.objects.get_or_create(user=request.user)
-
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    cart, created = Cart.objects.get_or_create(user=request.user)
     # get all cart items for this user
     cart_items = CartItem.objects.filter(cart=cart)
 
