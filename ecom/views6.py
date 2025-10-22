@@ -68,7 +68,7 @@ def buy_now(request, slug):
     discount = Decimal('0')
     total_amount = Decimal(product.price or 0)
     quantity = int(request.POST.get("quantity", 1))
-
+    profile, created = UserProfile.objects.get_or_create(user=user)
     # If JSON request (AJAX coupon apply), accept JSON payload
     if request.method == "POST":
         # handle JSON or form
@@ -134,7 +134,8 @@ def buy_now(request, slug):
             "total_amount": float(total_amount),
             "order_id": razorpay_order["id"],
             "razorpay_key": settings.RAZORPAY_KEY_ID,
-            "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}"
+            "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}".
+            "profile":profile
         })
 
     return redirect("product", p=slug)
