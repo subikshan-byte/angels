@@ -15,16 +15,12 @@ from django.shortcuts import redirect
 
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.contrib import messages
+from django.shortcuts import redirect
 
 def check_userprofile_complete(request):
-    """
-    Checks whether the user's profile has all required fields filled:
-    mobile, email, address, zip_code.
-    Redirects to /myaccount if any are missing.
-    """
     user = request.user
 
-    # Must be logged in
     if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
@@ -35,22 +31,29 @@ def check_userprofile_complete(request):
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
-    # ✅ Required fields to check
+    # ✅ Check which fields exist
+    print("DEBUG - Profile fields:",
+          "mobile:", profile.mobile,
+          "address:", profile.address,
+          "zip_code:", profile.zip_code,
+          "email:", user.email)
+
     required_fields = {
         "mobile": profile.mobile,
         "address": profile.address,
         "zip_code": profile.zip_code,
-        "email": user.email,  # email is on User model
+        "email": user.email,
     }
 
-    # ✅ Validate each field
     for field, value in required_fields.items():
         if not value or str(value).strip().lower() in ["", "none", "null"]:
+            print("DEBUG - Missing field:", field, "value:", value)
             messages.warning(request, f"Please complete your profile ({field} is missing).")
             return redirect("/myaccount")
 
-    # ✅ All good — allow continuation
+    print("DEBUG - All fields OK ✅")
     return None
+
 
 
 
