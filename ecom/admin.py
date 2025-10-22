@@ -70,33 +70,68 @@ class OrderItemInline(admin.TabularInline):  # use admin.StackedInline if you wa
     extra = 0  # show only existing items by default
     fields = ('product', 'quantity', 'price', 'subtotal')
     readonly_fields = ('subtotal',)
+from django.contrib import admin
+from .models import Order, OrderItem, UserProfile
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 
-        'user', 
+        'id',
+        'get_customer_name',
+        'get_customer_email',
+        'get_customer_mobile',
         'get_user_zipcode',
-        'get_ordered_items', 
-         'email',
-        'total_price', 
+        'get_ordered_items',
+        'total_price',
         'address',
         'payment_method',
-        'status', 
+        'status',
         'created_at',
-        
     )
-    search_fields = ('user__username', 'id', 'payment_method')
+    search_fields = (
+        'user__username',
+        'user__email',
+        'user__first_name',
+        'id',
+        'payment_method',
+    )
     list_filter = ('status', 'created_at', 'payment_method')
     list_editable = ('status',)
     inlines = [OrderItemInline]
     actions = ['mark_as_shipped', 'mark_as_delivered']
 
-    @admin.display(description="Ordered Items")
-    def get_ordered_items(self, obj):
-        """Display ordered products as comma-separated names."""
-        return ", ".join([f"{item.product.p_name} ({item.quantity})" for item in obj.items.all()])
+    # ✅ CUSTOMER NAME
+    @admin.display(description="Customer Name")
+    def get_customer_name(self, obj):
+        """Get the user's name (first_name if available, else username)."""
+        return obj.user.first_name or obj.user.username
 
+    # ✅ EMAIL
+    @admin.display(description="Email")
+    def get_customer_email(self, obj):
+        """Get email from UserProfile or fallback to User."""
+        try:
+            profile = obj.user.userprofile
+            return profile.email or obj.user.email or "-"
+        except UserProfile.DoesNotExist:
+            return obj.user.email or "-"
+
+    # ✅ MOBILE NUMBER
+    @admin.display(description="Mobile No.")
+    def get_customer_mobile(self, obj):
+        """Fetch mobile number from UserProfile."""
+        try:
+            return obj.user.userprofile.mobile or "-"
+        except UserProfile.DoesNotExist:
+            return "-"
+
+    # ✅ ZIPCODE
     @admin.display(description="Zipcode")
     def get_user_zipcode(self, obj):
         """Fetch user's zipcode from UserProfile model."""
@@ -105,6 +140,16 @@ class OrderAdmin(admin.ModelAdmin):
         except UserProfile.DoesNotExist:
             return "-"
 
+    # ✅ ORDERED ITEMS
+    @admin.display(description="Ordered Items")
+    def get_ordered_items(self, obj):
+        """Display ordered products as comma-separated names."""
+        return ", ".join([
+            f"{item.product.p_name} ({item.quantity})"
+            for item in obj.items.all()
+        ]) or "-"
+
+    # ✅ ACTIONS
     @admin.action(description="Mark selected orders as Shipped")
     def mark_as_shipped(self, request, queryset):
         queryset.update(status='shipped')
