@@ -9,25 +9,30 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import OrderItem, ProductImage
 from django.db.models import Prefetch
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Cart, CartItem, Product
+from django.shortcuts import redirect, get_object_or_404
+from .models import CartItem
 
-def add_to_cart(request, slug):
+def update_cart_quantity(request, cart_item_id):
     if not request.user.is_authenticated:
         return redirect("login")
 
-    product = get_object_or_404(Product, slug=slug)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    quantity = int(request.POST.get("quantity", 1))
+    cart_item = get_object_or_404(CartItem, id=cart_item_id, cart__user=request.user)
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    if not created:
-        cart_item.quantity += quantity
-    else:
-        cart_item.quantity = quantity
+    if request.method == "POST":
+        action = request.POST.get("action")
+        quantity = int(request.POST.get("quantity", cart_item.quantity))
 
-    cart_item.save()
-    return redirect("product", p=product.slug)
+        if action == "increase":
+            cart_item.quantity = quantity + 1
+        elif action == "decrease":
+            cart_item.quantity = max(1, quantity - 1)  # prevent going below 1
+        else:
+            cart_item.quantity = quantity
+
+        cart_item.save()
+
+    return redirect("cart")  # ✅ make sure this matches your cart URL name
+
 
 
 
