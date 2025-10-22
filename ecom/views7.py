@@ -13,13 +13,18 @@ from .models import UserProfile
 from django.contrib import messages
 from django.shortcuts import redirect
 
+from django.contrib import messages
+from django.shortcuts import redirect
+
 def check_userprofile_complete(request):
     """
-    Checks whether the user's profile has all required fields filled.
-    Redirects to /myaccount/ if any are missing.
+    Checks whether the user's profile has all required fields filled:
+    mobile, email, address, zip_code.
+    Redirects to /myaccount if any are missing.
     """
     user = request.user
 
+    # Must be logged in
     if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
@@ -30,38 +35,31 @@ def check_userprofile_complete(request):
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
-    # required fields
-    required_user_fields = ["first_name"]
-    required_profile_fields = ["address", "mobile", "zip_code"]
+    # ✅ Required fields to check
+    required_fields = {
+        "mobile": profile.mobile,
+        "address": profile.address,
+        "zip_code": profile.zip_code,
+        "email": user.email,  # email is on User model
+    }
 
-    # check user model fields
-    for field in required_user_fields:
-        value = getattr(user, field, None)
-        if not value or str(value).strip() == "":
-            messages.warning(request, "Please complete your profile before proceeding.")
+    # ✅ Validate each field
+    for field, value in required_fields.items():
+        if not value or str(value).strip().lower() in ["", "none", "null"]:
+            messages.warning(request, f"Please complete your profile ({field} is missing).")
             return redirect("/myaccount")
 
-    # check profile model fields
-    for field in required_profile_fields:
-        value = getattr(profile, field, None)
-        if not value or str(value).strip() == "":
-            messages.warning(request, "Please complete your profile before proceeding.")
-            return redirect("/myaccount")
-
-    # ✅ All required fields filled
+    # ✅ All good — allow continuation
     return None
+
 
 
 # ------------------ CHECKOUT PAGE ------------------
 @login_required
 def cart_checkout(request):
-    if not request.user.is_authenticated:
-        messages.warning(request, "Please log in to continue.")
-        return redirect("login")
-
-    redirect_response = check_userprofile_complete(request)
-    if redirect_response:
-        return redirect_response  # redirects to /myaccount/ if incomplete
+    check = check_userprofile_complete(request)
+    if check:  # means function returned a redirect
+        return check
 
     # ✅ All profile fields complete — continue checkout
     ...
