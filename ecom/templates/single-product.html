@@ -333,7 +333,7 @@ function copyLink(url) {
                                             
 
                                             <li>
-                                                <a href="{% url 'add to cart' cart_item_id=i.p_id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                <a href="{% url 'add to cart' product_id=product.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
                                                     <i class="fas fa-shopping-cart"></i>
                                                 </a>                                             
                                             </li>                                            
