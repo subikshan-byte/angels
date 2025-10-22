@@ -79,6 +79,7 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
@@ -98,6 +99,7 @@ class OrderAdmin(admin.ModelAdmin):
         'user__username',
         'user__email',
         'user__first_name',
+        'user__userprofile__mobile',
         'id',
         'payment_method',
     )
@@ -109,23 +111,16 @@ class OrderAdmin(admin.ModelAdmin):
     # ✅ CUSTOMER NAME
     @admin.display(description="Customer Name")
     def get_customer_name(self, obj):
-        """Get the user's name (first_name if available, else username)."""
-        return obj.user.first_name or obj.user.username
+        return obj.user.first_name or obj.user.username or "-"
 
     # ✅ EMAIL
     @admin.display(description="Email")
     def get_customer_email(self, obj):
-        """Get email from UserProfile or fallback to User."""
-        try:
-            profile = obj.user.userprofile
-            return profile.email or obj.user.email or "-"
-        except UserProfile.DoesNotExist:
-            return obj.user.email or "-"
+        return obj.user.email or "-"
 
     # ✅ MOBILE NUMBER
     @admin.display(description="Mobile No.")
     def get_customer_mobile(self, obj):
-        """Fetch mobile number from UserProfile."""
         try:
             return obj.user.userprofile.mobile or "-"
         except UserProfile.DoesNotExist:
@@ -134,7 +129,6 @@ class OrderAdmin(admin.ModelAdmin):
     # ✅ ZIPCODE
     @admin.display(description="Zipcode")
     def get_user_zipcode(self, obj):
-        """Fetch user's zipcode from UserProfile model."""
         try:
             return obj.user.userprofile.zip_code or "-"
         except UserProfile.DoesNotExist:
@@ -143,7 +137,6 @@ class OrderAdmin(admin.ModelAdmin):
     # ✅ ORDERED ITEMS
     @admin.display(description="Ordered Items")
     def get_ordered_items(self, obj):
-        """Display ordered products as comma-separated names."""
         return ", ".join([
             f"{item.product.p_name} ({item.quantity})"
             for item in obj.items.all()
