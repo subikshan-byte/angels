@@ -112,7 +112,7 @@ def edit_profile(request):
         # Update Profile fields
         profile.mobile = request.POST.get("mobile")
         profile.address = request.POST.get("address")
-        profile.zipcode = request.POST.get("zipcode")
+        profile.zip_code = request.POST.get("zipcode")
         profile.save()
 
         from django.contrib import messages
