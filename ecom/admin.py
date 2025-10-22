@@ -78,11 +78,13 @@ class OrderAdmin(admin.ModelAdmin):
         'user', 
         'get_user_zipcode',
         'get_ordered_items', 
-        'status', 
-        'created_at', 
+         'email',
         'total_price', 
         'address',
-        'payment_method'
+        'payment_method',
+        'status', 
+        'created_at',
+        
     )
     search_fields = ('user__username', 'id', 'payment_method')
     list_filter = ('status', 'created_at', 'payment_method')
