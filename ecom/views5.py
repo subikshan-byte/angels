@@ -32,6 +32,24 @@ def update_cart_quantity(request, cart_item_id):
     return redirect("cart")
 
 
+def add_to_cart(request, product_id):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    product = get_object_or_404(Product, slug=product_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    quantity = int(request.POST.get("quantity", 1))
+
+    # Check if product already in cart
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += quantity
+    else:
+        cart_item.quantity = quantity
+    cart_item.save()
+
+    return redirect("cart")  # go to cart after adding
 
 
 
