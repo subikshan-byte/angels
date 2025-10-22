@@ -8,7 +8,13 @@
     {% block meta %}{% endblock meta %}
     <title>{% block title %}{% endblock title %}</title>
    
-<link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicon.png" %}">
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static "img/favicon_io/apple-touch-icon.png" %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static "img/favicon_io/favicon-32x32.png" %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static "img/favicon_io/favicon-16x16.png" %}">
+  <link rel="manifest" href="{% static "img/favicon_io/site.webmanifest" %}">
+  <link rel="shortcut icon" href="{% static "img/favicon_io/favicon.ico" type="image/x-icon" %}">
+  <link rel="icon" type="image/png" sizes="96x96" href={% static ""img/favicon_io/favicon-96x96.png" %}">
 
     <!-- CSS here -->
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
@@ -570,7 +576,7 @@
                                     <li><a href="{% url "home" %}">Home</a></li>
 
                                     <li class="menu-item-has-children">
-                                        Cosmetics 
+                                       <a href="#"> Cosmetics </a>
                                         <ul class="dropdown">
                                             <li class="menu-item-has-children">
                                                 <a href="{% url "search" s="Makeup" %}">Makeup</a>
@@ -643,10 +649,10 @@
                                     </li>
 
                                     <li class="menu-item-has-children">
-                                        Jewelry
+                                        <a href="#">Jewellery </a>
                                         <ul class="dropdown">
                                             <li class="menu-item-has-children">
-                                                <a href="{% url "search" s="Neck Jewelry" %}">Neck Jewelry</a>
+                                                <a href="{% url "search" s="Neck Jewellery " %}">Neck Jewellery </a>
                                                 <ul class="dropdown">
                                                     <li><a href="{% url "search" s="Necklaces" %}">Necklaces</a></li>
                                                     <li><a href="{% url "search" s="Lockets" %}">Lockets</a></li>
@@ -656,7 +662,7 @@
                                             </li>
 
                                             <li class="menu-item-has-children">
-                                                <a href="{% url "search" s="Ear Jewelry" %}">Ear Jewelry</a>
+                                                <a href="{% url "search" s="Ear Jewellery " %}">Ear Jewellery </a>
                                                 <ul class="dropdown">
                                                     <li><a href="{% url "search" s="Studs" %}">Studs</a></li>
                                                     <li>
@@ -670,7 +676,7 @@
                                             </li>
 
                                             <li class="menu-item-has-children">
-                                                <a href="{% url "search" s="Hand & Wrist Jewelry" %}">Hand & Wrist Jewelry</a>
+                                                <a href="{% url "search" s="Hand & Wrist Jewellery " %}">Hand & Wrist Jewellery </a>
                                                 <ul class="dropdown">
                                                     <li><a href="{% url "search" s="Bracelets" %}">Bracelets</a></li>
                                                     <li><a href="{% url "search" s="Bangles" %}">Bangles</a></li>
@@ -684,7 +690,7 @@
                                             </li>
 
                                             <li class="menu-item-has-children">
-                                                <a href="{% url "search" s="Hair Jewelry" %}">Hair Jewelry</a>
+                                                <a href="{% url "search" s="Hair Jewellery " %}">Hair Jewellery /a>
                                                 <ul class="dropdown">
                                                     <li><a href="{% url "search" s="Hair pins" %}">Hair pins</a></li>
                                                     <li><a href="{% url "search" s="Hairclips" %}">Hairclips</a></li>
@@ -694,7 +700,7 @@
                                             </li>
 
                                             <li class="menu-item-has-children">
-                                                <a href="{% url "search" s="Body Jewelry" %}">Body Jewelry</a>
+                                                <a href="{% url "search" s="Body Jewellery " %}">Body Jewellery</a>
                                                 <ul class="dropdown">
                                                     <li><a href="{% url "search" s="Nose rings" %}">Nose rings</a></li>
                                                     <li><a href="{% url "search" s="Waist Belts" %}">Waist Belts</a></li>
@@ -707,7 +713,7 @@
                                     </li>
 
                                     <li class="menu-item-has-children">
-                                        Saloon Products
+                                        <a href="#">Saloon Products</a>
                                         <ul class="dropdown">
                                             <li><a href="{% url "search" s="L'Oreal Professionne" %}">L'Oreal Professionnel</a></li>
                                             <li><a href="{% url "search" s="Rica" %}">Rica</a></li>
@@ -893,21 +899,15 @@
                             <div class="footer__widget">
                                 <h4 class="footer__title"><strong>About Us.</strong></h4>
                                 <div class="footer__content">
-                                    <p>Angel's Fashion is your premier destination for beauty and cosmetics, dedicated to helping you express your unique style. We offer a carefully curated selection of high-quality makeup, skincare, and fragrance products from leading international and niche brands.</p>
+                                    <p>Since 1983, for the past 42 years, Angels Fashion has been your premier destination for beauty and cosmetics — dedicated to helping you express your unique style. We take pride in offering only 100% original and authentic products, featuring a carefully curated selection of high-quality makeup, skincare, and fragrances from leading international and niche brands.</p>
                                 </div>
                                 <div class="footer__social__icon">
                                     <ul>
-                                        <li><a target="_blank" title="Facebook-f"
-                                                href="https://www.facebook.com/shopify"><i
-                                                    class="fab fa-facebook-f"></i></a></li>
-
-
-                                        <li><a target="_blank" title="Twitter" href="https://twitter.com/shopify"><i
-                                                    class="fab fa-twitter"></i></a></li>
+                                      
 
 
 
-                                        <li><a target="_blank" title="Youtube"
+                                        <li><a target="_blank" title="Whatsapp"
                                                 href="https://www.youtube.com/user/shopify"><i
                                                     class="fab fa-youtube"></i></a></li>
 
@@ -917,8 +917,6 @@
                                                     class="fab fa-instagram"></i></a></li>
 
 
-                                        <li><a target="_blank" title="Tiktok" href="https://www.tiktok.com/@shopify"><i
-                                                    class="fab fa-tiktok"></i></a></li>
 
 
                                     </ul>
