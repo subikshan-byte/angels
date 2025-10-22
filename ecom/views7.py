@@ -9,24 +9,23 @@ from django.contrib import messages
 from .models import Cart, Product, Order,CartItem, OrderItem, Coupon, UserProfile
 from django.shortcuts import redirect
 from .models import UserProfile
-
-from django.contrib import messages
-from django.shortcuts import redirect
 from django.contrib import messages
 from django.shortcuts import redirect
 from ecom.models import UserProfile
 
 def check_userprofile_complete(request):
-    """Checks if user's email, mobile, address, and zip_code are filled."""
+    """Checks if user's email, mobile, address, and zip_code in UserProfile are filled."""
     user = request.user
 
     if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
 
+    # Always ensure profile exists
     profile, created = UserProfile.objects.get_or_create(user=user)
 
-    email = (user.email or "").strip()
+    # ✅ Pull all values from UserProfile (not from User)
+    email = (getattr(profile, "email", "") or "").strip()
     mobile = (getattr(profile, "mobile", "") or "").strip()
     address = (getattr(profile, "address", "") or "").strip()
     zip_code = (getattr(profile, "zip_code", getattr(profile, "zipcode", "")) or "").strip()
@@ -38,11 +37,14 @@ def check_userprofile_complete(request):
     print("Zip Code:", repr(zip_code))
     print("--------------------------------")
 
+    # ✅ Check if any are missing or empty
     if not email or not mobile or not address or not zip_code:
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
+    # ✅ Everything is fine — continue normally
     return None
+
 
 
 
