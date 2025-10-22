@@ -638,7 +638,7 @@
                         </div>
                       <div class="info-item">
                             <div class="info-label">Zipcode:</div>
-                            <div class="info-value" id="display-zipcode">{{ profile.zipcode}}</div>
+                            <div class="info-value" id="display-zipcode">{{ profile.zip_code }}</div>
                         </div>
                     </div>
                     <button class="edit-btn" id="open-edit-modal">Edit Profile</button>
@@ -731,7 +731,7 @@
 
         <div class="form-group">
           <label for="edit-zipcode">Zipcode</label>
-          <input type="text" id="edit-zipcode" name="zipcode" value="{{ profile.zipcode }}">
+          <input type="text" id="edit-zipcode" name="zipcode" value="{{ profile.zip_code }}">
         </div>
 
         <button class="save-btn" type="submit">Save Changes</button>
