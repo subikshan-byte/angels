@@ -16,38 +16,30 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.shortcuts import redirect
 from ecom.models import UserProfile
-from django.contrib import messages
-from django.shortcuts import redirect
-from ecom.models import UserProfile
-
 def check_userprofile_complete(request):
-    """Checks if user's email, mobile, address, and zip_code are filled."""
-    user = request.user
-
-    if not user.is_authenticated:
+    if not request.user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
 
-    # ✅ Automatically create profile if missing
-    profile, created = UserProfile.objects.get_or_create(user=user)
-
-    email = (user.email or "").strip()
-    mobile = (getattr(profile, "mobile", "") or "").strip()
-    address = (getattr(profile, "address", "") or "").strip()
-    zip_code = (getattr(profile, "zip_code", "") or "").strip()
-
-    print("DEBUG - email:", email)
-    print("DEBUG - mobile:", mobile)
-    print("DEBUG - address:", address)
-    print("DEBUG - zip_code:", zip_code)
-
-    # ✅ Check missing values
-    if not email or not mobile or not address or not zip_code:
+    try:
+        profile = UserProfile.objects.get_or_create(user=request.user)
+    except UserProfile.DoesNotExist:
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
-    # ✅ All fields OK
+    required_fields = [
+        profile.mobile,
+        profile.address,
+        profile.zip_code,  # match your model name
+        request.user.email
+    ]
+
+    if any(not f or str(f).strip().lower() in ["", "none", "null"] for f in required_fields):
+        messages.warning(request, "Please complete your profile before proceeding.")
+        return redirect("/myaccount")
+
     return None
+
 
 
 
