@@ -10,32 +10,47 @@ from .models import Cart, Product, Order,CartItem, OrderItem, Coupon, UserProfil
 from django.shortcuts import redirect
 from .models import UserProfile
 
+from django.contrib import messages
+from django.shortcuts import redirect
+
 def check_userprofile_complete(request):
     """
-    Checks whether the UserProfile of the given user has all required fields filled.
-    If any are empty, returns a redirect to /myaccount/.
-    Otherwise, returns None (continue as normal).
+    Checks whether the user's profile has all required fields filled.
+    Redirects to /myaccount/ if any are missing.
     """
-    try:
-        user = request.user
-        profile = UserProfile.objects.get(user=user)
-    except UserProfile.DoesNotExist:
-        # UserProfile not created yet → redirect to myaccount
+    user = request.user
+
+    if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
 
-    # Fields that must not be empty
-    required_fields = ["first_name", "address", "mobile","zip_code"]
+    try:
+        profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        messages.warning(request, "Please complete your profile before proceeding.")
+        return redirect("/myaccount")
 
-    for field in required_fields:
-        value = getattr(profile, field, None)
+    # required fields
+    required_user_fields = ["first_name"]
+    required_profile_fields = ["address", "mobile", "zip_code"]
+
+    # check user model fields
+    for field in required_user_fields:
+        value = getattr(user, field, None)
         if not value or str(value).strip() == "":
-            # Found an empty or null field → redirect
             messages.warning(request, "Please complete your profile before proceeding.")
             return redirect("/myaccount")
 
-    # ✅ All required fields filled → continue
+    # check profile model fields
+    for field in required_profile_fields:
+        value = getattr(profile, field, None)
+        if not value or str(value).strip() == "":
+            messages.warning(request, "Please complete your profile before proceeding.")
+            return redirect("/myaccount")
+
+    # ✅ All required fields filled
     return None
+
 
 # ------------------ CHECKOUT PAGE ------------------
 @login_required
