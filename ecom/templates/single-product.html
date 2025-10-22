@@ -125,7 +125,7 @@
             <button type="button" class="qty-btn-plus btn-qty">+</button>
         </div>
         <!-- Add to Cart -->
-        <button type="submit" formaction="{% url 'add to cart' product_id=i.slug %}" 
+        <button type="submit" formaction="{% url 'add to cart' product_id=product.slug %}" 
                 class="default__button">
             <i class="fas fa-shopping-cart"></i> Add to cart
         </button>
