@@ -9,7 +9,7 @@ urlpatterns = [
      path('signup/', views4.signup_view, name='signup'),
      path('myaccount',views5.account_detail,name="myaccount"),
      path("cart",views5.cart,name="cart"),
-     path("addcart/<slug:product_id>",views5.add_to_cart,name="add to cart"),
+ 
      path('edit',views5.edit_profile,name="edit"),
      path('accounts/', include('allauth.urls')),
     path('product/<slug:p>',views.product_detail,name='product'), 
