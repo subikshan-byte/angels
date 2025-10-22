@@ -8,6 +8,7 @@ from django.conf import settings
 from .models import Cart, Product, Order,CartItem, OrderItem, Coupon, UserProfile
 from django.shortcuts import redirect
 from .models import UserProfile
+from django.contrib import messages
 
 def check_userprofile_complete(request):
     """
