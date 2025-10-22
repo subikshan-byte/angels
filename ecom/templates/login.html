@@ -57,7 +57,7 @@
                         <button class="single__tab__link active" data-bs-toggle="tab" data-bs-target="#projects__one" type="button">Login</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="single__tab__link" data-bs-toggle="tab" data-bs-target="#projects__two" type="button">Sing up</button>
+                        <button class="single__tab__link" data-bs-toggle="tab" data-bs-target="#projects__two" type="button">Sign up</button>
                     </li>
 
 
@@ -209,4 +209,60 @@
 
     </div>
     </div>
+<style>
+.google-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    background: linear-gradient(135deg, #f3f4f6, #fff);
+}
+.google-login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+.google-login-card h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    background: #4285F4;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.google-btn:hover {
+    background: #357ae8;
+    text-decoration: none;
+    color: white;
+}
+.google-btn img {
+    height: 20px;
+    margin-right: 10px;
+}
+</style>
+
+<div class="google-login-container">
+  <div class="google-login-card">
+    <h2>Sign in to Angels Glam N Glow</h2>
+    <p class="text-muted">Use your Google account to continue.</p>
+
+    <a href="{% provider_login_url 'google' %}" class="google-btn">
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+      Continue with Google
+    </a>
+
+    <p class="mt-3 text-secondary">Or <a href="{% url 'login' %}">log in with email</a></p>
+  </div>
+</div>
 {% endblock content %}
