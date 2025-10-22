@@ -1,6 +1,48 @@
 {% extends "base.html" %}
 {% load static %}
-{%block title %}home{% endblock title %}
+{% block meta %}
+  <meta name="description" content="Angels Fashion – Anna Nagar’s premier beauty & fashion store since 1982. Shop cosmetics, bridal jewelry, and fashion products trusted by salons and retail customers.">
+  <meta name="keywords" content="Angels Fashion, beauty store Chennai, Anna Nagar cosmetics, fashion showroom Chennai, bridal jewelry, makeup, skincare, hair care, cosmetics online">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Zap Waves">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Angels Fashion | Beauty & Fashion Store in Anna Nagar, Chennai">
+  <meta property="og:description" content="Discover Angels Fashion – trusted since 1982 for premium cosmetics, fashion products, and bridal jewelry in Anna Nagar, Chennai.">
+  <meta property="og:image" content="https://www.angels-glamnglow.in/img/favicon_io/android-chrome-512x512.png">
+  <meta property="og:url" content="https://www.angels-glamnglow.in/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Angels Fashion | Beauty & Fashion Store in Anna Nagar, Chennai">
+  <meta name="twitter:description" content="Shop premium beauty and fashion products at Angels Fashion, Anna Nagar – trusted by salons, beauticians & retail customers since 1982.">
+  <meta name="twitter:image" content="https://www.angels-glamnglow.in/img/favicon_io/android-chrome-512x512.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Angels Fashion",
+    "image": "https://www.angels-glamnglow.in/img/favicon_io/android-chrome-512x512.png",
+    "@id": "https://www.angels-glamnglow.in/",
+    "url": "https://www.angels-glamnglow.in/",
+    "telephone": "+91-XXXXXXXXXX",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Anna Nagar East, Chennai",
+      "addressLocality": "Chennai",
+      "postalCode": "600102",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://www.facebook.com/YourPage",
+      "https://www.instagram.com/YourPage",
+      "https://wa.me/YourWhatsAppNumber"
+    ]
+  }
+  </script>
+{% endblock meta %}
+{%block title %}Angels Fashion | Beauty & Fashion Store in Anna Nagar, Chennai{% endblock title %}
 {% block content %}
  <style>
 .offer-banner {
