@@ -102,6 +102,13 @@
                 </div>
             </div>
         <!-- cart__section__end-->
+<script>
+document.querySelectorAll('.btn-qty i').forEach(icon => {
+  icon.addEventListener('click', e => {
+    e.stopPropagation();
+  });
+});
+</script>
 {% endblock content %}
 
 
