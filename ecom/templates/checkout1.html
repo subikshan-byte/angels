@@ -92,7 +92,7 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
       <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
       <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
-      <div class="info-item"><div class="info-label">Zipcode:</div><div class="info-value">+91 {{ profile.zipcode }}</div></div>
+      <div class="info-item"><div class="info-label">Zipcode:</div><div class="info-value">+91 {{ profile.zip_code }}</div></div>
     </div>
     <form id="address-form">
       {% csrf_token %}
