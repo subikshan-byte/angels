@@ -93,33 +93,6 @@
                                 </div>
                             </div>
 
-
-                            <div class="sidebar__widget widget-collapse-show">
-                                <div class="sidebar__title">
-                                    <h4>Size</h4>
-                                    <i class="fa fa-angle-down"></i>
-                                </div>
-                                <div class="sidebar__menu">
-                                    <ul>
-                                        {% if size1 %}
-                                        {% for i in size1 %}
-                                        <li>
-                                            <div class="sidebar__box">
-                                                {% with "100 size "|add:i.size as search_param %}
-                                                <a href="{% url 'search' s=search_param%}">
-                                                <span class="shopsidebar__number"><h6>{{i.size}}({{i.total}})</h6></span>
-                                                </a>
-                                                {% endwith %}
-
-                                            </div>
-                                        
-                                        </li>
-                                        {% endfor %}
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
 
@@ -188,7 +161,7 @@
                                                                             
                                 
                                                                             <li>
-                                                                                <a href="{% url 'add to cart' product_id=i.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                                <a href="{% url 'add to cart' cart_item_id=i.p_id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
                                                                                     <i class="fas fa-shopping-cart"></i>
                                                                                 </a>                                             
                                                                             </li>
