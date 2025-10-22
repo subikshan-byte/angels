@@ -152,7 +152,8 @@ def cart(request):
             # attach quantity and subtotal
             price+=item.quantity*product.price
             product.cart_item_id=item.id
-            product.p_id = product.id 
+            product.p_id = product.p_id
+
             product.quantity_in_cart = item.quantity
             product.subtotal_in_cart = item.subtotal()
             # attach first image url (or None if no image)
