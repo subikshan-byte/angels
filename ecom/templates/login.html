@@ -95,16 +95,17 @@
                             <div class="loginarea__social__option">
                                 <ul class="loginarea__social__btn">
                                     <li>
-                                        <a class="default__button" href="{% provider_login_url 'google' %}">
-                                            <i class="fab fa-google"></i> Log in with Google
-                                        </a>
-                                    </li>
-                                </ul>
-                                  <form method="post" action="{% provider_login_url 'google' %}">
+                                      <form method="post" action="{% provider_login_url 'google' %}">
       {% csrf_token %}
-      <button type="submit">Continue with Google</button>
+                                            <div class="loginarea__button text-center">
+                                <button type="submit"class="default__button">Continue with Google</button>
+                                </div>
+      
     </form>
                             </div>
+                                    </li>
+                                </ul>
+                                  
 
 
 
