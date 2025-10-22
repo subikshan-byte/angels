@@ -59,7 +59,7 @@
     <td class="cartarea__product__name"><a href="{% url "product" p=i.slug %}">{{ i.p_name }}</a></td>
     <td class="cartarea__product__price__cart"><span class="amount">Rs.{{ i.price }}</span></td>
     <td class="cartarea__product__quantity">
-        <form action="{% url 'update_cart_quantity' i.cart_item_id %}" method="POST">
+        <form action="{% url 'add_to_cart' i.cart_item_id %}" method="POST">
     {% csrf_token %}
     <div class="featurearea__quantity">
         <div class="qty-container">
