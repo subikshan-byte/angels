@@ -698,132 +698,83 @@
         </div>
     </section>
 
-    <!-- Edit Profile Modal -->
-    <div class="modal-overlay" id="edit-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Edit Profile</h3>
-                <button class="close-btn" id="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-<form method="POST" id="edit-profile-form" action="{% url "edit" %}">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="edit-name">Full Name</label>
-        <input type="text" id="edit-name" name="name" value="{{ request.user.first_name }}">
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit Profile</h3>
+      <button class="close-btn" id="close-modal">&times;</button>
     </div>
 
-    <div class="form-group">
-        <label for="edit-email">Email Address</label>
-        <input type="email" id="edit-email" name="email" value="{{ request.user.email }}">
-    </div>
-
-    <div class="form-group">
-        <label for="edit-mobile">Mobile Number</label>
-        <input type="tel" id="edit-mobile" name="mobile" value="{{ profile.mobile }}">
-    </div>
-
-    <div class="form-group">
-        <label for="edit-address">Delivery Address</label>
-        <input type="text" id="edit-address" name="address" value="{{  profile.address }}">
-    </div>
-  <div class="form-group">
-        <label for="edit-zipcode">Zipcode</label>
-        <input type="text" id="edit-zipcode" name="zipcode" value="{{ profile.zipcode }}">
-    </div>
- <button class="save-btn" id="save-profile" style:"align:center">Save Changes</button>
-</form>
-
-            </div>
-            <div class="modal-footer">
-                <button class="cancel-btn" id="cancel-edit">Cancel</button>
-               
-            </div>
+    <div class="modal-body">
+      <form method="POST" id="edit-profile-form" action="{% url 'edit' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="edit-name">Full Name</label>
+          <input type="text" id="edit-name" name="name" value="{{ request.user.first_name }}">
         </div>
+
+        <div class="form-group">
+          <label for="edit-email">Email Address</label>
+          <input type="email" id="edit-email" name="email" value="{{ request.user.email }}">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-mobile">Mobile Number</label>
+          <input type="tel" id="edit-mobile" name="mobile" value="{{ profile.mobile }}">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-address">Delivery Address</label>
+          <input type="text" id="edit-address" name="address" value="{{ profile.address }}">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-zipcode">Zipcode</label>
+          <input type="text" id="edit-zipcode" name="zipcode" value="{{ profile.zipcode }}">
+        </div>
+
+        <button class="save-btn" type="submit">Save Changes</button>
+      </form>
     </div>
 
-    <script>
-        // Modal functionality
-        const editModal = document.getElementById('edit-modal');
-        const openModalBtn = document.getElementById('open-edit-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-        const cancelEditBtn = document.getElementById('cancel-edit');
-        const saveProfileBtn = document.getElementById('save-profile');
-        
-        // Open modal
-        openModalBtn.addEventListener('click', function() {
-            editModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        // Close modal functions
-        function closeModal() {
-            editModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelEditBtn.addEventListener('click', closeModal);
-        
-        // Close modal when clicking outside content
-        editModal.addEventListener('click', function(e) {
-            if (e.target === editModal) {
-                closeModal();
-            }
-        });
-        
-        // Save profile changes
-        saveProfileBtn.addEventListener('click', function() {
-            // Get values from form
-            const name = document.getElementById('edit-name').value;
-            const email = document.getElementById('edit-email').value;
-            const mobile = document.getElementById('edit-mobile').value;
-            const address = document.getElementById('edit-address').value;
-            const city = document.getElementById('edit-city').value;
-            const state = document.getElementById('edit-state').value;
-            const pincode = document.getElementById('edit-pincode').value;
-            
-            // Update display values
-            document.getElementById('display-name').textContent = name;
-            document.getElementById('display-email').textContent = email;
-            document.getElementById('display-mobile').textContent = mobile;
-            document.getElementById('display-address').textContent = address;
-            document.getElementById('display-city').textContent = city;
-            document.getElementById('display-state').textContent = state;
-            document.getElementById('display-pincode').textContent = pincode;
-            
-            // Close modal
-            closeModal();
-            
-            // Show success message
-            
-        });
-        
-        // Tab switching functionality
-        document.querySelectorAll('.order-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                document.querySelectorAll('.order-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab
-                this.classList.add('active');
-            });
-        });
-        
-        // Reorder button
-        document.querySelector('.reorder-btn').addEventListener('click', function() {
-            alert('Selected items would be added to cart for reordering.');
-        });
+    <div class="modal-footer">
+      <button class="cancel-btn" id="cancel-edit" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+const editModal = document.getElementById('edit-modal');
+const openModalBtn = document.getElementById('open-edit-modal');
+const closeModalBtn = document.getElementById('close-modal');
+const cancelEditBtn = document.getElementById('cancel-edit');
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && editModal.style.display === 'flex') {
-                closeModal();
-            }
-        });
-    </script>
+// open modal
+openModalBtn.addEventListener('click', () => {
+  editModal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+});
+
+// close modal function
+function closeModal() {
+  editModal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+closeModalBtn.addEventListener('click', closeModal);
+cancelEditBtn.addEventListener('click', closeModal);
+
+// close modal when clicking outside
+editModal.addEventListener('click', (e) => {
+  if (e.target === editModal) closeModal();
+});
+
+// close modal with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && editModal.style.display === 'flex') closeModal();
+});
+</script>
+
 
   
 {% endblock content %}
