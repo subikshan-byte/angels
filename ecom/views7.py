@@ -34,8 +34,7 @@ def check_userprofile_complete(request):
         request.user.email
     ]
 
-    if any(not f or str(f).strip().lower() in ["", "none", "null"] for f in required_fields):
-        messages.warning(request, "Please complete your profile before proceeding.")
+    if(profile.mobile==''):
         return redirect("/myaccount")
 
     return None
