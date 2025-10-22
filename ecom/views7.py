@@ -25,20 +25,18 @@ def check_userprofile_complete(request):
     profile, created = UserProfile.objects.get_or_create(user=user)
 
     # ✅ Pull all values from UserProfile (not from User)
-    email = (getattr(profile, "email", "") or "").strip()
     mobile = (getattr(profile, "mobile", "") or "").strip()
     address = (getattr(profile, "address", "") or "").strip()
     zip_code = (getattr(profile, "zip_code", getattr(profile, "zipcode", "")) or "").strip()
 
     print("------ DEBUG PROFILE CHECK ------")
-    print("Email:", repr(email))
     print("Mobile:", repr(mobile))
     print("Address:", repr(address))
     print("Zip Code:", repr(zip_code))
     print("--------------------------------")
 
     # ✅ Check if any are missing or empty
-    if not email or not mobile or not address or not zip_code:
+    if  not mobile or not address or not zip_code:
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
