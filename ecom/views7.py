@@ -15,10 +15,10 @@ from django.shortcuts import redirect
 
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.contrib import messages
-from django.shortcuts import redirect
+from ecom.models import UserProfile
 
 def check_userprofile_complete(request):
+    """Checks if user's email, mobile, address, and zip_code are filled."""
     user = request.user
 
     if not user.is_authenticated:
@@ -31,28 +31,25 @@ def check_userprofile_complete(request):
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
-    # ✅ Check which fields exist
-    print("DEBUG - Profile fields:",
-          "mobile:", profile.mobile,
-          "address:", profile.address,
-          "zip_code:", profile.zip_code,
-          "email:", user.email)
+    # ✅ Extract fields
+    email = (user.email or "").strip()
+    mobile = (getattr(profile, "mobile", "") or "").strip()
+    address = (getattr(profile, "address", "") or "").strip()
+    zip_code = (getattr(profile, "zip_code", "") or "").strip()
 
-    required_fields = {
-        "mobile": profile.mobile,
-        "address": profile.address,
-        "zip_code": profile.zip_code,
-        "email": user.email,
-    }
+    print("DEBUG - email:", email)
+    print("DEBUG - mobile:", mobile)
+    print("DEBUG - address:", address)
+    print("DEBUG - zip_code:", zip_code)
 
-    for field, value in required_fields.items():
-        if not value or str(value).strip().lower() in ["", "none", "null"]:
-            print("DEBUG - Missing field:", field, "value:", value)
-            messages.warning(request, f"Please complete your profile ({field} is missing).")
-            return redirect("/myaccount")
+    # ✅ Check for missing fields (None, blank, or empty)
+    if not email or not mobile or not address or not zip_code:
+        messages.warning(request, "Please complete your profile before proceeding.")
+        return redirect("/myaccount")
 
-    print("DEBUG - All fields OK ✅")
+    # ✅ All fields OK
     return None
+
 
 
 
