@@ -60,15 +60,16 @@
     <td class="cartarea__product__price__cart"><span class="amount">Rs.{{ i.price }}</span></td>
     <td class="cartarea__product__quantity">
         <form action="{% url 'update_cart_quantity' i.cart_item_id %}" method="POST">
-            {% csrf_token %}
-            <div class="featurearea__quantity">
-                <div class="qty-container">
-                    <button type="submit" name="action" value="decrease" class="qty-btn-minus btn-qty"><i class="fa fa-minus"></i></button>
-                    <input type="text" name="quantity" value="{{ i.quantity_in_cart }}" class="input-qty">
-                    <button type="submit" name="action" value="increase" class="qty-btn-plus btn-qty"><i class="fa fa-plus"></i></button>
-                </div>
-            </div>
-        </form>
+    {% csrf_token %}
+    <div class="featurearea__quantity">
+        <div class="qty-container">
+            <button type="submit" name="action" value="decrease" class="qty-btn-minus btn-qty"><i class="fa fa-minus"></i></button>
+            <input type="text" name="quantity" value="{{ i.quantity_in_cart }}" class="input-qty">
+            <button type="submit" name="action" value="increase" class="qty-btn-plus btn-qty"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+</form>
+
     </td>
     <td class="cartarea__product__subtotal">Rs.{{ i.subtotal_in_cart }}</td>
     <td class="cartarea__product__remove">
