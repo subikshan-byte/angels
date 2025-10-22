@@ -53,18 +53,18 @@
             </div>
           </div>
         
-          <script>
-            const slides = document.querySelector('.slides');
-            const totalSlides = document.querySelectorAll('.slide').length;
-            let index = 0;
-        
-            function showNextSlide() {
-              index = (index + 1) % totalSlides;
-              slides.style.transform = `translateX(-${index * 100}%)`;
-            }
-        
-            setInterval(showNextSlide, 3000); // switch every 3s
-          </script>
+          
+<script>
+let index = 0;
+function autoSlide() {
+  const slider = document.getElementById('offerSlider');
+  const slides = document.querySelectorAll('.offer-banner .slide');
+  index++;
+  if (index >= slides.length) index = 0;
+  slider.style.transform = `translateX(-${index * 100}%)`;
+}
+setInterval(autoSlide, 3000); // slides every 3 seconds
+</script>
         <div class="herobanner herobanner__3">
 
             <div
