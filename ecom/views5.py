@@ -9,25 +9,26 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import OrderItem, ProductImage
 from django.db.models import Prefetch
-def add_to_cart(request, product_id):
-    if not request.user.is_authenticated:
-        return redirect("login")   # only logged-in users can have cart
-    product = get_object_or_404(Product, slug=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Cart, CartItem, Product
 
-    # get quantity from POST
+def add_to_cart(request, slug):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    product = get_object_or_404(Product, slug=slug)
+    cart, created = Cart.objects.get_or_create(user=request.user)
     quantity = int(request.POST.get("quantity", 1))
 
-    # Check if product already in cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
     if not created:
-        # Update quantity if already exists
         cart_item.quantity += quantity
     else:
         cart_item.quantity = quantity
-    cart_item.save()
 
+    cart_item.save()
     return redirect("product", p=product.slug)
+
 
 
 def account_detail(request):
