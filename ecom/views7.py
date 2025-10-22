@@ -12,32 +12,38 @@ from .models import UserProfile
 
 from django.contrib import messages
 from django.shortcuts import redirect
-
 from django.contrib import messages
 from django.shortcuts import redirect
 from ecom.models import UserProfile
+
 def check_userprofile_complete(request):
-    if not request.user.is_authenticated:
+    """Checks if user's email, mobile, address, and zip_code are filled."""
+    user = request.user
+
+    if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
 
-    try:
-        profile = UserProfile.objects.get_or_create(user=request.user)
-    except UserProfile.DoesNotExist:
+    profile, created = UserProfile.objects.get_or_create(user=user)
+
+    email = (user.email or "").strip()
+    mobile = (getattr(profile, "mobile", "") or "").strip()
+    address = (getattr(profile, "address", "") or "").strip()
+    zip_code = (getattr(profile, "zip_code", getattr(profile, "zipcode", "")) or "").strip()
+
+    print("------ DEBUG PROFILE CHECK ------")
+    print("Email:", repr(email))
+    print("Mobile:", repr(mobile))
+    print("Address:", repr(address))
+    print("Zip Code:", repr(zip_code))
+    print("--------------------------------")
+
+    if not email or not mobile or not address or not zip_code:
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
-    required_fields = [
-        profile.mobile,
-        profile.address,
-        profile.zip_code,  # match your model name
-        request.user.email
-    ]
-
-    if(profile.mobile==''):
-        return redirect("/myaccount")
-
     return None
+
 
 
 
