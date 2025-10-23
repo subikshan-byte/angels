@@ -8,4 +8,4 @@ def privacy(request):
 def paymentrazor(request):
     return render(request,"payment.html")
 def sitemap(request):
-    return render(request."sitemap.xml")
+    return render(request,"sitemap.xml")
