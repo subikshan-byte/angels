@@ -1,0 +1,378 @@
+* [33mb86edae[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mupdate[m[33m)[m new cha
+* [33m56c83c5[m new changes
+* [33m88468c5[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update views7.py
+* [33m80aa3fb[m Update login.html
+* [33m44f9df9[m Update login.html
+* [33m0a04e65[m Update home.html
+* [33me1b11ac[m Update home.html
+* [33m8af8c0b[m Update home.html
+* [33m8b4fbce[m Update home.html
+* [33mc14c4fd[m Update home.html
+* [33m4822377[m Update home.html
+* [33ma3ea93b[m Update home.html
+* [33mb6d38b6[m Update home.html
+* [33m2959c64[m[33m ([m[1;32mmain[m[33m)[m Update home.html
+* [33m1813f3a[m Update views.py
+* [33me4516f1[m Update home.html
+* [33m4a901b9[m Update home.html
+* [33mf133de8[m Update models.py
+* [33m0470eb7[m Update admin.py
+* [33m51b0688[m Update admin.py
+* [33mdcfc0cd[m Update views.py
+* [33m9a3bcd5[m Update home.html
+* [33m1ee807a[m Update views.py
+* [33m1b685ea[m Update admin.py
+* [33md7fc7de[m Update models.py
+* [33md7221cc[m Update myaccount.html
+* [33mf4d8530[m Update views5.py
+* [33m2dfd997[m Update myaccount.html
+* [33m551dba3[m Update views5.py
+* [33m7e1d5a2[m Update myaccount.html
+* [33m1536fb4[m Update views7.py
+* [33md4997a9[m Update views6.py
+* [33m8098d6a[m Update myaccount.html
+* [33ma53eb58[m Update views6.py
+* [33m9d0513e[m Update views7.py
+* [33m520034d[m Update views7.py
+* [33m02dca78[m Update views6.py
+* [33ma3efefa[m Update views7.py
+* [33m9df01a4[m Update views6.py
+* [33m0976752[m Update views6.py
+* [33mb8f03f1[m Update checkout1.html
+* [33m778c566[m Update checkout.html
+* [33mc456783[m Update myaccount.html
+* [33m9659070[m Update views6.py
+* [33m97c5875[m Update views7.py
+* [33m3bea668[m Update views7.py
+* [33mdad85d3[m Update views6.py
+* [33m0a42003[m Update models.py
+* [33m646c389[m Update settings.py
+* [33mf630ccb[m Update base.html
+* [33m8467353[m Update base.html
+* [33mae2c27d[m Update base.html
+* [33m0a45ad6[m Update style.css
+* [33m06f62d0[m Update single-product.html
+* [33m48d57fa[m Update checkout.html
+* [33md6eb264[m Update checkout1.html
+* [33m1c01c13[m Update checkout1.html
+* [33m798ad49[m Update checkout.html
+* [33maee4b6b[m Update models.py
+* [33mf2c0c08[m Update checkout.html
+* [33m0ce832a[m Update checkout.html
+* [33m7b58b49[m Update views3.py
+* [33mafb5a52[m Update views3.py
+* [33m53ae19d[m Update views3.py
+* [33me68324b[m Update single-product.html
+* [33m1feff70[m Update single-product.html
+* [33m13b68c6[m Update single-product.html
+* [33m59f8afa[m Update single-product.html
+* [33m96c88dc[m Update checkout1.html
+* [33m7222b85[m Update checkout1.html
+* [33m815d3cd[m Update checkout1.html
+* [33m7a8d730[m Update checkout1.html
+* [33m8401ff4[m Update urls.py
+* [33mfabae7f[m Update views8.py
+* [33m685e0c9[m Update checkout1.html
+* [33m145193c[m Update checkout.html
+* [33m589f958[m Update views7.py
+* [33m28d4bae[m Update urls.py
+* [33m6e8fa3b[m Update urls.py
+* [33m5ce9e40[m Update views6.py
+* [33m54ccf6d[m Update views7.py
+* [33md8ebf19[m Update views7.py
+* [33m78fd556[m Update views7.py
+* [33m30911ae[m Update views7.py
+* [33m4c92e43[m Update views7.py
+* [33m33d1253[m Update views7.py
+* [33m91aa033[m Update views7.py
+* [33mfd018bb[m Update views7.py
+* [33m9827835[m Update views7.py
+* [33m14f9249[m Update views7.py
+* [33mfa674ad[m Update views7.py
+* [33m3ea1956[m Update views7.py
+* [33m4f552f7[m Update views7.py
+* [33m56e5b42[m Update views7.py
+* [33m6d1d90f[m Update checkout1.html
+* [33m4d9d38e[m Update urls.py
+* [33m6e997d2[m Update urls.py
+* [33m4950069[m Update urls.py
+* [33m84beca0[m Update urls.py
+* [33ma875ff2[m Update urls.py
+* [33m061134e[m Update checkout1.html
+* [33maabb58e[m Update urls.py
+* [33m7e680ad[m Update checkout1.html
+* [33ma41bf97[m Update models.py
+* [33meba7a97[m Update models.py
+* [33mfc74cdb[m Update views6.py
+* [33m5804b6d[m Update views6.py
+* [33m8cc7686[m Update views6.py
+* [33m4b656fd[m Update views6.py
+* [33m35fa1e8[m Update models.py
+* [33md2923b8[m Update views7.py
+* [33mc321d31[m Update urls.py
+* [33m6d7d6a5[m Update urls.py
+* [33mdf56220[m Update views7.py
+* [33m754e4ed[m Update checkout1.html
+* [33me68f876[m Update urls.py
+* [33m6b30190[m Update urls.py
+* [33me36fc16[m Update views6.py
+* [33mcbb6d52[m Update checkout.html
+* [33me100395[m Update checkout.html
+* [33mfcefe7b[m Update views6.py
+* [33mda7e365[m Update checkout.html
+* [33m4a9a9af[m Update views6.py
+* [33m77563e4[m Update checkout.html
+* [33mc83507b[m Update views6.py
+* [33ma283cf4[m Update checkout.html
+* [33m337f289[m Update checkout.html
+* [33m4dda275[m Update models.py
+* [33m5594e1b[m Update checkout.html
+* [33m3615177[m Update views6.py
+* [33m7c48143[m Update checkout.html
+* [33m25c6558[m Update views6.py
+* [33mb7a2854[m Update checkout.html
+* [33md4a19c3[m Update checkout.html
+* [33m2902a1e[m Update models.py
+* [33m087c118[m Update models.py
+* [33mccabc5f[m Update checkout.html
+* [33me15b23a[m Update urls.py
+* [33md063673[m Update views6.py
+* [33mdc8a721[m Update checkout.html
+* [33md39d33a[m Update checkout.html
+* [33md10b861[m Update checkout.html
+* [33m40ba40c[m Update views6.py
+* [33ma618731[m Update admin.py
+* [33m2a85223[m Update admin.py
+* [33ma0634ff[m Update checkout.html
+* [33m309458e[m Update checkout.html
+* [33m2b28a9a[m Update checkout.html
+* [33m26a783d[m Update checkout.html
+* [33m002b1af[m Update checkout.html
+* [33m88890b4[m Update urls.py
+* [33m4df0158[m Update views6.py
+* [33mf33595b[m Update checkout.html
+* [33m68a6083[m Update views6.py
+* [33m36c7228[m Update urls.py
+* [33mae6b1ca[m Create verify_order_otp.html
+* [33m7ff14d6[m Update views6.py
+* [33m05967dc[m Update models.py
+* [33mf881527[m Update checkout1.html
+* [33mbdbdf33[m Update checkout1.html
+* [33mc5cbd9d[m Update checkout.html
+* [33m1c74dfd[m Update checkout1.html
+* [33m8336fce[m Update checkout.html
+* [33m8e87074[m Update checkout1.html
+* [33m9acf0d9[m Update checkout.html
+* [33m88201b4[m Update settings.py
+* [33m60bb3b7[m Update urls.py
+* [33me124d52[m Create check.py
+* [33mf083ba6[m Update doubleordercheck.html
+* [33m14a1894[m Create doubleordercheck.html
+* [33mf8ec4f6[m Delete ecom/templates/doublecheck for payment
+* [33mc7091ff[m Create doublecheck for payment
+* [33m68676b6[m Update models.py
+* [33ma142671[m Update verify_otp.html
+* [33m00f056b[m Update forgot_password.html
+* [33m1b81490[m Update reset_password.html
+* [33md5619c0[m Update verify_otp.html
+* [33mf538e84[m Update forgot_password.html
+* [33mdb81ce9[m Update reset_password.html
+* [33m552fc16[m Update verify_otp.html
+* [33m3c3bdbf[m Update forgot_password.html
+* [33m17645e9[m Update reset_password.html
+* [33mfbf8c43[m Update verify_otp.html
+* [33m489f510[m Update verify_otp.html
+* [33m6c62d5d[m Update forgot_password.html
+* [33m8d8eee1[m Update forgot_password.html
+* [33m222ab78[m Update forgot_password.html
+* [33mb3d9c38[m Update login.html
+* [33m95c5513[m Update forgot_password.html
+* [33m9622fb6[m Update verify_otp.html
+* [33m6af6dca[m Update reset_password.html
+* [33mae80d64[m Update reset_password.html
+* [33m8c1c33e[m Update verify_otp.html
+* [33macf52da[m Update forgot_password.html
+* [33m8035fb7[m Update settings.py
+* [33mbed5d09[m Update urls.py
+* [33m11fd628[m Create reset_password.html
+* [33m062d3e1[m Add OTP verification HTML template
+* [33me29cb30[m Add forgot password template
+* [33mc0b15c5[m Add email configuration for SMTP with Gmail
+* [33m4fb5d7c[m Add forms for password reset functionality
+* [33m8b75fb9[m Add PasswordResetOTP model for OTP management
+* [33m8ada5aa[m Add forgot password feature with OTP verification
+* [33mf4ac5ed[m Remove countdown timer from home page
+* [33mdd2a9eb[m Swap before and after images in home.html
+* [33mcdd8d53[m Enhance search fields for ProductImageAdmin
+* [33me95e5e6[m Remove 'p_id' from search fields in ProductImageAdmin
+* [33m1fcee1f[m Add 'p_id' to search fields in ProductImageAdmin
+* [33m73f043c[m Add files via upload
+* [33m077ef4c[m Add files via upload
+* [33m710ecf2[m Delete ecom/static/img/before.jpeg
+* [33me6da542[m Delete ecom/static/img/after.jpeg
+* [33mefe3afd[m Fix indentation and structure in home.html
+* [33m4da437a[m Add matched_products list initialization
+* [33m7f32a3b[m Refactor product scoring and filtering logic
+* [33m0096a3c[m Preserve product order in matching results
+* [33m225751e[m Fix indentation for else statement in views3.py
+* [33mede7783[m Refactor product search normalization and scoring
+* [33mf82812e[m Refactor product search and matching logic
+* [33ma7a2e6a[m Refactor fuzzy similarity and preserve order logic
+* [33mc648873[m Enhance product matching with score computation
+* [33m3b679d2[m Refactor product matching and ordering logic
+* [33md785c39[m Enhance product matching and ordering logic
+* [33m675f207[m Enhance product display order preservation logic
+* [33m56469bf[m Sort matched products by exact name match
+* [33m8ebbf1d[m Enhance product matching and normalization logic
+* [33m6bf3e05[m Fix whitespace in stylesheet links
+* [33m1fa15c1[m Remove DomainRedirectMiddleware from settings
+* [33m75e49b5[m Fix CSRF_TRUSTED_ORIGINS entry format
+* [33m3d31d86[m Update ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS
+* [33mf3056af[m Add exception handling for invalid host headers
+* [33mf37b1ee[m Add DomainRedirectMiddleware to MIDDLEWARE
+* [33m7be599f[m Add DomainRedirectMiddleware for IP redirection
+* [33m60bd26e[m Delete ecom/ecom/middleware/domain_redirect.py
+* [33mf33437e[m Add DomainRedirectMiddleware for domain redirectionadding domain push
+* [33m92c6f33[m Delete ecom/middleware
+* [33mf49b38d[m Create middleware
+* [33mce5d107[m Update ALLOWED_HOSTS and add security settingschange in crsf
+* [33m4d9b8a3[m change in host
+* [33m947b075[m allow
+* [33m42833de[m more eff
+* [33m2353591[m  more efficient
+* [33m681c5b5[m filtered seaarch
+* [33m051eae2[m second change
+* [33mdf7f475[m change in diff
+* [33mec5959f[m indentaditon3
+* [33m3baeb52[m change in search
+* [33m8a4a36e[m ind
+* [33m21147c9[m indendation 2
+* [33m4f6f5f6[m inendation
+* [33m6482469[m  search change
+* [33m2807c01[m Update home.html jpeg
+* [33m132e94d[m Update home.html
+* [33m62937b0[m Update home.html
+* [33m175f7b3[m Update home.html ADD URL IN BEFORE AFTER
+* [33m62db992[m Update home.html commin
+* [33mb98aadb[m add
+* [33m262cb68[m image before after
+* [33m1610da4[m Update home.html removed shop
+* [33mfa0b6ca[m Update home.html
+* [33md1ac009[m Update shop.html p_name is added
+* [33m827f1b4[m Update home.html
+* [33m6d1841d[m Update home.html jd
+* [33m284d0e7[m Update home.html sjkdksjd
+* [33mdddac8f[m Update home.html fv
+* [33mfac5fce[m Update home.html
+* [33mdb78654[m Update home.html
+* [33mf063665[m Update home.html
+* [33me828b83[m Update single-product.html hidhf
+* [33m0322318[m Update single-product.html dbj
+* [33m49cab80[m Update home.html ej
+* [33m67d479e[m Update single-product.html dfbdf
+* [33m81cfc68[m Update home.html hhsbh
+* [33mf3bfadd[m Update home.html jcbkdj
+* [33m9391e1b[m Update home.html bkjsbf
+* [33m6bff8a4[m Update home.html dljdlk
+* [33m2684b7c[m Update home.html djh
+* [33me055c34[m Update home.html
+* [33m0a03ffa[m Update home.html slskd
+* [33me5e512e[m Update single-product.html
+* [33m05d9817[m Update single-product.html del reomved
+* [33m8fdf363[m Update single-product.html llk
+* [33ma20d6e1[m Update single-product.html
+* [33mcd1284d[m Update single-product.html
+* [33mbb1ddd1[m Update views.py
+* [33m9c49901[m Update views.py
+* [33m7e43648[m Update views.py removed size
+* [33m0ab7761[m Update views.py size=""
+* [33mddc5c92[m Update views.py image_url chnage
+* [33m8b418d2[m Update views.py product_image added1
+* [33m6017164[m Update home.html changed view
+* [33md6e0fe9[m Update urls.py
+* [33m4c900dc[m new media
+* [33m3b71529[m Update settings.py
+* [33m71ec241[m Update home.html change
+* [33ma70a6a6[m add .map
+* [33m007075d[m Update base.html doc
+* [33m3ab07ea[m Update base.html style removed
+* [33m6121fc6[m Update base.html *
+* [33m3ef0321[m Update base.html
+* [33mcf2c172[m Update base.html class add
+* [33mf2c7d57[m Update base.html <html>
+* [33mf64b446[m Update base.html meta view port
+* [33mea3c010[m Update base.html
+* [33mbc47f6f[m Update home.html removed meta tag
+* [33maad9471[m Update base.html doctype
+* [33m6f09054[m Update home.html  jewelry change
+* [33ma0d2435[m Update views.py 8000
+* [33m4168030[m Update views.py
+* [33m8b2a0c2[m Update single-product.html change in alt
+* [33m4355030[m Update views.py
+* [33m1c7e430[m Update views.py product image
+* [33m97265aa[m Update single-product.html removed multi image
+* [33m4116aeb[m Update views.py url
+* [33mc372d61[m Update single-product.html url
+* [33m3334f19[m Update single-product.html
+* [33ma578746[m Update settings.py default domain
+* [33m0932300[m Update single-product.html
+* [33mabeec0e[m images new
+* [33md3084b3[m images
+* [33mbe74ce5[m Update admin.py title
+* [33mc5cd0d1[m Update style.css css change
+* [33m911b8de[m add
+* [33mc95a4d9[m html change
+* [33ma55d349[m Update models.py
+* [33m3fa89f2[m Update settings.py """
+* [33m6f65704[m Update settings.py
+* [33mffdbd3f[m Update settings.py
+* [33m832d093[m Update settings.py
+* [33ma65737d[m Update settings.py
+* [33ma2b5232[m Update settings.py
+* [33m165f65e[m Update settings.py
+* [33m45b7ca0[m Update settings.py
+* [33m42a7c35[m Update settings.py
+* [33m3e28679[m Update settings.py alloed host
+* [33m0672280[m Update settings.py
+* [33m680724f[m Update settings.py crf changes
+* [33m63dccb7[m Update settings.py
+* [33mdc22f65[m Update settings.py
+* [33mc7587d7[m Update views5.py creat or get
+* [33ma79aa10[m Update base.html div change
+* [33md70e441[m Update signals.py viedos removed
+* [33me720b60[m Update settings.py h
+* [33m0d984cc[m Update settings.py
+* [33m99b1d16[m Update settings.py host
+* [33m238ea92[m Update settings.py
+* [33ma3be793[m Update settings.py bldsbds
+* [33mee7c7fe[m Update settings.py crf
+* [33mf2786bd[m Update settings.py
+* [33mba6d64f[m Update base.html
+* [33mde25292[m Update settings.py
+* [33m550b496[m Update settings.py
+* [33mfb79ede[m Update base.html
+* [33m1661cb5[m Update base.html
+* [33md9f4c18[m Update settings.py
+* [33ma320260[m Update base.html
+* [33mc2297c1[m Update base.html
+* [33m35b593c[m Update base.html
+* [33mfe392f5[m Update base.html
+* [33m5e7c9c0[m Update base.html
+* [33m2c1d52e[m Update settings.py
+* [33m861ed8d[m Update settings.py
+* [33mf7f2cb8[m Update base.html
+* [33m17662cc[m Update base.html
+* [33m8a21ddc[m added new staticfiles
+* [33m718a9a0[m added new staticfiles
+* [33mc7174e1[m Update urls.py
+* [33m9808c07[m Update settings.py
+* [33meaa4dc7[m Update settings.py
+* [33m6b46f5a[m Update settings.py
+* [33m044db87[m Update settings.py
+* [33maf2f535[m changes
+* [33ma26cb5a[m contact about
+* [33ma6fc98d[m payment redirection
+* [33m211d24a[m payment added
+* [33m72dc192[m search featur
+* [33madb7868[m new project
+* [33mfa1dadd[m first commit
