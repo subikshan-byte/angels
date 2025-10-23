@@ -43,6 +43,7 @@ path('verify-order-otp-cart/', views7.verify_order_otp, name='verify_order_otp1'
     path('order-check/', check.order_check, name='order_check'),
     path("online-payment",views8.paymentrazor,name="razor"),
     path("sitemap",views8.sitemap,name="sitemap"),
+    path("robots",views8.robots,name="robots"),
 ]
 
 
