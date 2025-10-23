@@ -7,3 +7,5 @@ def privacy(request):
     return render(request,"privacy.html")
 def paymentrazor(request):
     return render(request,"payment.html")
+def sitemap(request):
+    return render(request."sitemap.xml")
