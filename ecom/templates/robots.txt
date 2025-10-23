@@ -1,0 +1,23 @@
+# robots.txt for https://angels-glamnglow.in/
+# Generated on: 2025-10-22
+# Purpose: Allow public content to be indexed while blocking sensitive or backend areas.
+
+User-agent: *
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /myaccount/
+Disallow: /login/
+Disallow: /register/
+Disallow: /password-reset/
+Disallow: /static/admin/
+Allow: /static/
+
+# Sitemap location (update if you use a different path)
+Sitemap: https://angels-glamnglow.in/sitemap.xml
+
+# Notes:
+# - Blocks search engines from accessing backend or user-related pages.
+# - Allows product pages, category pages, and static content to be indexed.
+# - Ensure your sitemap.xml exists for faster discovery of all indexable URLs.
