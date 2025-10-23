@@ -9,3 +9,5 @@ def paymentrazor(request):
     return render(request,"payment.html")
 def sitemap(request):
     return render(request,"sitemap.xml")
+def robots(request):
+    return render(request,"robots.txt")
