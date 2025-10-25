@@ -29,7 +29,7 @@ def check_userprofile_complete(request):
         return redirect("login")
 
     # Fields that must not be empty
-    required_fields = ["address", "mobile","zipcode"]
+    required_fields = ["first_name","address", "mobile","zipcode"]
 
     for field in required_fields:
         value = getattr(profile, field, None)
