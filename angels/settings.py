@@ -186,3 +186,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'subikshan505@gmail.com'
 EMAIL_HOST_PASSWORD = 'uwpt uamz esca xrhv'  # Use App Password, not your Gmail password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
