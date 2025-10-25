@@ -4,6 +4,7 @@ from . import views3,views2,views4,views5,views6,views7,views8,forgetpass,check
 urlpatterns = [
     path('',views.home,name='home'),
     path('<str:s>/search', views3.search, name='search'),
+    path('accounts/', include('allauth.urls')),
      path('login',views4.login_view,name="login"),
      path("logout/", views4.logout_view, name="logout"),
      path('signup/', views4.signup_view, name='signup'),
