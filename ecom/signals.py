@@ -48,5 +48,17 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
+from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
+
+@receiver(user_signed_up)
+def save_google_user_info(request, user, **kwargs):
+    socialaccount = user.socialaccount_set.first()
+    if socialaccount:
+        data = socialaccount.extra_data
+        user.email = data.get('email', user.email)
+        user.first_name = data.get('given_name', '')
+        user.last_name = data.get('family_name', '')
+        user.save()
 
 
