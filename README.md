@@ -19,7 +19,7 @@ It combines a powerful backend structure with an elegant frontend layout, making
 
 - **Frontend:** HTML, CSS, SCSS, JavaScript  
 - **Backend:** Python (Django Framework)  
-- **Database:** SQLite (default, can be upgraded to PostgreSQL/MySQL)  
+- **Database:** MYSQL
 - **Version Control:** Git & GitHub  
 - **Server:** Django’s built-in development server (for local testing)
 
