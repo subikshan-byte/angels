@@ -206,12 +206,44 @@ else{otpMsg.textContent='Invalid OTP';otpMsg.className='error-msg';}
 
 // === APPLY COUPON ===
 applyCouponBtn.addEventListener('click',()=>{
-fetch("{% url 'apply_coupon' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim()})})
-.then(r=>r.json()).then(d=>{
-if(d.status==='ok'){displayTotal.textContent='₹'+d.total;couponMsg.textContent='Coupon applied!';}
-else{couponMsg.textContent='Invalid coupon.';}
+  const code = couponInput.value.trim();
+  if(!code){
+    couponMsg.textContent = "Please enter a coupon code.";
+    couponMsg.className = "error-msg";
+    return;
+  }
+
+  fetch("{% url 'apply_coupon' %}", {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ coupon: code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'ok'){
+      displayTotal.textContent = '₹' + data.total;
+      couponMsg.textContent = data.message || "Coupon applied successfully!";
+      couponMsg.className = 'success-msg';
+    }
+    else if(data.status === 'invalid'){
+      couponMsg.textContent = data.message || "Invalid or expired coupon.";
+      couponMsg.className = 'error-msg';
+    }
+    else {
+      couponMsg.textContent = "Something went wrong. Please try again.";
+      couponMsg.className = 'error-msg';
+    }
+  })
+  .catch(err => {
+    couponMsg.textContent = "Network error. Try again.";
+    couponMsg.className = 'error-msg';
+    console.error(err);
+  });
 });
-});
+
 
 // === SAVE ADDRESS ===
 saveAddressBtn.addEventListener('click',()=>{
