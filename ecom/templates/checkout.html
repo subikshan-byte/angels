@@ -275,23 +275,49 @@ verifyOtpBtn.addEventListener('click', () => {
   .catch(()=> { otpMessage.textContent = 'Server error.'; otpMessage.className = 'error-msg'; });
 });
 
-// APPLY COUPON (AJAX)
+// === APPLY COUPON (AJAX) ===
 applyCouponBtn.addEventListener('click', () => {
   const code = couponInput.value.trim();
-  fetch("{% url 'buy_now' product.slug %}", {
+
+  if (!code) {
+    couponMsg.textContent = "Please enter a coupon code.";
+    couponMsg.className = "error-msg";
+    return;
+  }
+
+  applyCouponBtn.disabled = true;
+  couponMsg.textContent = "Checking coupon...";
+
+  fetch("{% url 'apply_coupon' %}", {
     method: 'POST',
-    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'apply_coupon', coupon: code, quantity: productQty })
-  }).then(r => r.json())
-    .then(data => {
-      if (data.status === 'ok' && data.total_amount !== undefined) {
-        displayTotal.textContent = '₹' + data.total_amount;
-        couponMsg.textContent = data.message || 'Coupon applied';
-      } else {
-        couponMsg.textContent = data.message || 'Invalid coupon';
-      }
-    }).catch(()=> couponMsg.textContent = 'Network error.');
+    headers: { 
+      'X-CSRFToken': csrftoken, 
+      'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify({ coupon: code })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === "ok") {
+      // ✅ Update total price and show the success message
+      displayTotal.textContent = "₹" + data.total;
+      couponMsg.textContent = data.message || `Coupon '${code}' applied successfully!`;
+      couponMsg.className = "success-msg";
+    } else {
+      // ⚠️ Invalid or expired coupon
+      couponMsg.textContent = data.message || "Invalid or expired coupon.";
+      couponMsg.className = "error-msg";
+    }
+  })
+  .catch(() => {
+    couponMsg.textContent = "Network error. Please try again.";
+    couponMsg.className = "error-msg";
+  })
+  .finally(() => {
+    applyCouponBtn.disabled = false;
+  });
 });
+
 
 // SAVE ADDRESS (AJAX) - saves to UserProfile immediately
 saveAddressBtn.addEventListener('click', () => {
