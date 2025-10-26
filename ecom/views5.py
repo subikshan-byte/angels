@@ -128,15 +128,34 @@ def edit_profile(request):
 
     if request.method == "POST":
         # Update User fields
-        user.first_name = request.POST.get("name")
-        user.email = request.POST.get("email")
+        # Get POST values safely
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        mobile = request.POST.get("mobile")
+        address = request.POST.get("address")
+        zipcode = request.POST.get("zipcode")
+        
+        # Update User fields only if provided
+        if name:
+            user.first_name = name
+        
+        if email:
+            user.email = email
+        
         user.save()
-
-        # Update Profile fields
-        profile.mobile = request.POST.get("mobile")
-        profile.address = request.POST.get("address")
-        profile.zip_code = request.POST.get("zipcode")
+        
+        # Update Profile fields only if provided
+        if mobile:
+            profile.mobile = mobile
+        
+        if address:
+            profile.address = address
+        
+        if zipcode:
+            profile.zip_code = zipcode
+        
         profile.save()
+
 
         from django.contrib import messages
         messages.success(request, "Profile updated successfully!")
