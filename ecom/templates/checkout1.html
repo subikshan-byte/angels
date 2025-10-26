@@ -156,188 +156,150 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
     </div>
   </div>
 </div>
-
 <script>
 // === CSRF ===
-function getCookie(name){
-  let v=null;
-  if(document.cookie){
-    document.cookie.split(';').forEach(c=>{
-      c=c.trim();
-      if(c.startsWith(name+'=')) v=decodeURIComponent(c.substring(name.length+1));
-    });
-  }
-  return v;
-}
-const csrftoken = getCookie('csrftoken');
+function getCookie(name){let v=null;if(document.cookie){document.cookie.split(';').forEach(c=>{c=c.trim();if(c.startsWith(name+'='))v=decodeURIComponent(c.substring(name.length+1));});}return v;}
+const csrftoken=getCookie('csrftoken');
+
+
+paymentrazor
+
 
 // ELEMENTS
-const sendOtpBtn = document.getElementById('send-otp'),
-      otpModal = document.getElementById('otp-modal'),
-      verifyOtpBtn = document.getElementById('verify-otp'),
-      resendOtpBtn = document.getElementById('resend-otp'),
-      otpInput = document.getElementById('otp-input'),
-      otpMsg = document.getElementById('otp-message'),
-      paymentChoices = document.getElementById('payment-choices'),
-      chooseCod = document.getElementById('choose-cod'),
-      chooseOnline = document.getElementById('choose-online'),
-      couponInput = document.getElementById('coupon'),
-      applyCouponBtn = document.getElementById('apply-coupon'),
-      couponMsg = document.getElementById('coupon-msg'),
-      displayTotal = document.getElementById('display-total'),
-      addressField = document.getElementById('addr'),           // may be null
-      addressMsg = document.getElementById('address-msg'),      // may be null
-      saveAddressBtn = document.getElementById('save-address'), // may be null
-      razorpayContainer = document.getElementById('razorpay-container');
+const sendOtpBtn=document.getElementById('send-otp'),otpModal=document.getElementById('otp-modal'),
+verifyOtpBtn=document.getElementById('verify-otp'),resendOtpBtn=document.getElementById('resend-otp'),
+otpInput=document.getElementById('otp-input'),otpMsg=document.getElementById('otp-message'),
+paymentChoices=document.getElementById('payment-choices'),chooseCod=document.getElementById('choose-cod'),
+chooseOnline=document.getElementById('choose-online'),couponInput=document.getElementById('coupon'),
+applyCouponBtn=document.getElementById('apply-coupon'),couponMsg=document.getElementById('coupon-msg'),
+displayTotal=document.getElementById('display-total'),addressField=document.getElementById('addr'),
+addressMsg=document.getElementById('address-msg'),saveAddressBtn=document.getElementById('save-address'),
+razorpayContainer=document.getElementById('razorpay-container');
 
-let lastVerified = false;
+let lastVerified=false;
 
 // MODAL HANDLERS
-function openOtpModal(){ otpModal.style.display='flex'; otpInput.value=''; otpMsg.textContent=''; paymentChoices.style.display='none'; }
-function closeOtpModal(){ otpModal.style.display='none'; }
-otpModal.addEventListener('click',e=>{ if(e.target===otpModal) closeOtpModal(); });
+function openOtpModal(){otpModal.style.display='flex';otpInput.value='';otpMsg.textContent='';paymentChoices.style.display='none';}
+function closeOtpModal(){otpModal.style.display='none';}
+otpModal.addEventListener('click',e=>{if(e.target===otpModal)closeOtpModal();});
 
 // === SEND OTP ===
-sendOtpBtn.addEventListener('click', ()=>{
-  fetch("{% url 'send_checkout_otp' %}", { // <-- match your view name
-    method:'POST',
-    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}
-  })
-  .then(r=>r.json())
-  .then(d=>{ if(d.status==='sent'){ openOtpModal(); otpMsg.textContent='OTP sent.'; } else alert('Failed to send OTP.'); })
-  .catch(()=>alert('Network error.'));
+sendOtpBtn.addEventListener('click',()=>{
+
+
+fetch("{% url 'send_checkout_otp1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}})
+
+
+.then(r=>r.json()).then(d=>{if(d.status==='sent'){openOtpModal();otpMsg.textContent='OTP sent.';}else alert('Failed to send OTP.');})
+.catch(()=>alert('Network error.'));
 });
 
 // === RESEND OTP ===
-resendOtpBtn.addEventListener('click', ()=>{
-  fetch("{% url 'send_checkout_otp' %}", { // <-- match your view name
-    method:'POST',
-    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}
-  })
-  .then(r=>r.json())
-  .then(d=>{ otpMsg.textContent = (d.status==='sent') ? 'OTP resent.' : 'Failed to resend.'; });
+resendOtpBtn.addEventListener('click',()=>{
+
+
+fetch("{% url 'send_checkout_otp1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}})
+
+
+.then(r=>r.json()).then(d=>{otpMsg.textContent=d.status==='sent'?'OTP resent.':'Failed to resend.';});
 });
 
 // === VERIFY OTP ===
-verifyOtpBtn.addEventListener('click', ()=>{
-  const otp = otpInput.value.trim();
-  if(!otp){ otpMsg.textContent='Enter OTP'; otpMsg.className='error-msg'; return; }
-  fetch("{% url 'verify_order_otp' %}", { // <-- match your view name
-    method:'POST',
-    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
-    body: JSON.stringify({ otp })
-  })
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.status==='verified'){
-      otpMsg.textContent='Verified!';
-      otpMsg.className='success-msg';
-      paymentChoices.style.display='block';
-      lastVerified=true;
-    } else {
-      otpMsg.textContent='Invalid OTP';
-      otpMsg.className='error-msg';
-    }
-  });
+verifyOtpBtn.addEventListener('click',()=>{
+const otp=otpInput.value.trim();
+if(!otp){otpMsg.textContent='Enter OTP';otpMsg.className='error-msg';return;}
+
+
+fetch("{% url 'verify_order_otp1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({otp})})
+
+
+.then(r=>r.json()).then(d=>{
+if(d.status==='verified'){otpMsg.textContent='Verified!';otpMsg.className='success-msg';paymentChoices.style.display='block';lastVerified=true;}
+else{otpMsg.textContent='Invalid OTP';otpMsg.className='error-msg';}
+});
 });
 
-// === APPLY COUPON (hardened) ===
-applyCouponBtn.addEventListener('click', ()=>{
+// === APPLY COUPON ===
+applyCouponBtn.addEventListener('click',()=>{
+
   const code = couponInput.value.trim();
   if(!code){
-    couponMsg.textContent = 'Please enter a coupon code.';
-    couponMsg.className = 'error-msg';
+    couponMsg.textContent = "Please enter a coupon code.";
+    couponMsg.className = "error-msg";
     return;
   }
-  applyCouponBtn.disabled = true;
 
   fetch("{% url 'apply_coupon' %}", {
-    method:'POST',
-    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken,
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({ coupon: code })
   })
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.status==='ok'){
-      displayTotal.textContent = '₹' + d.total;
-      couponMsg.textContent = d.message || 'Coupon applied successfully!';
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'ok'){
+      displayTotal.textContent = '₹' + data.total;
+      couponMsg.textContent = data.message || "Coupon applied successfully!";
       couponMsg.className = 'success-msg';
-    } else if(d.status==='invalid'){
-      couponMsg.textContent = d.message || 'Invalid or expired coupon.';
+    }
+    else if(data.status === 'invalid'){
+      couponMsg.textContent = data.message || "Invalid or expired coupon.";
       couponMsg.className = 'error-msg';
-    } else {
-      couponMsg.textContent = d.message || 'Something went wrong.';
+    }
+    else {
+      couponMsg.textContent = "Something went wrong. Please try again.";
       couponMsg.className = 'error-msg';
     }
   })
-  .catch(err=>{
+  .catch(err => {
+    couponMsg.textContent = "Network error. Try again.";
+    couponMsg.className = 'error-msg';
     console.error(err);
-    couponMsg.textContent='Network error. Try again.';
-    couponMsg.className='error-msg';
-  })
-  .finally(()=>{ applyCouponBtn.disabled = false; });
+  });
+
 });
 
-// === SAVE ADDRESS (guard nulls) ===
-if(saveAddressBtn){
-  saveAddressBtn.addEventListener('click', ()=>{
-    const addr = (addressField && addressField.value || '').trim();
-    fetch("{% url 'edit' %}", {
-      method:'POST',
-      headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
-      body: JSON.stringify({ address: addr })
-    })
-    .then(r=>r.json())
-    .then(d=>{ if(addressMsg) addressMsg.textContent = d.status==='ok'?'Saved!':'Failed.'; });
-  });
-}
+
+
+// === SAVE ADDRESS ===
+saveAddressBtn.addEventListener('click',()=>{
+fetch("{% url 'edit' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim()})})
+.then(r=>r.json()).then(d=>{addressMsg.textContent=d.status==='ok'?'Saved!':'Failed.';});
+});
 
 // === CHOOSE COD ===
-chooseCod.addEventListener('click', ()=>{
-  if(!lastVerified){ otpMsg.textContent='Verify OTP first.'; return; }
-  const addr = (addressField && addressField.value || '').trim();
-  fetch("{% url 'place_cod_order' %}", { // <-- match your view name
-    method:'POST',
-    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
-    body: JSON.stringify({ address: addr, coupon: couponInput.value.trim() })
-  })
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.status==='placed') window.location.href = d.redirect;
-    else document.getElementById('payment-msg').textContent = d.message || 'Could not place order.';
-  });
+chooseCod.addEventListener('click',()=>{
+if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
+
+
+fetch("{% url 'place_cod_order1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim(),coupon:couponInput.value.trim()})})
+
+
+.then(r=>r.json()).then(d=>{if(d.status==='placed')window.location.href=d.redirect;else document.getElementById('payment-msg').textContent=d.message;});
 });
 
 // === CHOOSE ONLINE ===
-chooseOnline.addEventListener('click', ()=>{
-  if(!lastVerified){ otpMsg.textContent='Verify OTP first.'; return; }
-  const addr = (addressField && addressField.value || '').trim();
-  fetch("{% url 'create_razorpay_order_cart' %}", { // <-- match your view name
-    method:'POST',
-    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
-    body: JSON.stringify({ coupon: couponInput.value.trim(), address: addr })
-  })
-  .then(r=>r.json())
-  .then(data=>{
-    if(data.status==='created'){
-      const opt = {
-        key: data.key,
-        amount: data.amount,
-        currency: 'INR',
-        order_id: data.order_id,
-        handler: function(res){
-          window.location.href = "{% url 'payment_success_cart' %}?razorpay_payment_id="+res.razorpay_payment_id;
-        },
-        theme: { color:'#4a6de5' }
-      };
-      new Razorpay(opt).open();
-    } else {
-      document.getElementById('payment-msg').textContent = data.message || 'Unable to create Razorpay order.';
-    }
-  });
+chooseOnline.addEventListener('click',()=>{
+if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
+
+
+fetch("{% url 'create_razorpay_order1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim(),address:addressField.value.trim()})})
+
+
+.then(r=>r.json()).then(data=>{
+if(data.status==='created'){
+const opt={key:data.key,amount:data.amount,currency:'INR',order_id:data.order_id,
+
+
+handler:function(res){window.location.href="{% url 'payment_success1' %}?pid="+res.razorpay_payment_id;},theme:{color:'#4a6de5'}};
+
+
+new Razorpay(opt).open();
+}});
 });
 </script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
