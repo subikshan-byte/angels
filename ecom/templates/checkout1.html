@@ -157,6 +157,8 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
   </div>
 </div>
 <script>
+  headers: {'X-CSRFToken': csrftoken,'Content-Type':'application/json'}
+
 // === CSRF ===
 function getCookie(name){
   let v=null;
