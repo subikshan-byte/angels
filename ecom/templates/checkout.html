@@ -274,7 +274,6 @@ verifyOtpBtn.addEventListener('click', () => {
   })
   .catch(()=> { otpMessage.textContent = 'Server error.'; otpMessage.className = 'error-msg'; });
 });
-
 // === APPLY COUPON (AJAX) ===
 applyCouponBtn.addEventListener('click', () => {
   const code = couponInput.value.trim();
@@ -296,15 +295,15 @@ applyCouponBtn.addEventListener('click', () => {
     },
     body: JSON.stringify({ coupon: code })
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(data => {
     if (data.status === "ok") {
-      // ✅ Update total price and show the success message
+      // ✅ Update total and show backend’s exact message
       displayTotal.textContent = "₹" + data.total;
-      couponMsg.textContent = data.message || `Coupon '${code}' applied successfully!`;
+      couponMsg.textContent = data.message; // e.g. "Coupon '123' applied successfully! You saved ₹45.20."
       couponMsg.className = "success-msg";
-    } else {
-      // ⚠️ Invalid or expired coupon
+    } 
+    else {
       couponMsg.textContent = data.message || "Invalid or expired coupon.";
       couponMsg.className = "error-msg";
     }
