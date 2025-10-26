@@ -235,28 +235,31 @@ def edit(request):
     return HttpResponseBadRequest()
 
 
-# ------------------ PLACE COD ORDER ------------------
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+import json
+from .models import Cart, CartItem, Order, OrderItem, Coupon
+
 @login_required
 def place_cod_order(request):
-    import json
-    from django.db.models import Sum
-
     if request.method != "POST":
         return JsonResponse({"status": "error", "message": "Invalid request method."})
 
-    # --- Parse request data ---
+    # Parse JSON from frontend
     try:
         data = json.loads(request.body.decode("utf-8"))
     except:
         return JsonResponse({"status": "error", "message": "Invalid JSON data."})
 
+    # Ensure OTP is verified
     if not request.session.get("otp_verified"):
-        return JsonResponse({"status": "error", "message": "OTP not verified"})
+        return JsonResponse({"status": "error", "message": "OTP not verified."})
 
-    address = data.get("address")
+    address = data.get("address", "").strip()
     coupon_code = data.get("coupon", "").strip()
 
-    # --- Fetch user cart ---
+    # Fetch user's cart
     try:
         cart = Cart.objects.get(user=request.user)
     except Cart.DoesNotExist:
@@ -266,32 +269,28 @@ def place_cod_order(request):
     if not cart_items.exists():
         return JsonResponse({"status": "error", "message": "Your cart is empty."})
 
-    # --- Calculate total ---
+    # Calculate total amount
     total_amount = sum(item.product.price * item.quantity for item in cart_items)
 
-    # --- Apply coupon if available ---
+    # Apply coupon if any
     if coupon_code:
         try:
             coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
-            if hasattr(coupon, "discount_percent") and coupon.discount_percent:
+            if coupon.is_valid():
                 discount = (total_amount * coupon.discount_percent) / 100
-            else:
-                discount = getattr(coupon, "discount_amount", 0)
-            total_amount -= discount
+                total_amount -= discount
         except Coupon.DoesNotExist:
             pass
 
-    # --- Create the order ---
+    # Create Order
     order = Order.objects.create(
         user=request.user,
         address=address,
-        total_amount=total_amount,
-        payment_method="COD",
-        payment_status="Pending",
-        status="Placed"
+        payment_method='cod',
+        status='pending'  # Matches your model choices
     )
 
-    # --- Create order items ---
+    # Create Order Items
     for item in cart_items:
         OrderItem.objects.create(
             order=order,
@@ -300,17 +299,19 @@ def place_cod_order(request):
             price=item.product.price,
         )
 
-    # --- Clear cart ---
+    # Clear the cart
     cart_items.delete()
     cart.delete()
 
-    # --- Remove OTP session flag ---
+    # Remove OTP flag
     request.session.pop("otp_verified", None)
 
+    # Return success response
     return JsonResponse({
         "status": "placed",
-        "redirect": "/myaccount"
+        "redirect": reverse("myaccount")  # or "/myaccount"
     })
+
 
 
 
