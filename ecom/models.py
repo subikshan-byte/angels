@@ -84,8 +84,9 @@ class Product(models.Model):
     )
 
     WHERE_TO_DISPLAY_CHOICES = [
-        ('home', 'Home'),
+        
         ('none', 'None'),
+        ('home', 'Home'),
     ]
     where_to_display = models.CharField(
         max_length=10,
