@@ -216,13 +216,22 @@ def place_cod_order(request):
     if not items.exists():
         return JsonResponse({"status": "error", "message": "Cart is empty"})
 
-    total_amount = sum(item.subtotal() for item in items)
-    if coupon:
+    data = json.loads(request.body.decode("utf-8"))
+    coupon_code = data.get("coupon")
+    
+    total_amount = sum(item.product.price * item.quantity for item in cart_items)
+    
+    if coupon_code:
         try:
-            cpn = Coupon.objects.get(code__iexact=coupon, active=True)
-            total_amount -= cpn.discount_percent
+            cpn = Coupon.objects.get(code__iexact=coupon_code, active=True)
+            if hasattr(cpn, "discount_percent") and cpn.discount_percent:
+                discount = (total_amount * cpn.discount_percent) / 100
+            else:
+                discount = getattr(cpn, "discount_amount", 0)
+            total_amount -= discount
         except Coupon.DoesNotExist:
             pass
+
 
     # Create order
     cart_items =CartItem.objects.filter(cart__user=request.user)
