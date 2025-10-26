@@ -131,56 +131,90 @@ def verify_order_otp(request):
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Cart, Coupon
-import json
 from datetime import date
+import json
 
 @login_required
 def apply_coupon(request):
     if request.method == "POST":
         try:
+            # Parse JSON data
             data = json.loads(request.body.decode("utf-8"))
-            code = data.get("coupon", "").strip()
+            code = (data.get("coupon") or "").strip()
 
             if not code:
-                return JsonResponse({"status": "invalid", "message": "Coupon code cannot be empty."})
+                return JsonResponse({
+                    "status": "invalid",
+                    "message": "Please enter a coupon code."
+                })
 
-            # Get the user's cart
-            cart = Cart.objects.get(user=request.user)
+            # Get user's cart
+            cart = Cart.objects.filter(user=request.user).first()
+            if not cart:
+                return JsonResponse({
+                    "status": "invalid",
+                    "message": "Your cart is empty."
+                })
+
             items = cart.items.all()
             if not items.exists():
-                return JsonResponse({"status": "invalid", "message": "Your cart is empty."})
+                return JsonResponse({
+                    "status": "invalid",
+                    "message": "Your cart is empty."
+                })
 
             total = sum(item.subtotal() for item in items)
 
-            # ✅ FIXED: using `active` instead of `is_active`
-            try:
-                coupon = Coupon.objects.get(code__iexact=code, active=True)
-
-                # Check expiry
-                if coupon.expiry_date and coupon.expiry_date < date.today():
-                    return JsonResponse({"status": "invalid", "message": "This coupon has expired."})
-
-                # Apply percentage discount if field is present
-                if hasattr(coupon, "discount_percent") and coupon.discount_percent:
-                    discount = (total * coupon.discount_percent) / 100
-                else:
-                    discount = getattr(coupon, "discount_amount", 0)
-
-                new_total = max(total - discount, 0)
-
+            # ✅ Safely get active coupon
+            coupon = Coupon.objects.filter(code__iexact=code, active=True).first()
+            if not coupon:
                 return JsonResponse({
-                    "status": "ok",
-                    "total": round(new_total, 2),
-                    "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{round(discount,2)}."
+                    "status": "invalid",
+                    "message": "Invalid or inactive coupon."
                 })
 
-            except Coupon.DoesNotExist:
-                return JsonResponse({"status": "invalid", "message": "Invalid or expired coupon."})
+            # ✅ Check expiry
+            if coupon.expiry_date and coupon.expiry_date < date.today():
+                return JsonResponse({
+                    "status": "invalid",
+                    "message": "This coupon has expired."
+                })
+
+            # ✅ Calculate discount
+            if hasattr(coupon, "discount_percent") and coupon.discount_percent:
+                discount = (total * coupon.discount_percent) / 100
+            else:
+                discount = getattr(coupon, "discount_amount", 0)
+
+            new_total = max(total - discount, 0)
+
+            # ✅ Store in session for later use (like order or Razorpay)
+            request.session["applied_coupon"] = {
+                "code": coupon.code,
+                "discount": float(discount),
+                "new_total": float(new_total)
+            }
+
+            # ✅ Return JSON response
+            return JsonResponse({
+                "status": "ok",
+                "total": round(new_total, 2),
+                "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{round(discount,2)}."
+            })
 
         except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)})
+            print("Error applying coupon:", e)
+            return JsonResponse({
+                "status": "error",
+                "message": "Something went wrong while applying the coupon."
+            })
 
-    return JsonResponse({"status": "error", "message": "Invalid request method."})
+    # If method is not POST
+    return JsonResponse({
+        "status": "error",
+        "message": "Invalid request method."
+    })
+
 
 
 # ------------------ SAVE ADDRESS (AJAX from Edit) ------------------
