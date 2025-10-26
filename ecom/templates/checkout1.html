@@ -156,7 +156,6 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
     </div>
   </div>
 </div>
-
 <script>
 // === CSRF ===
 function getCookie(name){
@@ -184,8 +183,7 @@ chooseOnline=document.getElementById('choose-online'),
 couponInput=document.getElementById('coupon'),
 applyCouponBtn=document.getElementById('apply-coupon'),
 couponMsg=document.getElementById('coupon-msg'),
-displayTotal=document.getElementById('display-total'),
-razorpayContainer=document.getElementById('razorpay-container');
+displayTotal=document.getElementById('display-total');
 
 let lastVerified=false;
 
@@ -209,9 +207,10 @@ sendOtpBtn.addEventListener('click',()=>{
   .then(d=>{
     if(d.status==='sent'){
       openOtpModal();
-      otpMsg.textContent='OTP sent.';
+      otpMsg.textContent='OTP sent to your email.';
+      otpMsg.className='small-muted';
     } else {
-      alert('Failed to send OTP.');
+      alert('Failed to send OTP. Try again.');
     }
   })
   .catch(()=>alert('Network error.'));
@@ -225,7 +224,7 @@ resendOtpBtn.addEventListener('click',()=>{
   })
   .then(r=>r.json())
   .then(d=>{
-    otpMsg.textContent=d.status==='sent'?'OTP resent.':'Failed to resend.';
+    otpMsg.textContent=d.status==='sent'?'OTP resent.':'Failed to resend OTP.';
   });
 });
 
@@ -246,12 +245,15 @@ verifyOtpBtn.addEventListener('click',()=>{
   .then(r=>r.json())
   .then(d=>{
     if(d.status==='verified'){
-      otpMsg.textContent='Verified!';
+      otpMsg.textContent='OTP verified! Choose a payment method below.';
       otpMsg.className='success-msg';
       paymentChoices.style.display='block';
       lastVerified=true;
+    } else if(d.status==='no_otp'){
+      otpMsg.textContent='No OTP found. Please resend.';
+      otpMsg.className='error-msg';
     } else {
-      otpMsg.textContent='Invalid OTP';
+      otpMsg.textContent='Invalid or expired OTP.';
       otpMsg.className='error-msg';
     }
   });
@@ -315,7 +317,7 @@ chooseCod.addEventListener('click',()=>{
   });
 });
 
-// === CHOOSE ONLINE ===
+// === CHOOSE ONLINE (Razorpay) ===
 chooseOnline.addEventListener('click',()=>{
   if(!lastVerified){
     otpMsg.textContent='Verify OTP first.';
@@ -323,32 +325,40 @@ chooseOnline.addEventListener('click',()=>{
     return;
   }
 
-  fetch("{% url 'create_razorpay_order' %}",{
+  fetch("{% url 'create_razorpay_order1' %}",{   // ✅ CORRECT URL
     method:'POST',
     headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
     body:JSON.stringify({coupon:couponInput.value.trim()})
   })
   .then(r=>r.json())
   .then(data=>{
+    console.log("Razorpay create response:", data);
+
     if(data.status==='created'){
-      const opt={
+      const options={
         key:data.key,
         amount:data.amount,
         currency:'INR',
         order_id:data.order_id,
-        handler:function(res){
-          window.location.href="{% url 'payment_success1' %}?pid="+res.razorpay_payment_id;
+        handler:function(response){
+          window.location.href="{% url 'payment_success1' %}?razorpay_payment_id="+response.razorpay_payment_id;
         },
         theme:{color:'#4a6de5'}
       };
-      new Razorpay(opt).open();
+      const rzp=new Razorpay(options);
+      rzp.open();
     } else {
-      document.getElementById('payment-msg').textContent='Failed to create Razorpay order.';
+      document.getElementById('payment-msg').textContent=data.message||'Failed to create Razorpay order.';
     }
+  })
+  .catch(err=>{
+    console.error("Error creating Razorpay order:",err);
+    document.getElementById('payment-msg').textContent='Network error creating payment.';
   });
 });
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
 
 {% endblock %}
