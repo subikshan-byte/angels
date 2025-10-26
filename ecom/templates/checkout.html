@@ -88,21 +88,12 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
       <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
       <div class="info-item"><div class="info-label">Zipcode:</div><div class="info-value">{{ profile.zip_code }}</div></div>
+      <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ profile.address }}</div></div>
     </div>
 
-    <form id="address-form">
-      {% csrf_token %}
-      <div class="address-section">
-        <label for="addr">Delivery Address</label>
-        <textarea id="addr" name="address" rows="4">{{ profile.address }}</textarea>
-        <div style="margin-top:10px;">
-          <button type="button" id="save-address" class="apply-btn">Save Address</button>
-          <span id="address-msg" class="small-muted" style="color:red"></span>
-        </div>
-      </div>
-    </form>
+   
 
-    <a href="{% url 'myaccount' %}"><button name="edit_profile" class="apply-btn" style="margin-top:8px;">My Account</button></a>
+    <a href="{% url 'myaccount' %}"><button name="edit_profile" class="apply-btn" style="margin-top:8px;">Edit ORDER DELIVERY INFORMATION</button></a>
   </div>
 
   <!-- ORDER SUMMARY / COUPON -->
