@@ -170,12 +170,7 @@ SOCIALACCOUNT_PROVIDERS = {
 SILENCED_SYSTEM_CHECKS = ["models.W036"]
 RAZORPAY_KEY_ID = "rzp_test_ROETDnupbhbT32"
 RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
-SESSION_COOKIE_DOMAIN = ".angels-glamnglow.in"  # note the dot at start
-CSRF_COOKIE_DOMAIN = ".angels-glamnglow.in"
-CSRF_TRUSTED_ORIGINS = [
-    "https://angels-glamnglow.in",
-    "https://www.angels-glamnglow.in",
-]
+
 
 CSRF_TRUSTED_ORIGINS = [
     "https://angels-glamnglow.in",
@@ -185,6 +180,7 @@ CSRF_TRUSTED_ORIGINS = [
 DEFAULT_DOMAIN="angels-glamnglow"
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False  #
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
