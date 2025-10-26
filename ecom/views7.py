@@ -327,59 +327,117 @@ from .models import CartItem
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
+import json
+import razorpay
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from .models import Cart, CartItem, Order, OrderItem, Coupon
+
 @login_required
-@csrf_exempt
 def create_razorpay_order_cart(request):
-    if request.method == 'POST':
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Invalid request method."})
+
+    # ✅ OTP verification
+    if not request.session.get("otp_verified"):
+        return JsonResponse({"status": "error", "message": "OTP not verified."})
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except:
+        return JsonResponse({"status": "error", "message": "Invalid JSON."})
+
+    coupon_code = data.get("coupon", "").strip()
+    address = data.get("address", "").strip()
+
+    # ✅ Fetch cart and items
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Cart not found."})
+
+    cart_items = CartItem.objects.filter(cart=cart)
+    if not cart_items.exists():
+        return JsonResponse({"status": "error", "message": "Cart empty."})
+
+    # ✅ Calculate total
+    total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+    # ✅ Apply coupon
+    if coupon_code:
         try:
-            cart_items = CartItem.objects.filter(cart__user=request.user)
-            total_amount = sum(item.product.price * item.quantity for item in cart_items)
-            amount_paise = int(total_amount * 100)
+            coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
+            if coupon.is_valid():
+                discount = (total_amount * coupon.discount_percent) / 100
+                total_amount -= discount
+        except Coupon.DoesNotExist:
+            pass
 
-            # Create Razorpay order
-            razorpay_order = razorpay_client.order.create({
-                'amount': amount_paise,
-                'currency': 'INR',
-                'payment_capture': '1'
-            })
+    amount_paise = int(total_amount * 100)
 
-            return JsonResponse({
-                'status': 'created',
-                'order_id': razorpay_order['id'],
-                'amount': amount_paise,
-                'key': settings.RAZORPAY_KEY_ID
-            })
-        except Exception as e:
-            print("Error creating Razorpay order for cart:", e)
-            return JsonResponse({'status': 'error', 'message': 'Error creating Razorpay order.'}, status=500)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
+    try:
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        razorpay_order = client.order.create({
+            'amount': amount_paise,
+            'currency': 'INR',
+            'payment_capture': '1'
+        })
 
+        print("✅ Razorpay order created:", razorpay_order)
+
+        # ✅ Store pending order details in session
+        request.session["pending_order"] = {
+            "razorpay_order_id": razorpay_order["id"],
+            "total_amount": float(total_amount),
+            "address": address,
+        }
+
+        # ✅ Respond to frontend JS
+        return JsonResponse({
+            "status": "created",
+            "key": settings.RAZORPAY_KEY_ID,
+            "amount": amount_paise,
+            "order_id": razorpay_order["id"]
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print("❌ Razorpay order creation error:", e)
+        return JsonResponse({"status": "error", "message": str(e)})
 
 
 # ------------------ PAYMENT SUCCESS (RAZORPAY) ------------------
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from .models import Cart, Order, OrderItem
+
 @csrf_exempt
 @login_required
 def payment_success_cart(request):
-    payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
-    cart = Cart.objects.get(user=request.user)
-    items = cart.items.all()
-
+    payment_id = request.GET.get("razorpay_payment_id")
     pending = request.session.get("pending_order", {})
-    address = pending.get("address", request.user.userprofile.address)
-    total = pending.get("total_amount", sum(i.subtotal() for i in items))
 
-    if not items.exists():
+    if not payment_id or not pending:
         return redirect("cart")
 
+    address = pending.get("address", "")
+    total_amount = pending.get("total_amount", 0)
+
+    # ✅ Create paid order
     order = Order.objects.create(
         user=request.user,
-        status="paid",
-        payment_id=payment_id,
         address=address,
-        total=total,
+        payment_method='online',
+        status='paid',
+        payment_id=payment_id,
     )
 
-    for item in items:
+    cart = Cart.objects.get(user=request.user)
+    cart_items = cart.items.all()
+    for item in cart_items:
         OrderItem.objects.create(
             order=order,
             product=item.product,
@@ -387,9 +445,10 @@ def payment_success_cart(request):
             price=item.product.price,
         )
 
-    cart.items.all().delete()
-    
-    request.session.pop("pending_order", None)
+    # ✅ Cleanup
+    cart_items.delete()
+    cart.delete()
     request.session.pop("otp_verified", None)
+    request.session.pop("pending_order", None)
 
     return redirect("myaccount")
