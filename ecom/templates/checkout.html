@@ -318,24 +318,7 @@ applyCouponBtn.addEventListener('click', () => {
 });
 
 
-// SAVE ADDRESS (AJAX) - saves to UserProfile immediately
-saveAddressBtn.addEventListener('click', () => {
-  const address = addressField.value.trim();
-  fetch("{% url 'edit' %}", {
-    method: 'POST',
-    headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'save_address', address })
-  })
-  .then(r=>r.json())
-  .then(data=>{
-    if (data.status === 'ok') {
-      addressMsg.textContent = 'Address saved.';
-      addressMsg.className = 'small-muted';
-    } else {
-      addressMsg.textContent = 'Failed to save.';
-    }
-  }).catch(()=> addressMsg.textContent = 'YOU NEED TO FILL ALL DETAILS SO CLICK MY ACCOUNT AND EDIT');
-});
+
 
 // CHOOSE COD (AJAX) -> place order directly and redirect to myaccount
 chooseCod.addEventListener('click', () => {
