@@ -331,7 +331,8 @@ chooseCod.addEventListener('click', () => {
       product_slug: productSlug,
       quantity: parseInt(productQty || '1', 10),
       coupon: couponInput.value.trim(),
-      address: addressField.value.trim()
+      address = request.user.userprofile.address
+   
     })
   })
   .then(r => r.json())
@@ -360,7 +361,8 @@ chooseOnline.addEventListener('click', () => {
       product_slug: productSlug,
       quantity: parseInt(productQty || '1',10),
       coupon: couponInput.value.trim(),
-      address: addressField.value.trim()
+      address = request.user.userprofile.address
+
     })
   })
   .then(r => r.json())
