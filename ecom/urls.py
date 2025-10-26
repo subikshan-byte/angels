@@ -28,7 +28,7 @@ path('place-cod-order/', views6.place_cod_order, name='place_cod_order'),
     path('place-cod-order-cart/', views7.place_cod_order, name='place_cod_order1'),
 path('apply-coupon/', views7.apply_coupon, name='apply_coupon'),
     
-path('create-razorpay-order-cart/', views6.create_razorpay_order, name='create_razorpay_order1'),
+path('create-razorpay-order-cart/', views7.create_razorpay_order_cart, name='create_razorpay_order1'),
 path("send-checkout-otp-cart/", views7.send_checkout_otp, name="send_checkout_otp1"),
 path('verify-order-otp-cart/', views7.verify_order_otp, name='verify_order_otp1'),
     # Payment success for cart
