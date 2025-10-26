@@ -173,7 +173,7 @@ paymentChoices=document.getElementById('payment-choices'),chooseCod=document.get
 chooseOnline=document.getElementById('choose-online'),couponInput=document.getElementById('coupon'),
 applyCouponBtn=document.getElementById('apply-coupon'),couponMsg=document.getElementById('coupon-msg'),
 displayTotal=document.getElementById('display-total'),addressField=document.getElementById('addr'),
-addressMsg=document.getElementById('address-msg'),saveAddressBtn=document.getElementById('save-address'),
+
 razorpayContainer=document.getElementById('razorpay-container');
 
 let lastVerified=false;
@@ -263,11 +263,7 @@ applyCouponBtn.addEventListener('click',()=>{
 
 
 
-// === SAVE ADDRESS ===
-saveAddressBtn.addEventListener('click',()=>{
-fetch("{% url 'edit' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim()})})
-.then(r=>r.json()).then(d=>{addressMsg.textContent=d.status==='ok'?'Saved!':'Failed.';});
-});
+
 
 // === CHOOSE COD ===
 chooseCod.addEventListener('click',()=>{
