@@ -52,6 +52,7 @@ def check_userprofile_complete(request):
 
 
 # ------------------ CHECKOUT PAGE ------------------
+@csrf_exempt
 @login_required
 def cart_checkout(request):
     check = check_userprofile_complete(request)
@@ -109,6 +110,8 @@ def send_checkout_otp(request):
 
 
 # ------------------ VERIFY OTP ------------------
+
+@csrf_exempt
 @login_required
 def verify_order_otp(request):
     if request.method == "POST":
@@ -134,7 +137,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Cart, Coupon
 from datetime import date
 import json
-
+@csrf_exempt
 @login_required
 def apply_coupon(request):
     print("Received coupon apply request:", request.body)
@@ -241,7 +244,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import json
 from .models import Cart, CartItem, Order, OrderItem, Coupon
-
+@csrf_exempt
 @login_required
 def place_cod_order(request):
     if request.method != "POST":
@@ -334,7 +337,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import Cart, CartItem, Order, OrderItem, Coupon
-
+@csrf_exempt
 @login_required
 def create_razorpay_order_cart(request):
     if request.method != "POST":
