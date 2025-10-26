@@ -158,6 +158,7 @@ class CartItem(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100,default="angels")
+    last_name = models.CharField(max_length=100,default="angels")
     address = models.TextField(blank=True, null=True)
     mobile = models.CharField(max_length=15)
     zip_code = models.CharField(max_length=10, null=True, blank=True) 
