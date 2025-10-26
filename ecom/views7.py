@@ -136,6 +136,8 @@ import json
 
 @login_required
 def apply_coupon(request):
+    print("Received coupon apply request:", request.body)
+
     if request.method == "POST":
         try:
             # Parse JSON data
