@@ -90,6 +90,7 @@ def cart_checkout(request):
 
 
 # ------------------ SEND OTP ------------------
+@csrf_exempt
 @login_required
 def send_checkout_otp(request):
     if request.method == "POST":
