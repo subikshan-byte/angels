@@ -238,53 +238,61 @@ def edit(request):
 # ------------------ PLACE COD ORDER ------------------
 @login_required
 def place_cod_order(request):
-    from django.db.models import Sum
     import json
-    data = json.loads(request.body.decode("utf-8"))
+    from django.db.models import Sum
+
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Invalid request method."})
+
+    # --- Parse request data ---
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except:
+        return JsonResponse({"status": "error", "message": "Invalid JSON data."})
+
     if not request.session.get("otp_verified"):
         return JsonResponse({"status": "error", "message": "OTP not verified"})
 
     address = data.get("address")
-    coupon = data.get("coupon")
+    coupon_code = data.get("coupon", "").strip()
 
-    cart = Cart.objects.get(user=request.user)
-    items = cart.items.all()
-    if not items.exists():
-        return JsonResponse({"status": "error", "message": "Cart is empty"})
+    # --- Fetch user cart ---
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Cart not found."})
 
-    data = json.loads(request.body.decode("utf-8"))
-    coupon_code = data.get("coupon")
-    
+    cart_items = CartItem.objects.filter(cart=cart)
+    if not cart_items.exists():
+        return JsonResponse({"status": "error", "message": "Your cart is empty."})
+
+    # --- Calculate total ---
     total_amount = sum(item.product.price * item.quantity for item in cart_items)
-    
+
+    # --- Apply coupon if available ---
     if coupon_code:
         try:
-            cpn = Coupon.objects.get(code__iexact=coupon_code, active=True)
-            if hasattr(cpn, "discount_percent") and cpn.discount_percent:
-                discount = (total_amount * cpn.discount_percent) / 100
+            coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
+            if hasattr(coupon, "discount_percent") and coupon.discount_percent:
+                discount = (total_amount * coupon.discount_percent) / 100
             else:
-                discount = getattr(cpn, "discount_amount", 0)
+                discount = getattr(coupon, "discount_amount", 0)
             total_amount -= discount
         except Coupon.DoesNotExist:
             pass
 
-
-    # Create order
-    cart_items =CartItem.objects.filter(cart__user=request.user)
-
-
-    # ✅ Step 2: Calculate total price
-    cart_total = sum(item.product.price * item.quantity for item in cart_items)
-
+    # --- Create the order ---
     order = Order.objects.create(
-    user=request.user,
-    
-    address=address,
-    payment_method='cod'
-)
+        user=request.user,
+        address=address,
+        total_amount=total_amount,
+        payment_method="COD",
+        payment_status="Pending",
+        status="Placed"
+    )
 
-
-    for item in items:
+    # --- Create order items ---
+    for item in cart_items:
         OrderItem.objects.create(
             order=order,
             product=item.product,
@@ -292,12 +300,18 @@ def place_cod_order(request):
             price=item.product.price,
         )
 
-    cart.items.all().delete()
+    # --- Clear cart ---
     cart_items.delete()
-    # Remove OTP verification
+    cart.delete()
+
+    # --- Remove OTP session flag ---
     request.session.pop("otp_verified", None)
 
-    return JsonResponse({"status": "placed", "redirect": "/myaccount"})
+    return JsonResponse({
+        "status": "placed",
+        "redirect": "/myaccount"
+    })
+
 
 
 # ------------------ CREATE RAZORPAY ORDER (AJAX) ------------------
