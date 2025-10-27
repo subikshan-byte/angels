@@ -17,37 +17,40 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from ecom.models import UserProfile
 
+import logging
+logger = logging.getLogger(__name__)
+
 def check_userprofile_complete(request):
-    """Checks if user's email, mobile, address, and zip_code in UserProfile are filled."""
+    """Safely checks if user's profile is complete and avoids I/O crashes."""
     user = request.user
 
     if not user.is_authenticated:
         messages.warning(request, "Please log in to continue.")
         return redirect("login")
 
-    # Always ensure profile exists
-    profile, created = UserProfile.objects.get_or_create(user=user)
+    try:
+        profile, created = UserProfile.objects.get_or_create(user=user)
+    except OSError as e:
+        # This captures disk/storage-related I/O errors
+        logger.exception(f"I/O error while fetching/creating UserProfile for user {user.id}: {e}")
+        messages.error(request, "Temporary profile issue. Please try again later.")
+        return redirect("myaccount")
+    except Exception as e:
+        logger.exception(f"Unexpected error in check_userprofile_complete: {e}")
+        messages.error(request, "Something went wrong while checking your profile.")
+        return redirect("myaccount")
 
-    # ✅ Pull all values from UserProfile (not from User)
-  
+    # ✅ Pull all values safely
     mobile = (getattr(profile, "mobile", "") or "").strip()
     address = (getattr(profile, "address", "") or "").strip()
     zip_code = (getattr(profile, "zip_code", getattr(profile, "zipcode", "")) or "").strip()
 
-    print("------ DEBUG PROFILE CHECK ------")
-
-    print("Mobile:", repr(mobile))
-    print("Address:", repr(address))
-    print("Zip Code:", repr(zip_code))
-    print("--------------------------------")
-
-    # ✅ Check if any are missing or empty
-    if  not mobile or not address or not zip_code:
+    if not mobile or not address or not zip_code:
         messages.warning(request, "Please complete your profile before proceeding.")
         return redirect("/myaccount")
 
-    # ✅ Everything is fine — continue normally
     return None
+
 
 
 # -------------------- BUY NOW (kept for legacy use; still works) --------------------
