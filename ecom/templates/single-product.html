@@ -115,7 +115,31 @@
                             </ul>
                           </div>
         
+                                      {% if product.stock_status == "Out of Stock" %}
                             <span style="color:red" >Out of Stock</span>
+          {% else %}
+                                  <form method="POST" id="productForm">
+              {% csrf_token %}
+              <div class="single__product__quantity">
+                  <div class="qty-container">
+                      <button type="button" class="qty-btn-minus btn-qty">-</button>
+                      <input type="number" name="quantity" value="1" class="input-qty" min="1">
+                      <button type="button" class="qty-btn-plus btn-qty">+</button>
+                  </div>
+                  <!-- Add to Cart -->
+                  <button type="submit" formaction="{% url 'add to cart' product_id=product.slug %}" 
+                          class="default__button">
+                      <i class="fas fa-shopping-cart"></i> Add to cart
+                  </button>
+          
+                  <!-- Buy it Now -->
+                  <button type="submit" formaction="{% url 'buy_now' product.slug %}" 
+                          class="default__button black__button">
+                      Buy it now
+                  </button>
+              </div>
+          </form>
+          {% endif %}
           
 
 
