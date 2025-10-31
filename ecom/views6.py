@@ -430,33 +430,68 @@ def update_cart_quantity(request, item_id):
         return HttpResponse(action)
 
     return redirect('cart')
-from django.http import JsonResponse
+from decimal import Decimal
 import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Product, Coupon
 
 def apply_coupon(request):
+    """
+    AJAX endpoint to apply a coupon to a single product.
+    Expects JSON:
+        {
+            "coupon": "SAVE10",
+            "product_slug": "aroma-magic-shine-shampoo",
+            "quantity": 1
+        }
+    Returns discounted total and success/error message.
+    """
     try:
         data = json.loads(request.body.decode('utf-8'))
-        print("DEBUG DATA:", data)  # 👈 Add this
-        coupon_code = data.get('coupon', '').strip()
-        
+        print("DEBUG DATA:", data)
+
+        coupon_code = (data.get('coupon') or '').strip()
+        product_slug = (data.get('product_slug') or '').strip()
+        quantity = int(data.get('quantity', 1))
+
+        # ✅ Validate inputs
         if not coupon_code:
             return JsonResponse({'status': 'error', 'message': 'Coupon code required.'})
-        
-        from .models import Coupon
+        if not product_slug:
+            return JsonResponse({'status': 'error', 'message': 'Product not specified.'})
+
+        # ✅ Get product
+        product = get_object_or_404(Product, slug=product_slug)
+        product_price = Decimal(product.price or 0)
+        total = product_price * quantity
+
+        # ✅ Get coupon
         try:
             coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
         except Coupon.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Invalid or expired coupon.'})
+
+        # ✅ Calculate discount
+        discount = Decimal(0)
+        if hasattr(coupon, 'discount_percent') and coupon.discount_percent:
+            discount = (total * Decimal(coupon.discount_percent)) / Decimal(100)
+        elif hasattr(coupon, 'discount_amount') and coupon.discount_amount:
+            discount = Decimal(coupon.discount_amount)
         
-        discount = coupon.discount
-        new_total = 1000 - discount  # Example
-        
+        new_total = total - discount
+        if new_total < 0:
+            new_total = Decimal(0)
+
+        # ✅ Return result
         return JsonResponse({
             'status': 'ok',
-            'message': f"Coupon '{coupon_code}' applied successfully! You saved ₹{discount}.",
-            'total': new_total
+            'message': f"Coupon '{coupon_code}' applied successfully! You saved ₹{discount:.2f}.",
+            'discount': float(discount),
+            'total': float(new_total)
         })
 
     except Exception as e:
-        # 👇 This will prevent the 500 and return the error in JSON form
+        print("❌ apply_coupon error:", e)
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
