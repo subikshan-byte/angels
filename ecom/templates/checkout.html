@@ -287,7 +287,7 @@ applyCouponBtn.addEventListener('click', () => {
   applyCouponBtn.disabled = true;
   couponMsg.textContent = "Checking coupon...";
 
-  fetch("{% url 'apply_coupon' %}", {
+  fetch("{% url 'apply_coupon1' %}", {
     method: 'POST',
     headers: { 
       'X-CSRFToken': csrftoken, 
