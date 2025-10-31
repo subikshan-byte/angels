@@ -114,8 +114,9 @@
                             
                             </ul>
                           </div>
-
-
+{% if product.stock_status == "Out of Stock" %}
+                  <span style="color:red" >Out of Stock</span>
+{% else %}
                         <form method="POST" id="productForm">
     {% csrf_token %}
     <div class="single__product__quantity">
@@ -137,7 +138,7 @@
         </button>
     </div>
 </form>
-
+{% endif %}
 
 
 
