@@ -129,7 +129,9 @@ def buy_now(request, slug):
             profile = request.user.userprofile
             profile.address = address
             profile.save()
-
+            log='0'
+        if not request.user.is_authenticated:
+           log='1'
         return render(request, "checkout.html", {
             "product": product,
             "quantity": quantity,
