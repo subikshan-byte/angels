@@ -94,6 +94,7 @@ def buy_now(request, slug):
                         "discount": float(discount),
                         "total_amount": float(total_amount),
                         "message": f"{coupon.discount_percent}% discount applied"
+                        
                     })
                 else:
                     return JsonResponse({"status": "error", "message": "Coupon expired or inactive."})
@@ -129,7 +130,7 @@ def buy_now(request, slug):
             profile = request.user.userprofile
             profile.address = address
             profile.save()
-            log='0'
+        log='0'
         if not request.user.is_authenticated:
            log='1'
         return render(request, "checkout.html", {
@@ -140,7 +141,8 @@ def buy_now(request, slug):
             "order_id": razorpay_order["id"],
             "razorpay_key": settings.RAZORPAY_KEY_ID,
             "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}",
-            "profile":profile
+            "profile":profile,
+            "log":log,
         })
 
     return redirect("product", p=slug)
