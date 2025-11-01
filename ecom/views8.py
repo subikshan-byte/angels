@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Cart, Product, Order,CartItem, OrderItem, Coupon, UserProfile
 def contact(request):
     log='0'
+    price=0;
     if not request.user.is_authenticated:
         log='1'
     else:
