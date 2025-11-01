@@ -158,6 +158,7 @@ def buy_now(request, slug):
             "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}",
             "profile":profile,
             "log":log,
+            "cart":products,
         })
 
     return redirect("product", p=slug)
