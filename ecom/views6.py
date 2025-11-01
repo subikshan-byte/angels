@@ -83,7 +83,7 @@ def buy_now(request, slug):
         coupon_code = data.get("coupon", "").strip() if data else ""
         action = data.get("action") if isinstance(data, dict) else request.POST.get("action")
 
-        if action == 'apply_coupon' and coupon_code:
+        if action == 'apply_coupon1' and coupon_code:
             try:
                 coupon = Coupon.objects.get(code=coupon_code.upper())
                 if coupon.is_valid():
