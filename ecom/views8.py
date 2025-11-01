@@ -1,7 +1,13 @@
 from django.shortcuts import render
 def contact(request):
+    log='0'
+    if not request.user.is_authenticated:
+        log='1'
     return render(request,"contact.html")
 def about(request):
+    log='0'
+    if not request.user.is_authenticated:
+        log='1'
     return render(request,"about.html")
 def privacy(request):
     return render(request,"privacy.html")
