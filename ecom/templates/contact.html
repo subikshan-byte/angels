@@ -68,7 +68,19 @@
       <div class="col-lg-6 col-md-12">
         <div class="form-wrapper">
           <h3 class="form-title">Send us an Enquiry</h3>
-         
+          <form id="enquiry-form1" action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" method="POST">
+          <div class="form-row1">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+          </div>
+          <div class="form-row1">
+            <input type="tel" name="phone" placeholder="Phone Number" required>
+            <input type="text" name="subject" placeholder="Subject">
+          </div>
+          <textarea name="message" placeholder="Your Message" required></textarea>
+          <button type="submit">Submit Enquiry</button>
+          <p id="form-message"></p>
+        </form>
         </div>
       </div>
 
