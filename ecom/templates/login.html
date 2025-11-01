@@ -121,16 +121,31 @@
 
 
 <!-- Custom Google Login Button -->
-<button id="google-login" class="default__button" type="button">
-  <img src="{% static 'img/google-icon.png' %}" alt="Google" style="width:18px; margin-right:8px;">
-  Sign in with Google
-</button>
+<div class="loginarea__social__option" style="text-align:center; margin: 20px 0;">
+  <form method="post" action="{% provider_login_url 'google' %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="
+        background-color: #4285F4;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    " 
+    onmouseover="this.style.backgroundColor='#357ae8';" 
+    onmouseout="this.style.backgroundColor='#4285F4';">
+      <img src="{% static 'images/google-icon.svg' %}" alt="Google" style="width:18px;height:18px;">
+      Sign in with Google
+    </button>
+  </form>
+</div>
 
-<script>
-  document.getElementById('google-login').addEventListener('click', () => {
-    window.location.href = "{% url 'social:begin' 'google-oauth2' %}";
-  });
-</script>
 
 
 
@@ -203,17 +218,31 @@
                                             <button type="submit" class="default__button">Sign Up</button>
                                         </div>
                                     </form>
-<!-- Custom Google Login Button -->
-<button id="google-login" class="default__button" type="button">
-  <img src="{% static 'img/google-icon.png' %}" alt="Google" style="width:18px; margin-right:8px;">
-  Sign in with Google
-</button>
+<div class="loginarea__social__option" style="text-align:center; margin: 20px 0;">
+  <form method="post" action="{% provider_login_url 'google' %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="
+        background-color: #4285F4;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    " 
+    onmouseover="this.style.backgroundColor='#357ae8';" 
+    onmouseout="this.style.backgroundColor='#4285F4';">
+      <img src="{% static 'images/google-icon.svg' %}" alt="Google" style="width:18px;height:18px;">
+      Sign in with Google
+    </button>
+  </form>
+</div>
 
-<script>
-  document.getElementById('google-login').addEventListener('click', () => {
-    window.location.href = "{% url 'social:begin' 'google-oauth2' %}";
-  });
-</script>
 
 
 
