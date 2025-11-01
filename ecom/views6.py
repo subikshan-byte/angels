@@ -442,7 +442,7 @@ from django.http import JsonResponse
 from .models import Coupon, Product
 import json
 
-def apply_coupon(request):
+def apply_coupon1(request):
     if request.method == "POST":
         data = json.loads(request.body)
         coupon_code = data.get("coupon")
