@@ -109,29 +109,31 @@
                             </form>
 
 
-                           <div class="loginarea__social__option" style="text-align: center; margin: 20px 0;">
-  <form method="post" action="{% provider_login_url 'google' %}">
+<div class="loginarea__social__option" style="text-align:center; margin: 20px 0;">
+  <form method="post" action="{% provider_login_url 'google' %}" style="display:inline;">
     {% csrf_token %}
-    <button type="submit" class="default__button" style="
+    <button type="submit" style="
+        background-color: #4285F4;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
         gap: 10px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        color: #444;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: 500;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         cursor: pointer;
-        transition: all 0.3s ease;
-    ">
-      <img src="{% static 'images/google-icon.svg' %}" alt="Google" style="width:20px; height:20px;">
-     
+        transition: background-color 0.3s ease;
+    " 
+    onmouseover="this.style.backgroundColor='#357ae8';" 
+    onmouseout="this.style.backgroundColor='#4285F4';">
+      <img src="{% static 'images/google-icon.svg' %}" alt="Google" style="width:18px;height:18px;">
+      Sign in with Google
     </button>
   </form>
 </div>
+
 
 
 
@@ -202,29 +204,31 @@
                                             <button type="submit" class="default__button">Sign Up</button>
                                         </div>
                                     </form>
-                          <div class="loginarea__social__option" style="text-align: center; margin: 20px 0;">
-  <form method="post" action="{% provider_login_url 'google' %}">
+ <div class="loginarea__social__option" style="text-align:center; margin: 20px 0;">
+  <form method="post" action="{% provider_login_url 'google' %}" style="display:inline;">
     {% csrf_token %}
-    <button type="submit" class="default__button" style="
+    <button type="submit" style="
+        background-color: #4285F4;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
         gap: 10px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        color: #444;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: 500;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         cursor: pointer;
-        transition: all 0.3s ease;
-    ">
-      <img src="{% static 'images/google-icon.svg' %}" alt="Google" style="width:20px; height:20px;">
-
+        transition: background-color 0.3s ease;
+    " 
+    onmouseover="this.style.backgroundColor='#357ae8';" 
+    onmouseout="this.style.backgroundColor='#4285F4';">
+      <img src="{% static 'images/google-icon.svg' %}" alt="Google" style="width:18px;height:18px;">
+      Sign in with Google
     </button>
   </form>
 </div>
+
 
 
 
