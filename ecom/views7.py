@@ -95,7 +95,7 @@ def cart_checkout(request):
         "razorpay_key": settings.RAZORPAY_KEY_ID,
         "callback_url": "/payment/success-cart/",
         "profile": profile,
-        "cart":products,
+        
         "log":log,
     })
 
