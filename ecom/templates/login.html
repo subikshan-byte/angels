@@ -23,6 +23,17 @@
 {% block title %}Login | Angels Fashion Customer Account{% endblock title %}
 {% load socialaccount %}
 {% block content %}
+<style>
+/* Removes unwanted "Sign in with Google" text appearing above button */
+.loginarea__social__option::before {
+  content: none !important;
+  display: none !important;
+}
+
+.default__button::before {
+  content: none !important;
+}
+</style>
 
       <!-- breadcrumb__start -->
       <div class="breadcrumb">
