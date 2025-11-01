@@ -158,13 +158,21 @@
                                                                     </div>
                                                                     <div class="grid__wraper__icon">                                
                                                                         <ul>
-                                                                            
-                                
-                                                                            <li>
+                                                                            {% if i.stock_status == "out of stock" %}
+                                                                                <li>
+                                                                                <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
+                                                                                    <span style="color:red" >Out of Stock</span>
+                                                                                </a>                                             
+                                                                            </li>
+          {% else %}
+                     <li>
                                                                                 <a href="{% url 'add to cart' product_id=i.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Add To Cart" data-bs-original-title="Add To Cart">
                                                                                     <i class="fas fa-shopping-cart"></i>
                                                                                 </a>                                             
                                                                             </li>
+          {% endif %}
+                                
+                                                                            
                                 
                                                                             
                                                                         
