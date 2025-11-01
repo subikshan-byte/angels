@@ -46,7 +46,7 @@ path('verify-order-otp-cart/', views7.verify_order_otp, name='verify_order_otp1'
     path("sitemap",views8.sitemap,name="sitemap"),
     path("robots",views8.robots,name="robots"),
  
- path('apply-coupon/', views6.apply_coupon, name='apply_coupon1'),
+ path('apply-coupon/', views6.apply_coupon1, name='apply_coupon1'),
 ]
 
 
