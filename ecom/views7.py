@@ -83,6 +83,9 @@ def cart_checkout(request):
     })
 
     profile = UserProfile.objects.get(user=request.user)
+    log='0'
+    if not request.user.is_authenticated:
+        log='1'
 
     return render(request, "checkout1.html", {
         "items": items,
