@@ -18,7 +18,7 @@ def contact(request):
             first_image = product.productimage_set.first()
             product.image_url = first_image.image.url if first_image else ""
             products.append(product)
-    return render(request,"contact.html",{"log":log,})
+    return render(request,"contact.html",{"log":log,"cart":products,})
 def about(request):
     log='0'
     if not request.user.is_authenticated:
@@ -38,7 +38,7 @@ def about(request):
             first_image = product.productimage_set.first()
             product.image_url = first_image.image.url if first_image else ""
             products.append(product)
-    return render(request,"about.html",{"log":log})
+    return render(request,"about.html",{"log":log,"cart":products,})
 def privacy(request):
     return render(request,"privacy.html")
 def paymentrazor(request):
