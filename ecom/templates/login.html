@@ -120,31 +120,7 @@
                             </form>
 
 
-<!-- Custom Google Login Button -->
-<div class="loginarea__social__option" style="text-align:center; margin: 20px 0;">
-  <form method="post" action="{% provider_login_url 'google' %}" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" style="
-        background-color: #4285F4;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 6px;
-        font-size: 15px;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    " 
-    onmouseover="this.style.backgroundColor='#357ae8';" 
-    onmouseout="this.style.backgroundColor='#4285F4';">
-      <img src="{% static 'images/google-icon.svg' %}" alt="" style="width:18px;height:18px;">
-       login with Google
-    </button>
-  </form>
-</div>
+
 
 
 
@@ -218,30 +194,7 @@
                                             <button type="submit" class="default__button">Sign Up</button>
                                         </div>
                                     </form>
-<div class="loginarea__social__option" style="text-align:center; margin: 20px 0;">
-  <form method="post" action="{% provider_login_url 'google' %}" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" style="
-        background-color: #4285F4;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 6px;
-        font-size: 15px;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    " 
-    onmouseover="this.style.backgroundColor='#357ae8';" 
-    onmouseout="this.style.backgroundColor='#4285F4';">
-      <img src="{% static 'images/google-icon.svg' %}" alt="" style="width:18px;height:18px;">
-      Sign in with Google
-    </button>
-  </form>
-</div>
+
 
 
 
