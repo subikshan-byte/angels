@@ -63,25 +63,40 @@
   <div class="container">
     <div class="row align-items-start g-4">
 
-      <!-- Enquiry Form -->
-      <div class="col-lg-6 col-md-12">
-        <div class="form-wrapper">
-          <h3 class="form-title">Send us an Enquiry</h3>
-          <form id="enquiry-form" action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" method="POST">
-            <div class="form-row">
-              <input type="text" name="name" placeholder="Your Name" required>
-              <input type="email" name="email" placeholder="Your Email" required>
-            </div>
-            <div class="form-row">
-              <input type="tel" name="phone" placeholder="Phone Number" required>
-              <input type="text" name="subject" placeholder="Subject">
-            </div>
-            <textarea name="message" placeholder="Your Message" required></textarea>
-            <button type="submit">Submit Enquiry</button>
-            <p id="form-message"></p>
-          </form>
+     <!-- Enquiry Form -->
+<div class="col-lg-6 col-md-12">
+  <div class="form-wrapper">
+    <h3 class="form-title">Send us an Enquiry</h3>
+    <form id="enquiry-form" 
+          action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" 
+          method="POST">
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="text" name="name" placeholder="Your Name" required>
+        </div>
+        <div class="col-md-6">
+          <input type="email" name="email" placeholder="Your Email" required>
         </div>
       </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="tel" name="phone" placeholder="Phone Number" required>
+        </div>
+        <div class="col-md-6">
+          <input type="text" name="subject" placeholder="Subject">
+        </div>
+      </div>
+
+      <textarea name="message" placeholder="Your Message" required></textarea>
+
+      <button type="submit">Submit Enquiry</button>
+      <p id="form-message"></p>
+    </form>
+  </div>
+</div>
+
 
       <!-- Google Map -->
       <div class="col-lg-6 col-md-12">
@@ -96,8 +111,6 @@
     </div>
   </div>
 </section>
-<!-- enquiry form + map section end -->
-
 <style>
   .enquiry-section {
     background: #f8f9fa;
@@ -110,7 +123,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     position: relative;
-    z-index: 1;
+    z-index: 10;
   }
 
   .form-title {
@@ -121,7 +134,7 @@
     text-align: center;
   }
 
-  /* Fix input visibility — override theme conflicts */
+  /* Prevent external CSS from hiding form inputs */
   .form-wrapper input,
   .form-wrapper textarea {
     display: block !important;
@@ -132,14 +145,13 @@
     font-size: 15px !important;
     color: #333 !important;
     background: #fff !important;
-    box-shadow: none !important;
     margin-bottom: 15px !important;
+    box-shadow: none !important;
   }
 
   .form-wrapper input::placeholder,
   .form-wrapper textarea::placeholder {
     color: #888 !important;
-    opacity: 1 !important;
   }
 
   .form-wrapper input:focus,
@@ -149,8 +161,8 @@
   }
 
   .form-wrapper textarea {
-    resize: none !important;
-    min-height: 120px !important;
+    resize: none;
+    min-height: 120px;
   }
 
   .form-wrapper button {
@@ -170,12 +182,6 @@
     background: linear-gradient(135deg, #0056b3, #004299);
   }
 
-  #form-message {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 14px;
-  }
-
   .map-wrapper iframe {
     width: 100%;
     height: 400px;
@@ -190,6 +196,7 @@
     }
   }
 </style>
+
 
 
 <script>
