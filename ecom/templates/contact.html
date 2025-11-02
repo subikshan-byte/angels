@@ -3,231 +3,191 @@
 {% block title %}Contact{% endblock title %}
 {% block content %}
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Contact | Angels Glam n Glow</title>
-  <meta name="description" content="Contact Angels Glam n Glow - beauty, fashion, and bridal experts in Chennai. Send us an enquiry or visit our store.">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us</title>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contact-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
+      padding: 50px 10px;
+      gap: 30px;
+      background-color: #f9fafb;
+    }
+
+    .contact-form {
+      flex: 1;
+      min-width: 330px;
+      max-width: 500px;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    .contact-form h2 {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .contact-form .form-group {
+      margin-bottom: 15px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #fff;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    }
+
+    .contact-form textarea {
+      resize: none;
+      height: 120px;
+    }
+
+    .contact-form button {
+      width: 100%;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .contact-form button:hover {
+      background: linear-gradient(135deg, #0056b3, #003e91);
+    }
+
+    .map-container {
+      flex: 1;
+      min-width: 330px;
+      max-width: 600px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 430px;
+      border: none;
+    }
+
+    @media (max-width: 992px) {
+      .contact-section {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .map-container {
+        height: 300px;
+      }
+    }
+  </style>
 </head>
 
-<!-- breadcrumb__start -->
-<div class="breadcrumb">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-12">
-        <div class="breadcrumb__title">
-          <h1>Contact</h1>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li class="color__blue">Contact</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- breadcrumb__end -->
+<body>
 
-<!-- contact info start -->
-<div class="contactarea sp_top_80 sp_bottom_80">
-  <div class="container">
-    <div class="row text-center">
-      <div class="col-xl-4 col-lg-4 col-md-6 col-12">
-        <div class="contactarea__single">
-          <h3>Email Address</h3>
-          <p>angelsfashion@gmail.com</p>
-        </div>
-      </div>
+  <section class="contact-section">
+    <div class="contact-form">
+      <h2>Send us an Enquiry</h2>
+      <form id="enquiry-form" 
+            action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" 
+            method="POST">
 
-      <div class="col-xl-4 col-lg-4 col-md-6 col-12">
-        <div class="contactarea__single">
-          <h3>Phone Number</h3>
-          <p>+91 9884 499174 <br>044-4217 0885</p>
-        </div>
-      </div>
-
-      <div class="col-xl-4 col-lg-4 col-md-6 col-12">
-        <div class="contactarea__single">
-          <h3>Office Address</h3>
-          <p>No. A-3, 2nd Avenue, Anna Nagar East (Metro Station), Chennai - 600102</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- contact info end -->
-
-<!-- enquiry form + map section start -->
-<section class="enquiry-section sp_top_80 sp_bottom_80">
-  <div class="container">
-    <div class="row align-items-start g-4">
-
-     <!-- Enquiry Form -->
-<div class="col-lg-6 col-md-12">
-  <div class="form-wrapper">
-    <h3 class="form-title">Send us an Enquiry</h3>
-    <form id="enquiry-form" 
-          action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" 
-          method="POST">
-
-      <div class="row g-3">
-        <div class="col-md-6">
+        <div class="form-group">
           <input type="text" name="name" placeholder="Your Name" required>
         </div>
-        <div class="col-md-6">
+
+        <div class="form-group">
           <input type="email" name="email" placeholder="Your Email" required>
         </div>
-      </div>
 
-      <div class="row g-3">
-        <div class="col-md-6">
+        <div class="form-group">
           <input type="tel" name="phone" placeholder="Phone Number" required>
         </div>
-        <div class="col-md-6">
+
+        <div class="form-group">
           <input type="text" name="subject" placeholder="Subject">
         </div>
-      </div>
 
-      <textarea name="message" placeholder="Your Message" required></textarea>
-
-      <button type="submit">Submit Enquiry</button>
-      <p id="form-message"></p>
-    </form>
-  </div>
-</div>
-
-
-      <!-- Google Map -->
-      <div class="col-lg-6 col-md-12">
-        <div class="map-wrapper">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7772.462401587011!2d80.2094894377944!3d13.08452859929208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a526421e57ffd87%3A0x40a38b0b1017a66f!2sAngels%20Cosmetics%20and%20Novelties!5e0!3m2!1sen!2sin!4v1759338914102!5m2!1sen!2sin"
-            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+        <div class="form-group">
+          <textarea name="message" placeholder="Your Message" required></textarea>
         </div>
-      </div>
 
+        <button type="submit">Submit Enquiry</button>
+        <p id="form-message"></p>
+      </form>
     </div>
-  </div>
-</section>
-<style>
-  .enquiry-section {
-    background: #f8f9fa;
-    padding: 60px 0;
-  }
 
-  .form-wrapper {
-    background: #ffffff;
-    padding: 35px 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    position: relative;
-    z-index: 10;
-  }
+    <div class="map-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.062414167948!2d79.13579987483662!3d10.806616489340672!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3baab97d01867f85%3A0x34f7b9b09e03b3b7!2sThiruvarur%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1698232380546!5m2!1sen!2sin"
+        allowfullscreen=""
+        loading="lazy">
+      </iframe>
+    </div>
+  </section>
 
-  .form-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 25px;
-    color: #222;
-    text-align: center;
-  }
-
-  /* Prevent external CSS from hiding form inputs */
-  .form-wrapper input,
-  .form-wrapper textarea {
-    display: block !important;
-    width: 100% !important;
-    padding: 12px 15px !important;
-    border: 1px solid #ccc !important;
-    border-radius: 8px !important;
-    font-size: 15px !important;
-    color: #333 !important;
-    background: #fff !important;
-    margin-bottom: 15px !important;
-    box-shadow: none !important;
-  }
-
-  .form-wrapper input::placeholder,
-  .form-wrapper textarea::placeholder {
-    color: #888 !important;
-  }
-
-  .form-wrapper input:focus,
-  .form-wrapper textarea:focus {
-    border-color: #007bff !important;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3) !important;
-  }
-
-  .form-wrapper textarea {
-    resize: none;
-    min-height: 120px;
-  }
-
-  .form-wrapper button {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
-  }
-
-  .form-wrapper button:hover {
-    background: linear-gradient(135deg, #0056b3, #004299);
-  }
-
-  .map-wrapper iframe {
-    width: 100%;
-    height: 400px;
-    border: 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  }
-
-  @media (max-width: 992px) {
-    .form-wrapper {
-      margin-bottom: 30px;
-    }
-  }
-</style>
-
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
+  <script>
     const form = document.getElementById("enquiry-form");
-    const messageBox = document.getElementById("form-message");
+    const msg = document.getElementById("form-message");
 
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      messageBox.textContent = "Submitting...";
-      messageBox.style.color = "#555";
-
-      const formData = new FormData(form);
+      msg.style.color = "#555";
+      msg.textContent = "Sending...";
 
       fetch(form.action, {
         method: "POST",
-        body: formData,
+        body: new FormData(form)
       })
-        .then((response) => response.text())
-        .then(() => {
-          messageBox.textContent = "✅ Thank you! Your enquiry has been submitted.";
-          messageBox.style.color = "green";
-          form.reset();
-        })
-        .catch((error) => {
-          console.error("Error!", error.message);
-          messageBox.textContent = "❌ Something went wrong. Please try again.";
-          messageBox.style.color = "red";
-        });
+      .then(() => {
+        msg.style.color = "green";
+        msg.textContent = "Thank you! Your enquiry has been sent successfully.";
+        form.reset();
+      })
+      .catch(() => {
+        msg.style.color = "red";
+        msg.textContent = "Something went wrong. Please try again later.";
+      });
     });
-  });
-</script>
+  </script>
+
+</body>
+</html>
 
 {% endblock content %}
