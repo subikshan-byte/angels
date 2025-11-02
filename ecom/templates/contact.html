@@ -59,7 +59,6 @@
 <!-- contact info end -->
 
 <!-- enquiry form + map section start -->
-<!-- enquiry form + map section start -->
 <section class="enquiry-section sp_top_80 sp_bottom_80">
   <div class="container">
     <div class="row align-items-start g-4">
@@ -68,19 +67,19 @@
       <div class="col-lg-6 col-md-12">
         <div class="form-wrapper">
           <h3 class="form-title">Send us an Enquiry</h3>
-          <form id="enquiry-form1" action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" method="POST">
-          <div class="form-row1">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-          </div>
-          <div class="form-row1">
-            <input type="tel" name="phone" placeholder="Phone Number" required>
-            <input type="text" name="subject" placeholder="Subject">
-          </div>
-          <textarea name="message" placeholder="Your Message" required></textarea>
-          <button type="submit">Submit Enquiry</button>
-          <p id="form-message"></p>
-        </form>
+          <form id="enquiry-form" action="https://script.google.com/macros/s/AKfycbxFIJ2KsWC3eDdgSkSzG2e1ru21WackAG6CMHmwlFl66EGWM_GcV1WUujakdiEZcMem/exec" method="POST">
+            <div class="form-row">
+              <input type="text" name="name" placeholder="Your Name" required>
+              <input type="email" name="email" placeholder="Your Email" required>
+            </div>
+            <div class="form-row">
+              <input type="tel" name="phone" placeholder="Phone Number" required>
+              <input type="text" name="subject" placeholder="Subject">
+            </div>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Submit Enquiry</button>
+            <p id="form-message"></p>
+          </form>
         </div>
       </div>
 
@@ -123,6 +122,7 @@
   .form-row {
     display: flex;
     gap: 15px;
+    margin-bottom: 15px;
   }
 
   form input,
@@ -133,13 +133,13 @@
     border-radius: 8px;
     font-size: 15px;
     outline: none;
-    color: #333 !important; /* ✅ Force visible text color */
-    background: #fff !important; /* ✅ Make sure it’s visible */
+    color: #333 !important;
+    background: #fff !important;
   }
 
   form input::placeholder,
   form textarea::placeholder {
-    color: #888 !important; /* ✅ Visible placeholder text */
+    color: #888 !important;
     opacity: 1;
   }
 
@@ -164,6 +164,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: 0.3s;
+    width: 100%;
   }
 
   form button:hover {
@@ -225,6 +226,5 @@
     });
   });
 </script>
-
 
 {% endblock content %}
