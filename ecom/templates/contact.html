@@ -59,38 +59,36 @@
       <div class="col-lg-6 col-md-12" style="flex: 1;">
         <div class="contactpage-formbox" style="background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <h3 class="contactpage-formtitle" style="margin-bottom: 20px; text-align: center;">Send us an Enquiry</h3>
-  <form id="contactpage-form"
-      action="https://script.google.com/macros/s/AKfycbxFJfJ2kWcM3eDoq5KsG2elru1WckaA6GCHMmhFLt66EQqM_GcViWUukjakdEIzfKzm/exec"
-      method="POST"
-      style="display:block; width:100%;">
+<form id="contactpage-form"
+  action="https://script.google.com/macros/s/AKfycbxFJfJ2kWcM3eDoq5KsG2elru1WckaA6GCHMmhFLt66EQqM_GcViWUukjakdEIzfKzm/exec"
+  method="POST"
+  style="display:flex; flex-direction:column; gap:15px; width:100%; background:#fff; padding:25px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
 
-  <div class="contactpage-row" style="margin-bottom:15px; display:block;">
-    <input type="text" name="name" placeholder="Your Name" required
-      style="width:100%; padding:12px 14px; border:1px solid #ccc; border-radius:8px;
-             font-size:15px; display:block; background:#fff; color:#000;">
-  </div>
+  <h3 style="text-align:center; font-size:22px; font-weight:600; color:#333;">Send us an Enquiry</h3>
 
-  <div class="contactpage-row" style="margin-bottom:15px; display:block;">
-    <input type="email" name="email" placeholder="Your Email" required
-      style="width:100%; padding:12px 14px; border:1px solid #ccc; border-radius:8px;
-             font-size:15px; display:block; background:#fff; color:#000;">
-  </div>
+  <input type="text" name="name" placeholder="Your Name" required
+    style="padding:12px 14px; border:1px solid #ccc; border-radius:8px; font-size:15px; color:#333; background:#fff;">
 
-  <div class="contactpage-row" style="margin-bottom:20px; display:block;">
-    <textarea name="message" placeholder="Your Message" required
-      style="width:100%; height:120px; padding:12px 14px; border:1px solid #ccc;
-             border-radius:8px; font-size:15px; display:block; background:#fff; color:#000;"></textarea>
-  </div>
+  <input type="email" name="email" placeholder="Your Email" required
+    style="padding:12px 14px; border:1px solid #ccc; border-radius:8px; font-size:15px; color:#333; background:#fff;">
 
-  <div style="text-align:center;">
-    <button type="submit"
-      style="background-color:#ff4b8b; color:#fff; border:none; padding:12px 35px;
-             border-radius:8px; font-size:16px; font-weight:500; cursor:pointer;
-             transition:all 0.3s ease;">
-      Submit Enquiry
-    </button>
-  </div>
+  <input type="tel" name="phone" placeholder="Your Phone Number" required
+    style="padding:12px 14px; border:1px solid #ccc; border-radius:8px; font-size:15px; color:#333; background:#fff;">
+
+  <input type="text" name="subject" placeholder="Subject"
+    style="padding:12px 14px; border:1px solid #ccc; border-radius:8px; font-size:15px; color:#333; background:#fff;">
+
+  <textarea name="message" placeholder="Your Message" required
+    style="padding:12px 14px; border:1px solid #ccc; border-radius:8px; font-size:15px; color:#333; min-height:120px; background:#fff;"></textarea>
+
+  <button type="submit"
+    style="background:#ff4b8b; color:#fff; border:none; border-radius:8px; padding:14px; font-size:16px; font-weight:500; cursor:pointer; transition:0.3s; width:100%; text-align:center;">
+    Submit Enquiry
+  </button>
+
+  <p id="contactpage-msg" style="text-align:center; margin-top:10px; font-size:14px; color:#333;"></p>
 </form>
+
 
 
         </div>
