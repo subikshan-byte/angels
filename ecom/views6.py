@@ -471,7 +471,7 @@ def apply_coupon1(request):
         return JsonResponse({"status": "error", "message": "Product not found."})
 
     try:
-        coupon = Coupon.objects.get(code=coupon_code, is_active=True)
+        coupon = Coupon.objects.get(code=coupon_code, active=True)
     except Coupon.DoesNotExist:
         return JsonResponse({"status": "error", "message": "Invalid coupon."})
 
