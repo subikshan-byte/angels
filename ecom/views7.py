@@ -86,11 +86,12 @@ def cart_checkout(request):
     log='0'
     if not request.user.is_authenticated:
         log='1'
-    
+    if(total_amount<2000){
+        total_amount+=100;}
 
     return render(request, "checkout1.html", {
         "items": items,
-        "total_amount": total_amount+100,
+        "total_amount": total_amount,
         "order_id": razorpay_order["id"],
         "razorpay_key": settings.RAZORPAY_KEY_ID,
         "callback_url": "/payment/success-cart/",
@@ -210,12 +211,12 @@ def apply_coupon(request):
                 "discount": float(discount),
                 "new_total": float(new_total)
             }
-
+            
             # ✅ Return JSON response
             return JsonResponse({
                 "status": "ok",
                 "total": round(new_total, 2),
-                "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{round(discount,2)}."
+                "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{round(discount,2)}.+if total price is more than 2000 .then not applicable +₹100 for delivery charge"
             })
 
         except Exception as e:
