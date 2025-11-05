@@ -477,7 +477,7 @@ def apply_coupon1(request):
 
     original_total = Decimal(product.price) * quantity
     
-    discount = (original_total * coupon.discount_value) / Decimal(100)
+    discount = (original_total * coupon.discount_value/ Decimal(100)) 
     
 
     final_total = max(Decimal("0.00"), original_total - discount)
