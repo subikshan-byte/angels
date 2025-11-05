@@ -476,10 +476,9 @@ def apply_coupon1(request):
         return JsonResponse({"status": "error", "message": "Invalid coupon."})
 
     original_total = Decimal(product.price) * quantity
-    if coupon.discount_type == "percentage":
-        discount = (original_total * coupon.discount_value) / Decimal(100)
-    else:
-        discount = coupon.discount_value
+    
+    discount = (original_total * coupon.discount_value) / Decimal(100)
+    
 
     final_total = max(Decimal("0.00"), original_total - discount)
 
