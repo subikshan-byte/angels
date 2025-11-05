@@ -109,6 +109,7 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       {% for item in items %}
       <tr><td>{{ item.product.p_name }}</td><td style="text-align:right;">₹{{ item.product.price }}</td></tr>
       {% endfor %}
+       <tr><td>Delivery price</td><td style="text-align:right;">+₹100</td></tr>
       <tr><td><strong>Total</strong></td><td style="text-align:right;"><strong id="display-total">₹{{ total_amount }}</strong></td></tr>
     </table>
 
