@@ -188,3 +188,7 @@ def shop(request):
     return render(request,"single-product.html")
 def product(request,p):
     return HttpResponse(p)
+from django.shortcuts import render
+
+def custom_404(request, exception=None):
+    return render(request, "404.html", status=404)
