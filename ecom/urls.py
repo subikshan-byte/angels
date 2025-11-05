@@ -1,6 +1,10 @@
 from django.urls import path,include
 from . import views
 from . import views3,views2,views4,views5,views6,views7,views8,forgetpass,check
+from django.conf.urls import handler404
+
+handler404 = "angels.views.custom_404"
+
 urlpatterns = [
     path('',views.home,name='home'),
     path('<str:s>/search', views3.search, name='search'),
