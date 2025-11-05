@@ -389,7 +389,7 @@ def create_razorpay_order_cart(request):
         except Coupon.DoesNotExist:
             pass
 
-    amount_paise = int(total_amount * 100)
+    amount_paise = int((total_amount+100) * 100)
 
     try:
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
