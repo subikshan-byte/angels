@@ -1,61 +1,68 @@
-{% extends "base.html" %}
-{% block title %}404 Page Not Found{% endblock %}
-{% block content %}
-<style>
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #ffffff;
-  color: #333;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-}
-.error-container {
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  max-width: 600px;
-}
-.error-code {
-  font-size: 120px;
-  font-weight: 700;
-  color: #4a6de5;
-  margin-bottom: 10px;
-}
-.error-text {
-  font-size: 24px;
-  font-weight: 600;
-  color: #555;
-}
-.error-subtext {
-  font-size: 16px;
-  margin-top: 10px;
-  color: #777;
-}
-.home-button {
-  margin-top: 25px;
-  background-color: #4a6de5;
-  color: white;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: 0.3s;
-}
-.home-button:hover {
-  background-color: #5e82f2;
-  box-shadow: 0 4px 10px rgba(74,109,229,0.3);
-}
-</style>
-
-<div class="error-container">
-  <div class="error-code">404</div>
-  <div class="error-text">Oops! Page Not Found</div>
-  <div class="error-subtext">The page you’re looking for doesn’t exist or may have been moved.</div>
-  <a href="/" class="home-button">Go Back Home</a>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Page Not Found</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #333;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .error-container {
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 600px;
+      background: #fff;
+    }
+    .error-code {
+      font-size: 120px;
+      font-weight: 700;
+      color: #4a6de5;
+      margin-bottom: 10px;
+    }
+    .error-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: #555;
+    }
+    .error-subtext {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #777;
+    }
+    .home-button {
+      margin-top: 25px;
+      background-color: #4a6de5;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .home-button:hover {
+      background-color: #5e82f2;
+      box-shadow: 0 4px 10px rgba(74,109,229,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <div class="error-code">404</div>
+    <div class="error-text">Oops! Page Not Found</div>
+    <div class="error-subtext">The page you’re looking for doesn’t exist or may have been moved.</div>
+    <a href="/" class="home-button">Go Back Home</a>
+  </div>
+</body>
+</html>
