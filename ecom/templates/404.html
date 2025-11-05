@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 Page Not Found</title>
+<style>
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Fullscreen container */
+body {
+  background: radial-gradient(circle at top, #0a0a0a 0%, #000 100%);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Floating shapes for animation */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: float 6s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 120px; height: 120px;
+  background: #00e0ff;
+  top: 15%; left: 10%;
+  animation-delay: 0s;
+}
+
+.circle:nth-child(2) {
+  width: 80px; height: 80px;
+  background: #ff0099;
+  bottom: 20%; right: 15%;
+  animation-delay: 1s;
+}
+
+.circle:nth-child(3) {
+  width: 60px; height: 60px;
+  background: #fff;
+  top: 70%; left: 25%;
+  animation-delay: 2s;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); opacity: 0.2; }
+  50% { transform: translateY(-20px); opacity: 0.5; }
+}
+
+/* 404 text */
+.container {
+  text-align: center;
+  z-index: 10;
+}
+
+.container h1 {
+  font-size: 8rem;
+  font-weight: 700;
+  letter-spacing: 10px;
+  background: linear-gradient(90deg, #fff, #00e0ff, #fff);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+/* Subtitle */
+.container p {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin: 15px 0 25px;
+  animation: fadeIn 2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Home Button */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  color: #fff;
+  border: 2px solid #00e0ff;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  background: #00e0ff;
+  color: #000;
+  box-shadow: 0 0 20px #00e0ff;
+  transform: scale(1.05);
+}
+
+/* Glow pulse around 404 */
+.glow {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,224,255,0.4) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(40px);
+  animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+}
+</style>
+</head>
+<body>
+  <!-- Floating Animated Shapes -->
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+
+  <!-- Glow Effect -->
+  <div class="glow"></div>
+
+  <!-- Main 404 Content -->
+  <div class="container">
+    <h1>404</h1>
+    <p>Oops! The page you’re looking for doesn’t exist.</p>
+    <a href="/" class="btn">Back to Home</a>
+  </div>
+
+<script>
+  // Optional floating effect for subtle movement
+  document.addEventListener("mousemove", (e) => {
+    const glow = document.querySelector(".glow");
+    const x = e.clientX / window.innerWidth * 100;
+    const y = e.clientY / window.innerHeight * 100;
+    glow.style.left = `${x}%`;
+    glow.style.top = `${y}%`;
+  });
+</script>
+</body>
+</html>
