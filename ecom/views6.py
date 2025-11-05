@@ -138,7 +138,7 @@ def buy_now(request, slug):
             "product": product,
             "quantity": quantity,
             "discount": discount,
-            "total_amount": float(total_amount+100),
+            "total_amount": float(total_amount),
             "order_id": razorpay_order["id"],
             "razorpay_key": settings.RAZORPAY_KEY_ID,
             "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}",
@@ -484,10 +484,10 @@ def apply_coupon1(request):
 
     return JsonResponse({
         "status": "ok",
-        "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{discount:.2f}.",
+        "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{discount:.2f}.+₹100 delivery charge",
         "discount": float(discount),
         "original_total": float(original_total),
-        "total": float(final_total)
+        "total": float(final_total+100)
     })
 
 
