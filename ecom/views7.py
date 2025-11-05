@@ -86,8 +86,8 @@ def cart_checkout(request):
     log='0'
     if not request.user.is_authenticated:
         log='1'
-    if(total_amount<2000){
-        total_amount+=100;}
+    if(total_amount<2000):
+        total_amount+=100;
 
     return render(request, "checkout1.html", {
         "items": items,
