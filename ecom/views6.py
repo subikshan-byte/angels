@@ -442,40 +442,54 @@ from django.http import JsonResponse
 from .models import Coupon, Product
 import json
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+from decimal import Decimal
+from .models import Coupon, Product
+
+@csrf_exempt  # temporarily bypass CSRF for testing
 def apply_coupon1(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        coupon_code = data.get("coupon")
-        product_slug = data.get("product_slug")
-        quantity = int(data.get("quantity", 1))
+    print("=== COUPON API HIT ===", request.method)
 
-        try:
-            product = Product.objects.get(slug=product_slug)
-        except Product.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "Product not found."})
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Invalid method"})
 
-        try:
-            coupon = Coupon.objects.get(code=coupon_code, is_active=True)
-        except Coupon.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "Invalid coupon."})
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+        print("Payload:", data)
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": f"Bad JSON: {str(e)}"})
 
-        original_total = product.price * quantity
+    coupon_code = data.get("coupon")
+    product_slug = data.get("product_slug")
+    quantity = int(data.get("quantity", 1))
 
-        if coupon.discount_type == "percentage":
-            discount = (original_total * coupon.discount_value) / Decimal(100)
-        else:
-            discount = coupon.discount_value
+    try:
+        product = Product.objects.get(slug=product_slug)
+    except Product.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Product not found."})
 
-        final_total = max(Decimal("0.00"), original_total - discount)
+    try:
+        coupon = Coupon.objects.get(code=coupon_code, is_active=True)
+    except Coupon.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Invalid coupon."})
 
-        return JsonResponse({
-            "status": "ok",
-            "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{discount:.2f}.",
-            "discount": float(discount),
-            "original_total": float(original_total),
-            "total": float(final_total),  # 🟢 Important: return final total
-        })
+    original_total = Decimal(product.price) * quantity
+    if coupon.discount_type == "percentage":
+        discount = (original_total * coupon.discount_value) / Decimal(100)
+    else:
+        discount = coupon.discount_value
 
-    return JsonResponse({"status": "error", "message": "Invalid request method."})
+    final_total = max(Decimal("0.00"), original_total - discount)
+
+    return JsonResponse({
+        "status": "ok",
+        "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{discount:.2f}.",
+        "discount": float(discount),
+        "original_total": float(original_total),
+        "total": float(final_total)
+    })
+
 
 
