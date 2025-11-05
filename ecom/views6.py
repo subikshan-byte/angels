@@ -133,6 +133,8 @@ def buy_now(request, slug):
         log='0'
         if not request.user.is_authenticated:
            log='1'
+        if(total_amount<2000):
+            total_amount+=100;
         
         return render(request, "checkout.html", {
             "product": product,
