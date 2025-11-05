@@ -90,7 +90,7 @@ def cart_checkout(request):
 
     return render(request, "checkout1.html", {
         "items": items,
-        "total_amount": total_amount,
+        "total_amount": total_amount+100,
         "order_id": razorpay_order["id"],
         "razorpay_key": settings.RAZORPAY_KEY_ID,
         "callback_url": "/payment/success-cart/",
