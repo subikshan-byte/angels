@@ -275,9 +275,9 @@ verifyOtpBtn.addEventListener('click', () => {
   .catch(()=> { otpMessage.textContent = 'Server error.'; otpMessage.className = 'error-msg'; });
 });
 // === APPLY COUPON (AJAX) ===
+
 applyCouponBtn.addEventListener('click', () => {
   const code = couponInput.value.trim();
-
   if (!code) {
     couponMsg.textContent = "Please enter a coupon code.";
     couponMsg.className = "error-msg";
@@ -293,17 +293,19 @@ applyCouponBtn.addEventListener('click', () => {
       'X-CSRFToken': csrftoken, 
       'Content-Type': 'application/json' 
     },
-    body: JSON.stringify({ coupon: code })
+    body: JSON.stringify({ 
+      coupon: code,
+      product_slug: productSlug,
+      quantity: parseInt(productQty || '1', 10)
+    })
   })
   .then(res => res.json())
   .then(data => {
     if (data.status === "ok") {
-      // ✅ Update total and show backend’s exact message
-      displayTotal.textContent = "₹" + data.total;
-      couponMsg.textContent = data.message; // e.g. "Coupon '123' applied successfully! You saved ₹45.20."
+      displayTotal.textContent = "₹" + data.total.toFixed(2);
+      couponMsg.textContent = data.message;
       couponMsg.className = "success-msg";
-    } 
-    else {
+    } else {
       couponMsg.textContent = data.message || "Invalid or expired coupon.";
       couponMsg.className = "error-msg";
     }
