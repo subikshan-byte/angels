@@ -303,7 +303,7 @@ def create_razorpay_order(request):
                     pass  # ignore invalid coupons
 
             # --- STEP 3: Convert amount to paise (Razorpay expects integer) ---
-            amount_paise = int(total * 100)
+            amount_paise = int((total +100)* 100)
 
             # --- STEP 4: Initialize Razorpay client ---
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
