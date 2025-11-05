@@ -138,7 +138,7 @@ def buy_now(request, slug):
             "product": product,
             "quantity": quantity,
             "discount": discount,
-            "total_amount": float(total_amount),
+            "total_amount": float(total_amount+100),
             "order_id": razorpay_order["id"],
             "razorpay_key": settings.RAZORPAY_KEY_ID,
             "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}",
