@@ -481,13 +481,14 @@ def apply_coupon1(request):
     
 
     final_total = max(Decimal("0.00"), original_total - discount)
-
+    if(final_total<2000):
+        final_total+=100
     return JsonResponse({
         "status": "ok",
         "message": f"Coupon '{coupon.code}' applied successfully! You saved ₹{discount:.2f}.+₹100 delivery charge",
         "discount": float(discount),
         "original_total": float(original_total),
-        "total": float(final_total+100)
+        "total": float(final_total)
     })
 
 
