@@ -204,12 +204,13 @@ def apply_coupon(request):
                 discount = getattr(coupon, "discount_amount", 0)
 
             new_total = max(total - discount, 0)
-
+            if(total<2000):
+                new_total+=100
             # ✅ Store in session for later use (like order or Razorpay)
             request.session["applied_coupon"] = {
                 "code": coupon.code,
                 "discount": float(discount),
-                "new_total": float(new_total+100)
+                "new_total": float(new_total)
             }
             
             # ✅ Return JSON response
