@@ -209,7 +209,7 @@ def apply_coupon(request):
             request.session["applied_coupon"] = {
                 "code": coupon.code,
                 "discount": float(discount),
-                "new_total": float(new_total)
+                "new_total": float(new_total+100)
             }
             
             # ✅ Return JSON response
