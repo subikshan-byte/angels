@@ -203,7 +203,7 @@ class OrderItem(models.Model):
         return f"{self.quantity} x {self.product.p_name} (Order #{self.order.id})"
 
     def subtotal(self):
-        return (self.quantity or 0) * (self.price or 0)
+        return ((self.quantity or 0) * (self.price or 0)+100)
 from django.utils import timezone
 import random
 
