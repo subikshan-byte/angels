@@ -6,19 +6,18 @@ USER = "root"
 PASSWORD = "Subi14082006@"
 DATABASE = "angles"
 
-# --- Folder to save backups (change path if needed) ---
-backup_dir = "/home/ubuntu/angles"
-os.makedirs(backup_dir, exist_ok=True)
-
-# --- File name with timestamp ---
+# --- Backup file name with timestamp ---
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-backup_file = f"{backup_dir}/{DATABASE}_backup_{timestamp}.sql"
+backup_file = f"/opt/myproject/myproject/angels{DATABASE}_backup_{timestamp}.sql"
 
-# --- Backup command ---
+# --- Create folder if not exists ---
+os.makedirs(os.path.dirname(backup_file), exist_ok=True)
+
+# --- Command to run mysqldump ---
 command = f"mysqldump -u {USER} -p'{PASSWORD}' {DATABASE} > {backup_file}"
 
-# --- Run command ---
+# --- Execute backup ---
 os.system(command)
 
-print(f"✅ Backup created and saved in: {backup_file}")
+print(f"✅ Backup created: {backup_file}")
 
