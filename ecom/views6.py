@@ -450,7 +450,7 @@ import json
 from decimal import Decimal
 from .models import Coupon, Product
 
-@csrf_exempt  # temporarily bypass CSRF for testing
+@login_required# temporarily bypass CSRF for testing
 def apply_coupon1(request):
     print("=== COUPON API HIT ===", request.method)
 
