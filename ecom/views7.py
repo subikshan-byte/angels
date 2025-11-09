@@ -148,7 +148,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Cart, Coupon
 from datetime import date
 import json
-@csrf_exempt
+
 @login_required
 def apply_coupon(request):
     print("Received coupon apply request:", request.body)
