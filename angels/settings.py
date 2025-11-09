@@ -170,7 +170,9 @@ SOCIALACCOUNT_PROVIDERS = {
 SILENCED_SYSTEM_CHECKS = ["models.W036"]
 RAZORPAY_KEY_ID = "rzp_test_ROETDnupbhbT32"
 RAZORPAY_KEY_SECRET = "VRTonu3vu3YBZ44YhSV5c53Q"
-
+SESSION_COOKIE_AGE = 36000  # 10 hours
+CSRF_COOKIE_AGE = 36000
+CSRF_USE_SESSIONS = False  # ensure cookie persists
 
 CSRF_TRUSTED_ORIGINS = [
     "https://angels-glamnglow.in",
