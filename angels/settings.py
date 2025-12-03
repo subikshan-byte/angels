@@ -176,17 +176,16 @@ CSRF_USE_SESSIONS = False  # ensure cookie persists
 
 CSRF_TRUSTED_ORIGINS = [
     "https://angels-glamnglow.in",
-    'http://190.92.175.39:8000',
-      'https://www.angels-glamnglow.in',
+    "https://www.angels-glamnglow.in",
 ]
-DEFAULT_DOMAIN="angels-glamnglow"
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = False  #
+DEFAULT_DOMAIN = "www.angels-glamnglow.in"
+
+
+#CSRF_COOKIE_HTTPONLY = False  
 # CSRF + Session Cookie settings
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = False  
+#CSRF_COOKIE_HTTPONLY = False  
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 
@@ -196,9 +195,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Redirect HTTP → HTTPS
 SECURE_SSL_REDIRECT = True
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
