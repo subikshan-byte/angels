@@ -181,13 +181,7 @@ def payment_success(request):
         price=product.price
     )
 
-    # generate OTP for verification after payment (optional - you already had this behaviour)
-    otp_code = str(random.randint(100000, 999999))
-    otp_obj, _ = OrderOTP.objects.update_or_create(
-        user=request.user,
-        order=order,
-        defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False},
-    )
+ 
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
     return redirect("home")
 
