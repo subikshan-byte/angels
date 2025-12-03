@@ -400,6 +400,7 @@ chooseOnline.addEventListener('click', () => {
             "&product_slug=" + encodeURIComponent(productSlug) +
             "&quantity=" + encodeURIComponent(productQty);
     },
+   "callback_url": "{% url 'payment_success' %}",
 
     "modal": {
         "ondismiss": function() {
