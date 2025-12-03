@@ -197,7 +197,7 @@ def payment_success(request):
     )
 
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
-    return redirect("verify_order_otp")
+    return redirect("home")
 
 
 # -------------------- SEND CHECKOUT OTP (AJAX) --------------------
