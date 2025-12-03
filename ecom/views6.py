@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt  # only used on views that intentionally need it
 from django.core.mail import send_mail
 from django.utils import timezone
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest,HttpResponse
 from .models import Product, Order, OrderItem, Coupon, OrderOTP, UserProfile
 from django.shortcuts import redirect
 from .models import UserProfile
@@ -160,7 +160,7 @@ def payment_success(request):
     Razorpay sends back the payment_id (via form submission we do in JS).
     This view creates the Order in DB (so we don't create it earlier).
     """
-    product = get_object_or_404(Product, slug=product_slug)
+    """product = get_object_or_404(Product, slug=product_slug)
 
     quantity = int(request.GET.get("quantity", 1))
     payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
@@ -184,7 +184,8 @@ def payment_success(request):
 
  
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
-    return redirect("home")
+    return redirect("home")"""
+    return httpresonse(product_slug)
 
 
 # -------------------- SEND CHECKOUT OTP (AJAX) --------------------
