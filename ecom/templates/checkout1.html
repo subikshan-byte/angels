@@ -349,6 +349,7 @@ chooseOnline.addEventListener('click',()=>{
         amount:data.amount,
         currency:'INR',
         order_id:data.order_id,
+        "callback_url": "{% url 'payment_success' %}",
         handler:function(response){
           window.location.href="{% url 'payment_success1' %}?razorpay_payment_id="+response.razorpay_payment_id;
         },
