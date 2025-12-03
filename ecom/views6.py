@@ -184,8 +184,9 @@ def payment_success(request):
 
  
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
-    return redirect("home")"""
-    return httpsresponse(product_slug)
+    """
+    return redirect("home")
+   
 
 
 
