@@ -384,13 +384,16 @@ chooseOnline.addEventListener('click', () => {
   .then(data => {
     chooseOnline.disabled = false;
     if (data.status === 'created') {
- const options = {
+const options = {
     "key": data.key,
     "amount": data.amount,
     "currency": "INR",
     "order_id": data.order_id,
     "name": "Angels Fashion",
     "description": "Order Payment",
+
+    // 🔥 This ensures payment_success is ALWAYS called
+    "callback_url": "{% url 'payment_success' %}",
 
     "handler": function (response){
         window.location.href =
@@ -400,7 +403,6 @@ chooseOnline.addEventListener('click', () => {
             "&product_slug=" + encodeURIComponent(productSlug) +
             "&quantity=" + encodeURIComponent(productQty);
     },
-   "callback_url": "{% url 'payment_success' %}",
 
     "modal": {
         "ondismiss": function() {
@@ -408,6 +410,7 @@ chooseOnline.addEventListener('click', () => {
         }
     }
 };
+
 
 const rzp = new Razorpay(options);
 rzp.open();
