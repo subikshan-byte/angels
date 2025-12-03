@@ -389,7 +389,12 @@ const options = {
     "amount": data.amount,
     "currency": "INR",
     "order_id": data.order_id,
-    "name": "Angels Fashion",
+    "name": "{{ request.user.first_name|default:'Customer' }}",
+  "prefill": {
+    "name": "{{ request.user.first_name|default:'Customer' }}",
+    "email": "{{ request.user.email }}",
+},
+
     "description": "Order Payment",
 
     // 🔥 This ensures payment_success is ALWAYS called
