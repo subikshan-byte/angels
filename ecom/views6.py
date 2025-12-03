@@ -188,14 +188,6 @@ def payment_success(request):
         order=order,
         defaults={"otp": otp_code, "created_at": timezone.now(), "verified": False},
     )
-
-    send_mail(
-        subject="Your Order Verification OTP",
-        message=f"Dear {request.user.first_name}, your OTP for order #{order.id} is {otp_code}. It expires in 5 minutes.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[request.user.email],
-    )
-
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
     return redirect("home")
 
