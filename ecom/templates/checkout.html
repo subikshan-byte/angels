@@ -384,31 +384,33 @@ chooseOnline.addEventListener('click', () => {
   .then(data => {
     chooseOnline.disabled = false;
     if (data.status === 'created') {
-      const options = {
-        "key": data.key,
-        "amount": data.amount,
-        "currency": "INR",
-        "order_id": data.order_id,
-        "handler": function (response){
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = "{% url 'payment_success' %}?product_slug=" + encodeURIComponent(productSlug) + "&quantity=" + encodeURIComponent(productQty);
-          const csrfInput = document.createElement('input');
-          csrfInput.type = 'hidden'; 
-          csrfInput.name = 'csrfmiddlewaretoken'; 
-          csrfInput.value = csrftoken;
-          form.appendChild(csrfInput);
-          const rpInput = document.createElement('input');
-          rpInput.type = 'hidden'; 
-          rpInput.name = 'razorpay_payment_id'; 
-          rpInput.value = response.razorpay_payment_id;
-          form.appendChild(rpInput);
-          document.body.appendChild(form);
-          form.submit();
+ const options = {
+    "key": data.key,
+    "amount": data.amount,
+    "currency": "INR",
+    "order_id": data.order_id,
+    "name": "Angels Fashion",
+    "description": "Order Payment",
+
+    "handler": function (response){
+        window.location.href =
+            "{% url 'payment_success' %}?payment_id=" + response.razorpay_payment_id +
+            "&order_id=" + response.razorpay_order_id +
+            "&signature=" + response.razorpay_signature +
+            "&product_slug=" + encodeURIComponent(productSlug) +
+            "&quantity=" + encodeURIComponent(productQty);
+    },
+
+    "modal": {
+        "ondismiss": function() {
+            alert("Payment cancelled");
         }
-      };
-      const rzp = new Razorpay(options);
-      rzp.open();
+    }
+};
+
+const rzp = new Razorpay(options);
+rzp.open();
+
     } else {
       document.getElementById('payment-msg').textContent = data.message || 'Failed to create payment.';
     }
