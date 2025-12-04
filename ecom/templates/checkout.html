@@ -434,8 +434,12 @@ chooseOnline.addEventListener('click', () => {
         }
       };
 
-      const rzp = new Razorpay(options);
-      rzp.open();
+    payOnlineLaunch.addEventListener("click", function () {
+    console.log("Opening Razorpay...");
+    const rzp = new Razorpay(options);
+    rzp.open();
+});
+
     } 
     else {
       document.getElementById('payment-msg').textContent = data.message || 'Failed to create payment.';
