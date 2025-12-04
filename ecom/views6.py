@@ -348,7 +348,7 @@ def place_cod_order(request):
     Expects JSON: { product_slug, quantity, coupon, address }
     Creates Order with payment_method='cod' and returns redirect URL.
     """
-    if request.method != "GET":
+    if request.method != "POST":
         return JsonResponse({"status": "error", "message": "POST required"}, status=400)
 
     try:
