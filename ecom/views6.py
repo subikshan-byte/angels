@@ -143,7 +143,7 @@ def buy_now(request, slug):
             "total_amount": float(total_amount),
             "order_id": razorpay_order["id"],
             "razorpay_key": settings.RAZORPAY_KEY_ID,
-            "callback_url": f"/payment/success/?product_slug={product.slug}&quantity={quantity}",
+            "callback_url": f"/payment/success-cart/?product_slug={product.slug}&quantity={quantity}",
             "profile":profile,
             "log":log,
             
