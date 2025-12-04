@@ -430,7 +430,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import Cart, Order, OrderItem
 
-
+@csrf_exempt
 @login_required
 def payment_success_cart(request):
     payment_id = request.GET.get("razorpay_payment_id")
