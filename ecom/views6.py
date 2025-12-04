@@ -160,7 +160,17 @@ def payment_success(request):
     Razorpay sends back the payment_id (via form submission we do in JS).
     This view creates the Order in DB (so we don't create it earlier).
     """
-    """product = get_object_or_404(Product, slug=product_slug)
+    product_slug = request.GET.get("product_slug")
+    quantity = int(request.GET.get("quantity", 1))
+
+    # Extract Razorpay payment id
+    payment_id = request.POST.get("razorpay_payment_id")
+
+    if not product_slug:
+        return HttpResponse("product_slug missing", status=400)
+
+    if not payment_id:
+        return HttpResponse("Payment ID missing", status=400)
 
     quantity = int(request.GET.get("quantity", 1))
     payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
@@ -184,8 +194,7 @@ def payment_success(request):
 
  
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
-    """
-    return redirect("home")
+    return redirect(home)
    
 
 
