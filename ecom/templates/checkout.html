@@ -399,29 +399,32 @@ const options = {
 
     // 🔥 This ensures payment_success is ALWAYS called
   "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
-  fetch("{% url 'payment_success' %}", {
+
+fetch("/payment/success-cart/", {
     method: 'POST',
     headers: { 
-      'X-CSRFToken': csrftoken, 
-      'Content-Type': 'application/json' 
+        'X-CSRFToken': csrftoken,
+        'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      product_slug: productSlug,
-      quantity: parseInt(productQty || '1', 10),
-      coupon: couponInput.value.trim(),
-      address: "{{ profile.address|escapejs }}"
+        payment_id: response.razorpay_payment_id,
+        order_id: response.razorpay_order_id,
+        signature: response.razorpay_signature,
+        product_slug: productSlug,
+        quantity: parseInt(productQty || '1', 10),
+        coupon: couponInput.value.trim(),
+        address: "{{ profile.address|escapejs }}"
     })
-  })
+})
+.then(r => r.json())
+.then(data => {
+    if (data.status === "ok") {
+        window.location.href = data.redirect;
+    } else {
+        alert("Order creation failed: " + data.message);
+    }
+});
 
-
-    "handler": function (response) {
-    window.location.href =
-        "/payment/success-cart/?payment_id=" + response.razorpay_payment_id +
-        "&order_id=" + response.razorpay_order_id +
-        "&signature=" + response.razorpay_signature +
-        "&product_slug=" + encodeURIComponent(productSlug) +
-        "&quantity=" + encodeURIComponent(productQty);
-},
 
 
     "modal": {
