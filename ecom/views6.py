@@ -154,8 +154,8 @@ def buy_now(request, slug):
 
 
 # -------------------- PAYMENT SUCCESS (Razorpay posts back here) --------------------
-@csrf_exempt
 @login_required
+@csrf_exempt
 def payment_success(request):
     """
     Razorpay handler POST → JSON payload from your JS
