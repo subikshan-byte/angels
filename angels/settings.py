@@ -177,6 +177,7 @@ CSRF_USE_SESSIONS = False  # ensure cookie persists
 CSRF_TRUSTED_ORIGINS = [
     "https://angels-glamnglow.in",
     "https://www.angels-glamnglow.in",
+    "https://api.razorpay.com",
 ]
 DEFAULT_DOMAIN = "www.angels-glamnglow.in"
 
