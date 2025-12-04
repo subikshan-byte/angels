@@ -139,6 +139,7 @@ def buy_now(request, slug):
         return render(request, "checkout.html", {
             "product": product,
             "quantity": quantity,
+            "product_slug": product.slug,
             "discount": discount,
             "total_amount": float(total_amount),
             "order_id": razorpay_order["id"],
@@ -160,20 +161,17 @@ def payment_success(request):
     Razorpay sends back the payment_id (via form submission we do in JS).
     This view creates the Order in DB (so we don't create it earlier).
     """
-    product_slug = request.GET.get("product_slug")
-    quantity = int(request.GET.get("quantity", 1))
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "POST required"}, status=400)
 
-    # Extract Razorpay payment id
-    payment_id = request.POST.get("razorpay_payment_id")
-
-    if not product_slug:
-        return HttpResponse("product_slug missing", status=400)
-
-    if not payment_id:
-        return HttpResponse("Payment ID missing", status=400)
-
-    quantity = int(request.GET.get("quantity", 1))
-    payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+    product_slug = data.get("product_slug")
+    quantity = int(data.get("quantity", 1))
+    coupon_code = (data.get("coupon") or "").strip().upper()
+    address = (data.get("address") or "").strip()
     product = get_object_or_404(Product, slug=product_slug)
 
     # Create Order (payment confirmed by Razorpay)
