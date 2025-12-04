@@ -401,14 +401,15 @@ const options = {
   "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
 
 
-    "handler": function (response){
-        window.location.href =
-            "{% url 'payment_success' %}?payment_id=" + response.razorpay_payment_id +
-            "&order_id=" + response.razorpay_order_id +
-            "&signature=" + response.razorpay_signature +
-            "&product_slug=" + encodeURIComponent(productSlug) +
-            "&quantity=" + encodeURIComponent(productQty);
-    },
+    "handler": function (response) {
+    window.location.href =
+        "/payment/success-cart/?payment_id=" + response.razorpay_payment_id +
+        "&order_id=" + response.razorpay_order_id +
+        "&signature=" + response.razorpay_signature +
+        "&product_slug=" + encodeURIComponent(productSlug) +
+        "&quantity=" + encodeURIComponent(productQty);
+},
+
 
     "modal": {
         "ondismiss": function() {
