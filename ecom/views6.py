@@ -16,7 +16,7 @@ from .models import UserProfile
 from django.contrib import messages
 from django.shortcuts import redirect
 from ecom.models import UserProfile
-
+product_slug=""
 import logging
 logger = logging.getLogger(__name__)
 
@@ -135,7 +135,7 @@ def buy_now(request, slug):
            log='1'
         if(total_amount<2000):
             total_amount+=100;
-        
+        product_slug=product.slug
         return render(request, "checkout.html", {
             "product": product,
             "quantity": quantity,
@@ -161,23 +161,12 @@ def payment_success(request):
     Razorpay sends back payment details via POST (fetch in JS).
     This view safely creates the order.
     """
-    if request.method != "POST":
-        return JsonResponse({"status": "error", "message": "POST required"}, status=400)
-
-    # Parse JSON
-    try:
-        data = json.loads(request.body.decode("utf-8"))
-    except Exception:
-        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
-
     # Extract fields
-    product_slug = data.get("product_slug")
+    
     quantity = int(data.get("quantity", 1))
     payment_id = data.get("payment_id")        # ✔ FIXED
     order_id = data.get("order_id")
-    signature = data.get("signature")
-    coupon_code = (data.get("coupon") or "").strip().upper()
-    address = (data.get("address") or "").strip()
+
 
     # Validate product
     product = get_object_or_404(Product, slug=product_slug)
