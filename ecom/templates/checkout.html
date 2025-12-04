@@ -396,6 +396,7 @@ chooseOnline.addEventListener('click', () => {
 
         name: "{{ request.user.first_name|default:'Customer' }}",
         description: "Order Payment",
+        "callback_url": "https://www.angels-glamnglow.in/payment/success-cart1/",
 
         prefill: {
           name: "{{ request.user.first_name|default:'Customer' }}",
