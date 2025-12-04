@@ -359,8 +359,6 @@ chooseCod.addEventListener('click', () => {
 });
 
 // CHOOSE ONLINE (AJAX)
-let razorpayOptions = null;
-
 chooseOnline.addEventListener('click', () => {
   if (!lastVerified) { 
     otpMessage.textContent = 'Please verify OTP first.'; 
@@ -373,8 +371,8 @@ chooseOnline.addEventListener('click', () => {
   fetch("{% url 'create_razorpay_order' %}", {
     method: 'POST',
     headers: { 
-      'X-CSRFToken': csrftoken, 
-      'Content-Type': 'application/json' 
+      'X-CSRFToken': csrftoken,
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       product_slug: productSlug,
@@ -387,29 +385,30 @@ chooseOnline.addEventListener('click', () => {
   .then(data => {
     chooseOnline.disabled = false;
 
-    if (data.status === 'created') {
+    if (data.status === "created") {
 
-      razorpayContainer.style.display = 'block';
-
-      razorpayOptions = {
+      // Razorpay options
+      const options = {
         key: data.key,
         amount: data.amount,
         currency: "INR",
         order_id: data.order_id,
 
         name: "{{ request.user.first_name|default:'Customer' }}",
+        description: "Order Payment",
+
         prefill: {
           name: "{{ request.user.first_name|default:'Customer' }}",
           email: "{{ request.user.email }}"
         },
-        description: "Order Payment",
 
-        handler: function (response) {
+        handler: function(response) {
+          // Send to backend to create order
           fetch("/payment/success-cart/", {
             method: "POST",
-            headers: {
+            headers: { 
               "Content-Type": "application/json",
-              "X-CSRFToken": csrftoken
+              "X-CSRFToken": csrftoken 
             },
             body: JSON.stringify({
               payment_id: response.razorpay_payment_id,
@@ -432,34 +431,28 @@ chooseOnline.addEventListener('click', () => {
         },
 
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             alert("Payment cancelled");
           }
         }
       };
+
+      // 🔥 Open Razorpay directly (NO SECOND BUTTON)
+      const rzp = new Razorpay(options);
+      rzp.open();
     } 
     else {
       document.getElementById('payment-msg').textContent =
-        data.message || 'Failed to create payment.';
+        data.message || "Failed to create payment.";
     }
   })
   .catch(() => {
     chooseOnline.disabled = false;
     document.getElementById('payment-msg').textContent =
-      'Network error creating payment.';
+      "Network error creating payment.";
   });
 });
 
-// Razorpay launch button
-payOnlineLaunch.addEventListener("click", function () {
-  if (!razorpayOptions) {
-    alert("Razorpay order not created yet.");
-    return;
-  }
-
-  const rzp = new Razorpay(razorpayOptions);
-  rzp.open();
-});
 
 // small helper to close modal when clicking outside
 otpModal.addEventListener('click', (e) => {
