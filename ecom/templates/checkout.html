@@ -389,7 +389,7 @@ chooseOnline.addEventListener('click', () => {
 
       // Razorpay options
       
-        const options = {
+  const options = {
   key: data.key,
   amount: data.amount,
   currency: "INR",
@@ -430,15 +430,14 @@ chooseOnline.addEventListener('click', () => {
     });
   },
 
-  redirect: false,    // VERY IMPORTANT
+  redirect: false,   // PREVENTS RAZORPAY REDIRECT
 
-
-        modal: {
-          ondismiss: function () {
-            alert("Payment cancelled");
-          }
-        
-      };
+  modal: {
+    ondismiss: function () {
+      alert("Payment cancelled");
+    }
+  }
+};
 
       // 🔥 Open Razorpay directly (NO SECOND BUTTON)
       const rzp = new Razorpay(options);
