@@ -392,7 +392,11 @@ chooseOnline.addEventListener('click', () => {
         "handler": function (response){
           const form = document.createElement('form');
           form.method = 'POST';
-          form.action = "{% url 'payment_success' %}?product_slug=" + encodeURIComponent(productSlug) + "&quantity=" + encodeURIComponent(productQty);
+          form.action = "{% url 'success-cart' %}?product_slug=" 
+              + encodeURIComponent(productSlug)
+              + "&quantity=" 
+              + encodeURIComponent(productQty);
+
           const csrfInput = document.createElement('input');
           csrfInput.type = 'hidden'; 
           csrfInput.name = 'csrfmiddlewaretoken'; 
