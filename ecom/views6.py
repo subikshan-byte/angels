@@ -158,23 +158,31 @@ def buy_now(request, slug):
 @login_required
 def payment_success(request):
     """
-    Razorpay sends back the payment_id (via form submission we do in JS).
-    This view creates the Order in DB (so we don't create it earlier).
+    Razorpay sends back payment details via POST (fetch in JS).
+    This view safely creates the order.
     """
     if request.method != "POST":
         return JsonResponse({"status": "error", "message": "POST required"}, status=400)
 
+    # Parse JSON
     try:
         data = json.loads(request.body.decode("utf-8"))
     except Exception:
         return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+
+    # Extract fields
     product_slug = data.get("product_slug")
     quantity = int(data.get("quantity", 1))
+    payment_id = data.get("payment_id")        # ✔ FIXED
+    order_id = data.get("order_id")
+    signature = data.get("signature")
     coupon_code = (data.get("coupon") or "").strip().upper()
     address = (data.get("address") or "").strip()
+
+    # Validate product
     product = get_object_or_404(Product, slug=product_slug)
 
-    # Create Order (payment confirmed by Razorpay)
+    # Create order
     order = Order.objects.create(
         user=request.user,
         status="paid",
@@ -183,6 +191,7 @@ def payment_success(request):
         address=request.user.userprofile.address
     )
 
+    # Create order item
     OrderItem.objects.create(
         order=order,
         product=product,
@@ -190,9 +199,11 @@ def payment_success(request):
         price=product.price
     )
 
- 
     messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
-    return redirect(home)
+
+    # ✔ Correct redirect
+    return JsonResponse({"status": "ok", "redirect": "/myaccount"})
+
    
 
 
