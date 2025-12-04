@@ -396,47 +396,35 @@ const options = {
     },
     "description": "Order Payment",
 
-    // Razorpay callback after successful payment
+    // FINAL CORRECT HANDLER
     "handler": function (response) {
+        console.log("Handler called!", response);
 
-    fetch("/payment/success-cart/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken
-        },
-        body: JSON.stringify({
-            payment_id: response.razorpay_payment_id,
-            order_id: response.razorpay_order_id,
-            signature: response.razorpay_signature,
-            product_slug: productSlug,
-            quantity: parseInt(productQty || "1", 10),
-            coupon: couponInput.value.trim(),
-            address: "{{ profile.address|escapejs }}"
+        fetch("/payment/success-cart/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({
+                payment_id: response.razorpay_payment_id,
+                order_id: response.razorpay_order_id,
+                signature: response.razorpay_signature,
+                product_slug: productSlug,
+                quantity: parseInt(productQty || "1", 10),
+                coupon: couponInput.value.trim(),
+                address: "{{ profile.address|escapejs }}"
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "ok") {
-            window.location.href = data.redirect;
-        } else {
-            alert("Order not created: " + data.message);
-        }
-    });
-}
-
-        .then(r => r.json())
+        .then(res => res.json())
         .then(data => {
             if (data.status === "ok") {
                 window.location.href = data.redirect;
             } else {
-                alert("Order creation failed: " + data.message);
+                alert("Order not created: " + data.message);
             }
         });
     },
-
-    // Razorpay server → Django fallback success URL
-
 
     "modal": {
         "ondismiss": function() {
@@ -444,6 +432,7 @@ const options = {
         }
     }
 };
+
 
 
 
