@@ -388,48 +388,51 @@ chooseOnline.addEventListener('click', () => {
     if (data.status === "created") {
 
       // Razorpay options
-      const options = {
-        key: data.key,
-        amount: data.amount,
-        currency: "INR",
-        order_id: data.order_id,
+      
+        const options = {
+  key: data.key,
+  amount: data.amount,
+  currency: "INR",
+  order_id: data.order_id,
 
-        name: "{{ request.user.first_name|default:'Customer' }}",
-        description: "Order Payment",
-        "callback_url": "https://www.angels-glamnglow.in/payment/success-cart1/",
+  name: "{{ request.user.first_name|default:'Customer' }}",
+  description: "Order Payment",
 
-        prefill: {
-          name: "{{ request.user.first_name|default:'Customer' }}",
-          email: "{{ request.user.email }}"
-        },
+  prefill: {
+    name: "{{ request.user.first_name|default:'Customer' }}",
+    email: "{{ request.user.email }}"
+  },
 
-        handler: function(response) {
-          // Send to backend to create order
-          fetch("/payment/success-cart/", {
-            method: "POST",
-            headers: { 
-              "Content-Type": "application/json",
-              "X-CSRFToken": csrftoken 
-            },
-            body: JSON.stringify({
-              payment_id: response.razorpay_payment_id,
-              order_id: response.razorpay_order_id,
-              signature: response.razorpay_signature,
-              product_slug: productSlug,
-              quantity: parseInt(productQty || "1", 10),
-              coupon: couponInput.value.trim(),
-              address: "{{ profile.address|escapejs }}"
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.status === "ok") {
-              window.location.href = data.redirect;
-            } else {
-              alert("Order not created: " + data.message);
-            }
-          });
-        },
+  handler: function(response) {
+    fetch("/payment/success-cart/", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken 
+      },
+      body: JSON.stringify({
+        payment_id: response.razorpay_payment_id,
+        order_id: response.razorpay_order_id,
+        signature: response.razorpay_signature,
+        product_slug: productSlug,
+        quantity: parseInt(productQty || "1", 10),
+        coupon: couponInput.value.trim(),
+        address: "{{ profile.address|escapejs }}"
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        window.location.href = data.redirect;
+      } else {
+        alert("Order not created: " + data.message);
+      }
+    });
+  },
+
+  redirect: false,    // VERY IMPORTANT
+};
+
 
         modal: {
           ondismiss: function () {
