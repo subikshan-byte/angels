@@ -399,6 +399,19 @@ const options = {
 
     // 🔥 This ensures payment_success is ALWAYS called
   "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
+  fetch("{% url 'payment_success' %}", {
+    method: 'POST',
+    headers: { 
+      'X-CSRFToken': csrftoken, 
+      'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify({
+      product_slug: productSlug,
+      quantity: parseInt(productQty || '1', 10),
+      coupon: couponInput.value.trim(),
+      address: "{{ profile.address|escapejs }}"
+    })
+  })
 
 
     "handler": function (response) {
