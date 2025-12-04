@@ -383,66 +383,61 @@ chooseOnline.addEventListener('click', () => {
   .then(r => r.json())
   .then(data => {
     chooseOnline.disabled = false;
+
     if (data.status === 'created') {
-const options = {
-    "key": data.key,
-    "amount": data.amount,
-    "currency": "INR",
-    "order_id": data.order_id,
-    "name": "{{ request.user.first_name|default:'Customer' }}",
-    "prefill": {
-        "name": "{{ request.user.first_name|default:'Customer' }}",
-        "email": "{{ request.user.email }}",
-    },
-    "description": "Order Payment",
 
-    // FINAL CORRECT HANDLER
-    "handler": function (response) {
-        console.log("Handler called!", response);
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: "INR",
+        order_id: data.order_id,
+        name: "{{ request.user.first_name|default:'Customer' }}",
+        prefill: {
+          name: "{{ request.user.first_name|default:'Customer' }}",
+          email: "{{ request.user.email }}"
+        },
+        description: "Order Payment",
 
-        fetch("/payment/success-cart/", {
+        handler: function (response) {
+          console.log("Handler called!", response);
+
+          fetch("/payment/success-cart/", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken
             },
             body: JSON.stringify({
-                payment_id: response.razorpay_payment_id,
-                order_id: response.razorpay_order_id,
-                signature: response.razorpay_signature,
-                product_slug: productSlug,
-                quantity: parseInt(productQty || "1", 10),
-                coupon: couponInput.value.trim(),
-                address: "{{ profile.address|escapejs }}"
+              payment_id: response.razorpay_payment_id,
+              order_id: response.razorpay_order_id,
+              signature: response.razorpay_signature,
+              product_slug: productSlug,
+              quantity: parseInt(productQty || "1", 10),
+              coupon: couponInput.value.trim(),
+              address: "{{ profile.address|escapejs }}"
             })
-        })
-        .then(res => res.json())
-        .then(data => {
+          })
+          .then(res => res.json())
+          .then(data => {
             if (data.status === "ok") {
-                window.location.href = data.redirect;
+              window.location.href = data.redirect;
             } else {
-                alert("Order not created: " + data.message);
+              alert("Order not created: " + data.message);
             }
-        });
-    },
+          });
+        },
 
-    "modal": {
-        "ondismiss": function() {
+        modal: {
+          ondismiss: function() {
             alert("Payment cancelled");
+          }
         }
-    }
-};
+      };
 
-
-
-
-
-
-
-const rzp = new Razorpay(options);
-rzp.open();
-
-    } else {
+      const rzp = new Razorpay(options);
+      rzp.open();
+    } 
+    else {
       document.getElementById('payment-msg').textContent = data.message || 'Failed to create payment.';
     }
   })
@@ -451,10 +446,6 @@ rzp.open();
     document.getElementById('payment-msg').textContent = 'Network error creating payment.';
   });
 });
-
-
-
-
 // small helper to close modal when clicking outside
 otpModal.addEventListener('click', (e) => {
   if (e.target === otpModal) closeOtpModal();
