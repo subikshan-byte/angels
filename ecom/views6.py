@@ -158,36 +158,51 @@ def buy_now(request, slug):
 @login_required
 def payment_success(request):
     """
-    Razorpay sends back payment details via POST (fetch in JS).
-    This view safely creates the order.
+    Razorpay will POST here from your JS.
+    Creates order after a successful payment.
     """
-    # Extract fields
-    if request.method != "GET":
+
+    if request.method != "POST":
         return JsonResponse({"status": "error", "message": "POST required"}, status=400)
 
+    # Read JSON payload
     try:
         data = json.loads(request.body.decode("utf-8"))
-    except Exception:
+    except:
         return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
-    
-    quantity = int(data.get("quantity", 1))
-    payment_id = data.get("payment_id")        # ✔ FIXED
-    order_id = data.get("order_id")
 
+    payment_id = data.get("payment_id")
+    order_id = data.get("order_id")
+    product_slug = data.get("product_slug")
+    quantity = int(data.get("quantity", 1))
+    coupon_code = data.get("coupon")
+    address = data.get("address") or request.user.userprofile.address
 
     # Validate product
     product = get_object_or_404(Product, slug=product_slug)
+
+    # Calculate price
+    price = Decimal(product.price)
+
+    # Apply coupon if any
+    if coupon_code:
+        try:
+            coupon = Coupon.objects.get(code=coupon_code)
+            if coupon.is_valid():
+                discount = (price * Decimal(coupon.discount_percent)) / 100
+                price -= discount
+        except Coupon.DoesNotExist:
+            pass
 
     # Create order
     order = Order.objects.create(
         user=request.user,
         status="paid",
         payment_id=payment_id,
-        payment_method='online',
-        address=request.user.userprofile.address
+        payment_method="online",
+        address=address
     )
 
-    # Create order item
     OrderItem.objects.create(
         order=order,
         product=product,
@@ -195,10 +210,11 @@ def payment_success(request):
         price=product.price
     )
 
-    messages.info(request, "Payment successful! Please verify your order with the OTP sent to your email.")
+    return JsonResponse({
+        "status": "ok",
+        "redirect": "/myaccount"
+    })
 
-    # ✔ Correct redirect
-    return JsonResponse({"status": "ok", "redirect": "/myaccount"})
 
    
 
