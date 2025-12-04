@@ -390,42 +390,43 @@ const options = {
     "currency": "INR",
     "order_id": data.order_id,
     "name": "{{ request.user.first_name|default:'Customer' }}",
-  "prefill": {
-    "name": "{{ request.user.first_name|default:'Customer' }}",
-    "email": "{{ request.user.email }}",
-},
-
+    "prefill": {
+        "name": "{{ request.user.first_name|default:'Customer' }}",
+        "email": "{{ request.user.email }}",
+    },
     "description": "Order Payment",
 
-    // 🔥 This ensures payment_success is ALWAYS called
-  "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
+    // Razorpay callback after successful payment
+    "handler": function (response) {
 
-fetch("/payment/success-cart/", {
-    method: 'POST',
-    headers: { 
-        'X-CSRFToken': csrftoken,
-        'Content-Type': 'application/json'
+        fetch("/payment/success-cart/", {
+            method: 'POST',
+            headers: { 
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                payment_id: response.razorpay_payment_id,
+                order_id: response.razorpay_order_id,
+                signature: response.razorpay_signature,
+                product_slug: productSlug,
+                quantity: parseInt(productQty || '1', 10),
+                coupon: couponInput.value.trim(),
+                address: "{{ profile.address|escapejs }}"
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === "ok") {
+                window.location.href = data.redirect;
+            } else {
+                alert("Order creation failed: " + data.message);
+            }
+        });
     },
-    body: JSON.stringify({
-        payment_id: response.razorpay_payment_id,
-        order_id: response.razorpay_order_id,
-        signature: response.razorpay_signature,
-        product_slug: productSlug,
-        quantity: parseInt(productQty || '1', 10),
-        coupon: couponInput.value.trim(),
-        address: "{{ profile.address|escapejs }}"
-    })
-})
-.then(r => r.json())
-.then(data => {
-    if (data.status === "ok") {
-        window.location.href = data.redirect;
-    } else {
-        alert("Order creation failed: " + data.message);
-    }
-});
 
-
+    // Razorpay server → Django fallback success URL
+    "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
 
     "modal": {
         "ondismiss": function() {
@@ -433,6 +434,10 @@ fetch("/payment/success-cart/", {
         }
     }
 };
+
+
+
+
 
 
 const rzp = new Razorpay(options);
