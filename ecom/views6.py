@@ -162,6 +162,13 @@ def payment_success(request):
     This view safely creates the order.
     """
     # Extract fields
+    if request.method != "GET":
+        return JsonResponse({"status": "error", "message": "POST required"}, status=400)
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
     
     quantity = int(data.get("quantity", 1))
     payment_id = data.get("payment_id")        # ✔ FIXED
