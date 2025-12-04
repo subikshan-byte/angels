@@ -436,7 +436,8 @@ def payment_success_cart(request):
     payment_id = request.GET.get("razorpay_payment_id")
     pending = request.session.get("pending_order", {})
 
-    
+        if not payment_id :
+            return redirect("cart")
 
     address = pending.get("address", "")
     total_amount = pending.get("total_amount", 0)
