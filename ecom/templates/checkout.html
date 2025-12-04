@@ -359,12 +359,15 @@ chooseCod.addEventListener('click', () => {
 });
 
 // CHOOSE ONLINE (AJAX)
+let razorpayOptions = null;
+
 chooseOnline.addEventListener('click', () => {
   if (!lastVerified) { 
     otpMessage.textContent = 'Please verify OTP first.'; 
     otpMessage.className = 'error-msg'; 
     return; 
   }
+
   chooseOnline.disabled = true;
 
   fetch("{% url 'create_razorpay_order' %}", {
@@ -386,11 +389,14 @@ chooseOnline.addEventListener('click', () => {
 
     if (data.status === 'created') {
 
-      const options = {
+      razorpayContainer.style.display = 'block';
+
+      razorpayOptions = {
         key: data.key,
         amount: data.amount,
         currency: "INR",
         order_id: data.order_id,
+
         name: "{{ request.user.first_name|default:'Customer' }}",
         prefill: {
           name: "{{ request.user.first_name|default:'Customer' }}",
@@ -399,8 +405,6 @@ chooseOnline.addEventListener('click', () => {
         description: "Order Payment",
 
         handler: function (response) {
-          console.log("Handler called!", response);
-
           fetch("/payment/success-cart/", {
             method: "POST",
             headers: {
@@ -433,23 +437,30 @@ chooseOnline.addEventListener('click', () => {
           }
         }
       };
-
-    payOnlineLaunch.addEventListener("click", function () {
-    console.log("Opening Razorpay...");
-    const rzp = new Razorpay(options);
-    rzp.open();
-});
-
     } 
     else {
-      document.getElementById('payment-msg').textContent = data.message || 'Failed to create payment.';
+      document.getElementById('payment-msg').textContent =
+        data.message || 'Failed to create payment.';
     }
   })
   .catch(() => {
     chooseOnline.disabled = false;
-    document.getElementById('payment-msg').textContent = 'Network error creating payment.';
+    document.getElementById('payment-msg').textContent =
+      'Network error creating payment.';
   });
 });
+
+// Razorpay launch button
+payOnlineLaunch.addEventListener("click", function () {
+  if (!razorpayOptions) {
+    alert("Razorpay order not created yet.");
+    return;
+  }
+
+  const rzp = new Razorpay(razorpayOptions);
+  rzp.open();
+});
+
 // small helper to close modal when clicking outside
 otpModal.addEventListener('click', (e) => {
   if (e.target === otpModal) closeOtpModal();
