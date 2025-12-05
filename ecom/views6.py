@@ -178,7 +178,10 @@ def payment_success(request):
     
 
     # Extract fields
-    payment_id = request.GET.get("razorpay_payment_id")
+    payment_id = request.POST.get("razorpay_payment_id")
+    order_id = request.POST.get("razorpay_order_id")
+    signature = request.POST.get("razorpay_signature")
+
 
     # Validate required fields
     if not payment_id :
