@@ -359,91 +359,67 @@ chooseCod.addEventListener('click', () => {
 });
 
 // CHOOSE ONLINE (AJAX)
-chooseOnline.addEventListener('click', () => {
-  if (!lastVerified) { 
-    otpMessage.textContent = 'Please verify OTP first.'; 
-    otpMessage.className = 'error-msg'; 
-    return; 
+cchooseOnline.addEventListener("click", () => {
+  if (!lastVerified) {
+    otpMessage.textContent = "Please verify OTP first.";
+    otpMessage.className = "error-msg";
+    return;
   }
 
   chooseOnline.disabled = true;
 
   fetch("{% url 'create_razorpay_order' %}", {
-    method: 'POST',
-    headers: { 
-      'X-CSRFToken': csrftoken,
-      'Content-Type': 'application/json'
+    method: "POST",
+    headers: {
+      "X-CSRFToken": csrftoken,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       product_slug: productSlug,
-      quantity: parseInt(productQty || '1', 10),
+      quantity: parseInt(productQty || "1", 10),
       coupon: couponInput.value.trim(),
-      address: "{{ profile.address|escapejs }}"
-    })
+      address: "{{ profile.address|escapejs }}",
+    }),
   })
-  .then(r => r.json())
-  .then(data => {
-    chooseOnline.disabled = false;
+    .then((r) => r.json())
+    .then((data) => {
+      chooseOnline.disabled = false;
 
-    if (data.status === "created") {
-
-      // Razorpay options
-      
-const options={
-        key:data.key,
-        amount:data.amount,
-        currency:'INR',
-        order_id:data.order_id,
-        "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
-        handler: function (response) {
-  window.location.href =
-    "{% url 'payment_success' %}?razorpay_payment_id=" + response.razorpay_payment_id +
-    "&razorpay_order_id=" + response.razorpay_order_id +
-    "&razorpay_signature=" + response.razorpay_signature;
-}
-
-        theme:{color:'#4a6de5'}
-      };
-      const rzp=new Razorpay(options);
-      rzp.open();
-    } else {
-      document.getElementById('payment-msg').textContent=data.message||'Failed to create Razorpay order.';
-    }
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "ok") {
-        window.location.href = data.redirect;
-      } else {
-        alert("Order not created: " + data.message);
+      if (data.status !== "created") {
+        document.getElementById("payment-msg").textContent =
+          data.message || "Failed to create Razorpay order.";
+        return;
       }
-    });
-  },
 
-  redirect: false,   // PREVENTS RAZORPAY REDIRECT
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: "INR",
+        order_id: data.order_id,
 
-  modal: {
-    ondismiss: function () {
-      alert("Payment cancelled");
-    }
-  }
-};
+        handler: function (response) {
+          window.location.href =
+            "{% url 'payment_success' %}?razorpay_payment_id=" +
+            response.razorpay_payment_id +
+            "&razorpay_order_id=" +
+            response.razorpay_order_id +
+            "&razorpay_signature=" +
+            response.razorpay_signature;
+        },
 
-      // 🔥 Open Razorpay directly (NO SECOND BUTTON)
+        theme: { color: "#4a6de5" },
+      };
+
       const rzp = new Razorpay(options);
       rzp.open();
-    } 
-    else {
-      document.getElementById('payment-msg').textContent =
-        data.message || "Failed to create payment.";
-    }
-  })
-  .catch(() => {
-    chooseOnline.disabled = false;
-    document.getElementById('payment-msg').textContent =
-      "Network error creating payment.";
-  });
+    })
+    .catch(() => {
+      chooseOnline.disabled = false;
+      document.getElementById("payment-msg").textContent =
+        "Network error creating payment.";
+    });
 });
+
 
 
 // small helper to close modal when clicking outside
