@@ -194,10 +194,11 @@ def payment_success(request):
         signature = request.GET.get("razorpay_signature")
 
     # If still missing, payment failed
+    payment_id = request.GET.get("razorpay_payment_id")
     if not payment_id:
         return JsonResponse({
             "status": "error",
-            "message": "Payment details missing"
+            "message": payment_id,
         }, status=400)
 
     # Fetch product
