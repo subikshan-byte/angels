@@ -401,7 +401,7 @@ chooseOnline.addEventListener('click', () => {
     
         handler:function(response){
          window.location.href =
-    "{% url 'payment_success' %}?razorpay_payment_id=" + response.razorpay_payment_id +
+    "{% url 'payment_success1' %}?razorpay_payment_id=" + response.razorpay_payment_id +
     "&order_id=" + response.razorpay_order_id +
     "&signature=" + response.razorpay_signature;
 
