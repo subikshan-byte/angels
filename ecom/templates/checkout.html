@@ -358,68 +358,67 @@ chooseCod.addEventListener('click', () => {
   });
 });
 
-// CHOOSE ONLINE (AJAX)
-chooseOnline.addEventListener('click', () => {
-  if (!lastVerified) { 
-    otpMessage.textContent = 'Please verify OTP first.'; 
-    otpMessage.className = 'error-msg'; 
-    return; 
+chooseCod.addEventListener('click',()=>{
+  if(!lastVerified){
+    otpMsg.textContent='Verify OTP first.';
+    otpMsg.className='error-msg';
+    return;
   }
-  chooseOnline.disabled = true;
 
-  fetch("{% url 'create_razorpay_order' %}", {
-    method: 'POST',
-    headers: { 
-      'X-CSRFToken': csrftoken, 
-      'Content-Type': 'application/json' 
-    },
-    body: JSON.stringify({
-      product_slug: productSlug,
-      quantity: parseInt(productQty || '1', 10),
-      coupon: couponInput.value.trim(),
-      address: "{{ profile.address|escapejs }}"
-    })
+  fetch("{% url 'place_cod_order1' %}",{
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    body:JSON.stringify({coupon:couponInput.value.trim()})
   })
-  .then(r => r.json())
-  .then(data => {
-    chooseOnline.disabled = false;
-    if (data.status === 'created') {
-      const options = {
-        "key": data.key,
-        "amount": data.amount,
-        "currency": "INR",
-        "order_id": data.order_id,
-        "handler": function (response){
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = "{% url 'success-cart' %}?product_slug=" 
-              + encodeURIComponent(productSlug)
-              + "&quantity=" 
-              + encodeURIComponent(productQty);
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==='placed'){
+      window.location.href=d.redirect;
+    } else {
+      document.getElementById('payment-msg').textContent=d.message||'Failed to place order.';
+    }
+  });
+});
 
-          const csrfInput = document.createElement('input');
-          csrfInput.type = 'hidden'; 
-          csrfInput.name = 'csrfmiddlewaretoken'; 
-          csrfInput.value = csrftoken;
-          form.appendChild(csrfInput);
-          const rpInput = document.createElement('input');
-          rpInput.type = 'hidden'; 
-          rpInput.name = 'razorpay_payment_id'; 
-          rpInput.value = response.razorpay_payment_id;
-          form.appendChild(rpInput);
-          document.body.appendChild(form);
-          form.submit();
-        }
+// === CHOOSE ONLINE (Razorpay) ===
+chooseOnline.addEventListener('click',()=>{
+  if(!lastVerified){
+    otpMsg.textContent='Verify OTP first.';
+    otpMsg.className='error-msg';
+    return;
+  }
+
+  fetch("{% url 'create_razorpay_order' %}",{   // ✅ CORRECT URL
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    body:JSON.stringify({coupon:couponInput.value.trim()})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    console.log("Razorpay create response:", data);
+
+    if(data.status==='created'){
+      const options={
+        key:data.key,
+        amount:data.amount,
+        currency:'INR',
+        order_id:data.order_id,
+        handler:function(response){
+          window.location.href="{% url 'payment_success1' %}?razorpay_payment_id="+response.razorpay_payment_id;
+        },
+        theme:{color:'#4a6de5'}
       };
-      const rzp = new Razorpay(options);
+      const rzp=new Razorpay(options);
       rzp.open();
     } else {
-      document.getElementById('payment-msg').textContent = data.message || 'Failed to create payment.';
+      document.getElementById('payment-msg').textContent=data.message||'Failed to create Razorpay order.';
     }
   })
-  .catch(() => {
-    chooseOnline.disabled = false;
-    document.getElementById('payment-msg').textContent = 'Network error creating payment.';
+  .catch(err=>{
+    console.error("Error creating Razorpay order:",err);
+    document.getElementById('payment-msg').textContent='Network error creating payment.';
   });
 });
 
