@@ -534,6 +534,31 @@ def apply_coupon1(request):
         "original_total": float(original_total),
         "total": float(final_total)
     })
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def verify_cart(request):
+    if request.method == "POST":
+        payment_id = request.POST.get("razorpay_payment_id")
+        order_id = request.POST.get("razorpay_order_id")
+        signature = request.POST.get("razorpay_signature")
+
+        # verify signature
+        client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+        try:
+            client.utility.verify_payment_signature({
+                "razorpay_order_id": order_id,
+                "razorpay_payment_id": payment_id,
+                "razorpay_signature": signature
+            })
+
+            # update order status here...
+
+            return redirect('/payment/success-cart/')
+        
+        except:
+            return redirect('/payment/failed/')
+
 
 
 
