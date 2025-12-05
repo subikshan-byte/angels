@@ -71,6 +71,8 @@ def buy_now(request, slug):
     discount = Decimal('0')
     total_amount = Decimal(product.price or 0)
     quantity = int(request.POST.get("quantity", 1))
+    request.session['product_slug'] = product_slug
+    request.session['quantity'] = quantity
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     # If JSON request (AJAX coupon apply), accept JSON payload
     if request.method == "POST":
@@ -160,6 +162,16 @@ def payment_success(request):
     Razorpay sends back the payment_id (via form submission we do in JS).
     This view creates the Order in DB (so we don't create it earlier).
     """
+    product_slug = request.session.get("product_slug")
+    quantity = request.session.get("quantity", 1)
+
+    if not product_slug:
+        return HttpResponse("Product slug missing in session", status=400)
+
+    # Do your order creation
+    print("Product slug =", product_slug)
+
+    return HttpResponse("Payment success")
     product_slug = request.GET.get("product_slug")
     quantity = int(request.GET.get("quantity", 1))
     payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
