@@ -388,43 +388,38 @@ chooseOnline.addEventListener("click", () => {
       chooseOnline.disabled = false;
 
       if (data.status !== "created") {
-        document.getElementById("payment-msg").textContent =
-          data.message || "Failed to create Razorpay order.";
-        return;
-      }
-
       const options = {
-        key: data.key,
-        amount: data.amount,
-        currency: "INR",
-        order_id: data.order_id,
-        name: "Angels Fashion",
-        description: "Secure Payment",
+    key: data.key,
+    amount: data.amount,
+    currency: "INR",
+    order_id: data.order_id,
+    name: "Angels Fashion",
+    description: "Secure Payment",
 
- handler: function (response) {
-    console.log(response);
-
-    fetch("/payment/success-cart/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            payment_id: response.razorpay_payment_id,
-            order_id: response.razorpay_order_id,
-            signature: response.razorpay_signature
+    handler: function (response) {
+        fetch("/payment/success-cart/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                payment_id: response.razorpay_payment_id,
+                order_id: response.razorpay_order_id,
+                signature: response.razorpay_signature
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        window.location.href = "/myaccount";
-    });
-},
-theme: { color: "#4a6de5" }
+        .then(res => res.json())
+        .then(data => {
+            window.location.href = "/myaccount";
+        });
+    },
 
- 
-      };
+    theme: {
+        color: "#4a6de5"
+    }
+};
 
-      const rzp = new Razorpay(options);
-      rzp.open();
+const rzp = new Razorpay(options);
+rzp.open();
+
     })
     .catch(() => {
       chooseOnline.disabled = false;
