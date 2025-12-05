@@ -71,7 +71,7 @@ def buy_now(request, slug):
     discount = Decimal('0')
     total_amount = Decimal(product.price or 0)
     quantity = int(request.POST.get("quantity", 1))
-    request.session['product_slug'] = product_slug
+    request.session['product_slug'] =slug
     request.session['quantity'] = quantity
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     # If JSON request (AJAX coupon apply), accept JSON payload
