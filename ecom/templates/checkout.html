@@ -403,15 +403,18 @@ chooseOnline.addEventListener('click', () => {
     // ❌ DO NOT USE redirect: true
 
     handler: function (response) {
-        const params = new URLSearchParams({
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_signature: response.razorpay_signature,
-        });
+    alert("Handler Fired!");
+    console.log("HANDLER FIRED", response);
 
-        // Send user to Django success view
-        window.location.href = "/payment/success-cart/?" + params.toString();
-    },
+    const params = new URLSearchParams({
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_signature: response.razorpay_signature,
+    });
+
+    window.location.href = "/payment/success-cart/?" + params.toString();
+},
+
 
     theme: { color: "#4a6de5" },
 };
