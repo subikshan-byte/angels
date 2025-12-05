@@ -159,79 +159,36 @@ def buy_now(request, slug):
 @login_required
 @csrf_exempt
 def payment_success(request):
-    """
-    Razorpay handler POST → JSON payload from your JS
-    Razorpay callback_url GET → fallback response (order is NOT created here)
-    """
+
+    # Get product + quantity from session
     product_slug = request.session.get("product_slug")
     quantity = request.session.get("quantity", 1)
 
     if not product_slug:
-        return HttpResponse("Product slug missing in session", status=400)
+        return JsonResponse({"status": "error", "message": "Product slug missing in session"}, status=400)
 
-    # Do your order creation
-    print("Product slug =", product_slug)
-    profile = request.user.userprofile
+    # Razorpay response (GET or POST)
+    payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
+    order_id = request.POST.get("razorpay_order_id") or request.GET.get("order_id")
+    signature = request.POST.get("razorpay_signature") or request.GET.get("signature")
 
-    
-
-    
-
-    # Extract fields
-    payment_id = (
-    request.POST.get("razorpay_payment_id")
-    or request.GET.get("razorpay_payment_id")
-)
-
-    order_id = (
-        request.POST.get("razorpay_order_id")
-        or request.GET.get("order_id")
-    )
-    
-    signature = (
-        request.POST.get("razorpay_signature")
-        or request.GET.get("signature")
-    )
-
-if not payment_id:
-    return JsonResponse({
-        "status": "error",
-        "message": "Missing payment details."
-    }, status=400)
-
-
-
-    # Validate required fields
-    if not payment_id :
+    # Validate payment
+    if not payment_id:
         return JsonResponse({"status": "error", "message": "Missing payment details."}, status=400)
 
-    # 3️⃣ Fetch the product
+    # Fetch product
     product = get_object_or_404(Product, slug=product_slug)
 
-    # 4️⃣ Calculate price
+    # Calculate final price
     final_price = Decimal(product.price)
 
-    # Apply coupon if exists
-    if coupon_code:
-        try:
-            coupon = Coupon.objects.get(code=coupon_code, active=True)
-            if coupon.is_valid():
-                discount = (final_price * Decimal(coupon.discount_percent)) / 100
-                final_price -= discount
-        except Coupon.DoesNotExist:
-            pass
-
-    # Add delivery charge
+    # Delivery charge
     if final_price * quantity < 2000:
-        final_price += 100
+        final_price += Decimal(100)
 
-    # 5️⃣ Save address to user profile if changed
     profile = request.user.userprofile
-    if address and address != profile.address:
-        profile.address = address
-        profile.save()
 
-    # 6️⃣ Create Order
+    # Create Order
     order = Order.objects.create(
         user=request.user,
         status="paid",
@@ -240,7 +197,7 @@ if not payment_id:
         address=profile.address
     )
 
-    # 7️⃣ Create Order Item
+    # Create Order Item
     OrderItem.objects.create(
         order=order,
         product=product,
@@ -248,12 +205,16 @@ if not payment_id:
         price=product.price
     )
 
-    # 8️⃣ Success Response
+    # Clear session values
+    request.session.pop("product_slug", None)
+    request.session.pop("quantity", None)
+
     return JsonResponse({
         "status": "ok",
         "redirect": "/myaccount",
         "order_id": order.id
     })
+
 
 
 
