@@ -398,18 +398,14 @@ chooseOnline.addEventListener('click', () => {
           "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
     // ❌ DO NOT USE redirect: true
 
-    handler: function (response) {
-    alert("Handler Fired!");
-    console.log("HANDLER FIRED", response);
+    "callback_url": "https://www.angels-glamnglow.in/payment/success-cart1/",
+        handler:function(response){
+         window.location.href =
+    "{% url 'payment_success1' %}?razorpay_payment_id=" + response.razorpay_payment_id +
+    "&order_id=" + response.razorpay_order_id +
+    "&signature=" + response.razorpay_signature;
 
-    const params = new URLSearchParams({
-        razorpay_payment_id: response.razorpay_payment_id,
-        razorpay_order_id: response.razorpay_order_id,
-        razorpay_signature: response.razorpay_signature,
-    });
-
-    window.location.href = "/payment/success-cart/?" + params.toString();
-},
+        },
 
 
     theme: { color: "#4a6de5" },
