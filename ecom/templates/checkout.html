@@ -396,8 +396,9 @@ chooseOnline.addEventListener("click", () => {
           order_id: data.order_id,
           name: "Angels Fashion",
           description: "Secure Payment",
-           callback_url: "https://www.angels-glamnglow.in/payment/success-cart/",
-          redirect: true,
+          callback_url: "https://www.angels-glamnglow.in/payment/verify-cart/",
+redirect: true,
+
 
           handler: function (response) {
             fetch("/payment/success-cart/", {
