@@ -160,38 +160,56 @@ def buy_now(request, slug):
 @login_required
 def payment_success(request):
 
-    # Get product from session
+    # Fetch product+qty from session
     product_slug = request.session.get("product_slug")
-    quantity = request.session.get("quantity", 1)
+    quantity = int(request.session.get("quantity", 1))
 
     if not product_slug:
-        return JsonResponse({"status": "error", "message": "Product slug missing in session"}, status=400)
+        return JsonResponse({"status": "error", "message": "No product in session"}, status=400)
 
-    # Razorpay returns values through GET (because you redirected manually)
-    data = json.loads(request.body)
+    # ------------------------------
+    # CASE 1 → Razorpay POST (correct)
+    # ------------------------------
+    if request.method == "POST":
+        raw = request.body.decode("utf-8").strip()
 
-    payment_id = data["payment_id"]
-    order_id = data["order_id"]
-    signature = data["signature"]
+        if raw:   # <-- prevents JSONDecodeError
+            try:
+                data = json.loads(raw)
+            except json.JSONDecodeError:
+                return HttpResponseBadRequest("Invalid JSON payload")
+        else:
+            data = {}
 
-    # Validate payment
-    if not payment_id or not order_id or not signature:
+        payment_id = data.get("payment_id")
+        order_id = data.get("order_id")
+        signature = data.get("signature")
+
+    # ------------------------------
+    # CASE 2 → Razorpay GET redirect
+    # ------------------------------
+    else:
+        payment_id = request.GET.get("razorpay_payment_id")
+        order_id = request.GET.get("razorpay_order_id")
+        signature = request.GET.get("razorpay_signature")
+
+    # If still missing, payment failed
+    if not payment_id:
         return JsonResponse({
             "status": "error",
-            "message": "Missing payment details."
+            "message": "Payment details missing"
         }, status=400)
 
     # Fetch product
     product = get_object_or_404(Product, slug=product_slug)
 
-    # Calculate final amount
-    final_price = Decimal(product.price)
-    if final_price * quantity < 2000:
-        final_price += Decimal(100)
+    total = Decimal(product.price) * quantity
+    if total < 2000:
+        total += 100
 
     profile = request.user.userprofile
 
-    # Create order
+    # Create Order
     order = Order.objects.create(
         user=request.user,
         status="paid",
@@ -200,23 +218,20 @@ def payment_success(request):
         address=profile.address,
     )
 
-    # Create order item
     OrderItem.objects.create(
         order=order,
         product=product,
         quantity=quantity,
-        price=product.price,
+        price=product.price
     )
 
-    # Clear session
+    # Clean session
     request.session.pop("product_slug", None)
     request.session.pop("quantity", None)
 
-    return JsonResponse({
-        "status": "ok",
-        "redirect": "/myaccount",
-        "order_id": order.id
-    })
+    # Final redirect
+    return redirect("/myaccount")
+
 
 
 
