@@ -156,56 +156,57 @@ def buy_now(request, slug):
 
 
 # -------------------- PAYMENT SUCCESS (Razorpay posts back here) --------------------
-@login_required
 @csrf_exempt
+@login_required
 def payment_success(request):
 
-    # Get product + quantity from session
+    # Get product from session
     product_slug = request.session.get("product_slug")
     quantity = request.session.get("quantity", 1)
 
     if not product_slug:
         return JsonResponse({"status": "error", "message": "Product slug missing in session"}, status=400)
 
-    # Razorpay response (GET or POST)
-    payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
-    order_id = request.POST.get("razorpay_order_id") or request.GET.get("order_id")
-    signature = request.POST.get("razorpay_signature") or request.GET.get("signature")
+    # Razorpay returns values through GET (because you redirected manually)
+    payment_id = request.GET.get("razorpay_payment_id")
+    order_id = request.GET.get("razorpay_order_id")
+    signature = request.GET.get("razorpay_signature")
 
     # Validate payment
-    if not payment_id:
-        return JsonResponse({"status": "error", "message": "Missing payment details."}, status=400)
+    if not payment_id or not order_id or not signature:
+        return JsonResponse({
+            "status": "error",
+            "message": "Missing payment details."
+        }, status=400)
 
     # Fetch product
     product = get_object_or_404(Product, slug=product_slug)
 
-    # Calculate final price
+    # Calculate final amount
     final_price = Decimal(product.price)
-
-    # Delivery charge
     if final_price * quantity < 2000:
         final_price += Decimal(100)
 
     profile = request.user.userprofile
 
-    # Create Order
+    # Create order
     order = Order.objects.create(
         user=request.user,
         status="paid",
         payment_id=payment_id,
         payment_method="online",
-        address=profile.address
+        address=profile.address,
     )
 
-    # Create Order Item
+    # Create order item
     OrderItem.objects.create(
         order=order,
         product=product,
         quantity=quantity,
-        price=product.price
+        price=product.price,
     )
 
-    # Clear session values
+    # Clear session
     request.session.pop("product_slug", None)
     request.session.pop("quantity", None)
 
@@ -214,6 +215,7 @@ def payment_success(request):
         "redirect": "/myaccount",
         "order_id": order.id
     })
+
 
 
 
