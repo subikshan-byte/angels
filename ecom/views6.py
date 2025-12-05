@@ -178,9 +178,27 @@ def payment_success(request):
     
 
     # Extract fields
-    payment_id = request.GET.get("razorpay_payment_id")
-    order_id = request.POST.get("razorpay_order_id")
-    signature = request.POST.get("razorpay_signature")
+    payment_id = (
+    request.POST.get("razorpay_payment_id")
+    or request.GET.get("razorpay_payment_id")
+)
+
+    order_id = (
+        request.POST.get("razorpay_order_id")
+        or request.GET.get("order_id")
+    )
+    
+    signature = (
+        request.POST.get("razorpay_signature")
+        or request.GET.get("signature")
+    )
+
+if not payment_id:
+    return JsonResponse({
+        "status": "error",
+        "message": "Missing payment details."
+    }, status=400)
+
 
 
     # Validate required fields
