@@ -172,7 +172,8 @@ class Order(models.Model):
         ('shipped', 'Shipped'),
         ('out_for_delivery', 'Out for Delivery'),
         ('delivered', 'Delivered'),
-        ('cancelled', 'Cancelled')
+        ('cancelled', 'Cancelled'),
+        ('payment failed','payment failed')
     ]
     PAYMENT_METHOD_CHOICES = [
         ('online', 'Online Payment'),
