@@ -394,7 +394,7 @@ chooseOnline.addEventListener('click', () => {
   amount: data.amount,
   currency: "INR",
   order_id: data.order_id,
-
+"callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
   name: "{{ request.user.first_name|default:'Customer' }}",
   description: "Order Payment",
 
