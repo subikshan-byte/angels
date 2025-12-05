@@ -389,37 +389,27 @@ chooseOnline.addEventListener('click', () => {
 
       // Razorpay options
       
-  const options = {
-  key: data.key,
-  amount: data.amount,
-  currency: "INR",
-  order_id: data.order_id,
-"callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
-  name: "{{ request.user.first_name|default:'Customer' }}",
-  description: "Order Payment",
+const options={
+        key:data.key,
+        amount:data.amount,
+        currency:'INR',
+        order_id:data.order_id,
+        "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
+        handler:function(response){
+         window.location.href =
+    "{% url 'payment_success' %}?razorpay_payment_id=" + response.razorpay_payment_id +
+    "&order_id=" + response.razorpay_order_id +
+    "&signature=" + response.razorpay_signature;
 
-  prefill: {
-    name: "{{ request.user.first_name|default:'Customer' }}",
-    email: "{{ request.user.email }}"
-  },
-
-  handler: function(response) {
-    fetch("/payment/success-cart/", {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken 
-      },
-      body: JSON.stringify({
-        payment_id: response.razorpay_payment_id,
-        order_id: response.razorpay_order_id,
-        signature: response.razorpay_signature,
-        product_slug: productSlug,
-        quantity: parseInt(productQty || "1", 10),
-        coupon: couponInput.value.trim(),
-        address: "{{ profile.address|escapejs }}"
-      })
-    })
+        },
+        theme:{color:'#4a6de5'}
+      };
+      const rzp=new Razorpay(options);
+      rzp.open();
+    } else {
+      document.getElementById('payment-msg').textContent=data.message||'Failed to create Razorpay order.';
+    }
+  })
     .then(res => res.json())
     .then(data => {
       if (data.status === "ok") {
