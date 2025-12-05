@@ -168,7 +168,7 @@ def payment_success(request):
         return JsonResponse({"status": "error", "message": "Product slug missing in session"}, status=400)
 
     # Razorpay returns values through GET (because you redirected manually)
-     data = json.loads(request.body)
+    data = json.loads(request.body)
 
     payment_id = data["payment_id"]
     order_id = data["order_id"]
