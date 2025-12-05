@@ -157,6 +157,7 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
     </div>
   </div>
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 // csrf helper (from cookie)
@@ -430,6 +431,6 @@ otpModal.addEventListener('click', (e) => {
   if (e.target === otpModal) closeOtpModal();
 });
 </script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
 {% endblock %}
