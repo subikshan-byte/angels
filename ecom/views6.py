@@ -163,6 +163,16 @@ def payment_success(request):
     Razorpay handler POST → JSON payload from your JS
     Razorpay callback_url GET → fallback response (order is NOT created here)
     """
+    product_slug = request.session.get("product_slug")
+    quantity = request.session.get("quantity", 1)
+
+    if not product_slug:
+        return HttpResponse("Product slug missing in session", status=400)
+
+    # Do your order creation
+    print("Product slug =", product_slug)
+
+    return HttpResponse(product_slug)
 
     # 1️⃣ Razorpay callback_url sends GET request → DO NOT CREATE ORDER
     if request.method == "GET":
