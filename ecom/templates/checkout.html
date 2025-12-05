@@ -394,17 +394,21 @@ chooseOnline.addEventListener('click', () => {
     name: "Angels Fashion",
     description: "Secure Payment",
 
-    handler: function(response) {
-        console.log("Handler Fired:", response);
+    // ❌ DO NOT USE callback_url
+          "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
+    // ❌ DO NOT USE redirect: true
 
-        window.location.href =
-            "{% url 'payment_success' %}?" +
-            "razorpay_payment_id=" + response.razorpay_payment_id +
-            "&order_id=" + response.razorpay_order_id +
-            "&signature=" + response.razorpay_signature;
-    },
+    
+        handler:function(response){
+         window.location.href =
+    "{% url 'payment_success' %}?razorpay_payment_id=" + response.razorpay_payment_id +
+    "&order_id=" + response.razorpay_order_id +
+    "&signature=" + response.razorpay_signature;
 
-    theme: { color: "#4a6de5" }
+        },
+
+
+    theme: { color: "#4a6de5" },
 };
 
 
