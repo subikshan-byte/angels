@@ -151,7 +151,7 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       <p class="small-muted">Choose payment method:</p>
       <div class="payment-options">
         <button class="payment-cod" id="choose-cod">Cash on Delivery</button>
-        <button class="payment-online" id="choose-online-modal">Pay Online</button>
+        <button class="payment-online" id="choose-online">Pay Online</button>
       </div>
       <div id="payment-msg" class="small-muted"></div>
     </div>
@@ -186,7 +186,7 @@ const otpInput = document.getElementById('otp-input');
 const otpMessage = document.getElementById('otp-message');
 const paymentChoices = document.getElementById('payment-choices');
 const chooseCod = document.getElementById('choose-cod');
-const chooseOnline = document.getElementById('choose-online-modal');
+const chooseOnline = document.getElementById('choose-online');
 const razorpayContainer = document.getElementById('razorpay-container');
 const payOnlineLaunch = document.getElementById('pay-online-launch');
 const productSlug = document.getElementById('product-slug').value;
@@ -396,8 +396,8 @@ chooseOnline.addEventListener("click", () => {
           order_id: data.order_id,
           name: "Angels Fashion",
           description: "Secure Payment",
-           "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
-          "redirect": true,
+           callback_url: "https://www.angels-glamnglow.in/payment/success-cart/",
+          redirect: true,
 
           handler: function (response) {
             fetch("/payment/success-cart/", {
