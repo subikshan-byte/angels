@@ -386,7 +386,7 @@ chooseOnline.addEventListener('click', () => {
       chooseOnline.disabled = false;
 
       if (data.status === "created") {
-        const options = {
+    const options = {
     key: data.key,
     amount: data.amount,
     currency: "INR",
@@ -394,22 +394,19 @@ chooseOnline.addEventListener('click', () => {
     name: "Angels Fashion",
     description: "Secure Payment",
 
-    // ❌ DO NOT USE callback_url
-          "callback_url": "https://www.angels-glamnglow.in/payment/success-cart/",
-    // ❌ DO NOT USE redirect: true
+    handler: function(response) {
+        console.log("Handler Fired:", response);
 
-    
-        handler:function(response){
-         window.location.href =
-    "{% url 'payment_success' %}?razorpay_payment_id=" + response.razorpay_payment_id +
-    "&order_id=" + response.razorpay_order_id +
-    "&signature=" + response.razorpay_signature;
+        window.location.href =
+            "{% url 'payment_success' %}?" +
+            "razorpay_payment_id=" + response.razorpay_payment_id +
+            "&order_id=" + response.razorpay_order_id +
+            "&signature=" + response.razorpay_signature;
+    },
 
-        },
-
-
-    theme: { color: "#4a6de5" },
+    theme: { color: "#4a6de5" }
 };
+
 
 console.log("My Razorpay instance is opening!");
 alert("My Razorpay script is running!");
