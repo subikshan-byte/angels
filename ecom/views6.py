@@ -168,9 +168,11 @@ def payment_success(request):
         return JsonResponse({"status": "error", "message": "Product slug missing in session"}, status=400)
 
     # Razorpay returns values through GET (because you redirected manually)
-    payment_id = request.GET.get("razorpay_payment_id")
-    order_id = request.GET.get("razorpay_order_id")
-    signature = request.GET.get("razorpay_signature")
+     data = json.loads(request.body)
+
+    payment_id = data["payment_id"]
+    order_id = data["order_id"]
+    signature = data["signature"]
 
     # Validate payment
     if not payment_id or not order_id or not signature:
