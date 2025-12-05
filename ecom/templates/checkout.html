@@ -401,22 +401,26 @@ chooseOnline.addEventListener("click", () => {
         name: "Angels Fashion",
         description: "Secure Payment",
 
-  handler: function (response){
-    // This contains payment id
-    console.log(response.razorpay_payment_id);
+ handler: function (response) {
+    console.log(response);
 
-    // Send to backend to verify
     fetch("/payment/success-cart/", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             payment_id: response.razorpay_payment_id,
             order_id: response.razorpay_order_id,
             signature: response.razorpay_signature
         })
+    })
+    .then(res => res.json())
+    .then(data => {
+        window.location.href = "/myaccount";
     });
-}
-        theme: { color: "#4a6de5" },
+},
+theme: { color: "#4a6de5" }
+
+ 
       };
 
       const rzp = new Razorpay(options);
