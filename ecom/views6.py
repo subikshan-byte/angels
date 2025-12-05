@@ -178,11 +178,7 @@ def payment_success(request):
     
 
     # Extract fields
-    payment_id = data.get("payment_id")
-    order_id = data.get("order_id")
-    signature = data.get("signature")
-    coupon_code = (data.get("coupon") or "").strip()
-    address = (data.get("address") or request.user.userprofile.address).strip()
+    payment_id = request.GET.get("razorpay_payment_id")
 
     # Validate required fields
     if not payment_id :
