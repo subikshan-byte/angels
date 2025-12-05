@@ -171,85 +171,73 @@ def payment_success(request):
 
     # Do your order creation
     print("Product slug =", product_slug)
+    profile = request.user.userprofile
 
-    return HttpResponse(product_slug)
+    
 
-    # 1️⃣ Razorpay callback_url sends GET request → DO NOT CREATE ORDER
-    if request.method == "GET":
-        return JsonResponse({"status": "ok", "message": "Razorpay callback received (GET). Waiting for JS handler POST."})
+    
 
-    # 2️⃣ Only your JavaScript handler should create the order using POST
-    if request.method == "POST":
+    # Extract fields
+    payment_id = data.get("payment_id")
+    order_id = data.get("order_id")
+    signature = data.get("signature")
+    coupon_code = (data.get("coupon") or "").strip()
+    address = (data.get("address") or request.user.userprofile.address).strip()
+
+    # Validate required fields
+    if not payment_id :
+        return JsonResponse({"status": "error", "message": "Missing payment details."}, status=400)
+
+    # 3️⃣ Fetch the product
+    product = get_object_or_404(Product, slug=product_slug)
+
+    # 4️⃣ Calculate price
+    final_price = Decimal(product.price)
+
+    # Apply coupon if exists
+    if coupon_code:
         try:
-            data = json.loads(request.body.decode("utf-8"))
-        except:
-            return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+            coupon = Coupon.objects.get(code=coupon_code, active=True)
+            if coupon.is_valid():
+                discount = (final_price * Decimal(coupon.discount_percent)) / 100
+                final_price -= discount
+        except Coupon.DoesNotExist:
+            pass
 
-        # Extract fields
-        payment_id = data.get("payment_id")
-        order_id = data.get("order_id")
-        signature = data.get("signature")
-        product_slug = data.get("product_slug")
-        quantity = int(data.get("quantity", 1))
-        coupon_code = (data.get("coupon") or "").strip()
-        address = (data.get("address") or request.user.userprofile.address).strip()
+    # Add delivery charge
+    if final_price * quantity < 2000:
+        final_price += 100
 
-        # Validate required fields
-        if not payment_id or not order_id:
-            return JsonResponse({"status": "error", "message": "Missing payment details."}, status=400)
+    # 5️⃣ Save address to user profile if changed
+    profile = request.user.userprofile
+    if address and address != profile.address:
+        profile.address = address
+        profile.save()
 
-        # 3️⃣ Fetch the product
-        product = get_object_or_404(Product, slug=product_slug)
+    # 6️⃣ Create Order
+    order = Order.objects.create(
+        user=request.user,
+        status="paid",
+        payment_id=payment_id,
+        payment_method="online",
+        address=profile.address
+    )
 
-        # 4️⃣ Calculate price
-        final_price = Decimal(product.price)
+    # 7️⃣ Create Order Item
+    OrderItem.objects.create(
+        order=order,
+        product=product,
+        quantity=quantity,
+        price=product.price
+    )
 
-        # Apply coupon if exists
-        if coupon_code:
-            try:
-                coupon = Coupon.objects.get(code=coupon_code, active=True)
-                if coupon.is_valid():
-                    discount = (final_price * Decimal(coupon.discount_percent)) / 100
-                    final_price -= discount
-            except Coupon.DoesNotExist:
-                pass
+    # 8️⃣ Success Response
+    return JsonResponse({
+        "status": "ok",
+        "redirect": "/myaccount",
+        "order_id": order.id
+    })
 
-        # Add delivery charge
-        if final_price * quantity < 2000:
-            final_price += 100
-
-        # 5️⃣ Save address to user profile if changed
-        profile = request.user.userprofile
-        if address and address != profile.address:
-            profile.address = address
-            profile.save()
-
-        # 6️⃣ Create Order
-        order = Order.objects.create(
-            user=request.user,
-            status="paid",
-            payment_id=payment_id,
-            payment_method="online",
-            address=address
-        )
-
-        # 7️⃣ Create Order Item
-        OrderItem.objects.create(
-            order=order,
-            product=product,
-            quantity=quantity,
-            price=product.price
-        )
-
-        # 8️⃣ Success Response
-        return JsonResponse({
-            "status": "ok",
-            "redirect": "/myaccount",
-            "order_id": order.id
-        })
-
-    # 9️⃣ If someone sends anything else (PUT/DELETE)
-    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=400)
 
 
 
