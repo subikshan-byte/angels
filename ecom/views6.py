@@ -194,7 +194,7 @@ def payment_success(request):
         signature = request.GET.get("razorpay_signature")
 
     # If still missing, payment failed
-    payment_id = request.GET.get("razorpay_payment_id")
+    payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
     if not payment_id:
         return JsonResponse({
             "status": "error",
