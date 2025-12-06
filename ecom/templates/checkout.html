@@ -399,7 +399,14 @@ chooseOnline.addEventListener('click', () => {
     // ❌ DO NOT USE redirect: true
 
     
-        
+                handler:function(response){
+
+         window.location.href =
+    "{% url 'payment_success1' %}?razorpay_payment_id=" + response.razorpay_payment_id +
+    "&order_id=" + response.razorpay_order_id +
+    "&signature=" + response.razorpay_signature;
+
+        },
 
 
     theme: { color: "#4a6de5" },
